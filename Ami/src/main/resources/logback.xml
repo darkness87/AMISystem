@@ -8,7 +8,7 @@
 
 	<appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>C:\logs\ami-log-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
+            <fileNamePattern>C:\logs\ami-waslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -21,7 +21,7 @@
     
     <appender name="SYSTEMLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>C:\logs\sys-log-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
+            <fileNamePattern>C:\logs\ami-syslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -42,5 +42,6 @@
     </logger>
 
 	<logger name="com.cnu.ami" level="DEBUG"/>
+	<logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
 
 </configuration>

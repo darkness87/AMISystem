@@ -2,10 +2,8 @@ package com.cnu.ami.login.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,6 +24,10 @@ import com.cnu.ami.login.service.LoginService;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+import java.util.Map.Entry;
+import org.springframework.context.annotation.Description;
+import org.springframework.core.MethodParameter;
+
 @Slf4j
 @RestController
 @RequestMapping(value = "/api")
@@ -37,63 +39,67 @@ public class LoginController {
 	@Autowired
 	LoginService loginService;
 
-//	@RequestMapping(value = { "/", "/login" }, method = RequestMethod.GET)
+	@Autowired
+	private RequestMappingHandlerMapping requestMappingHandlerMapping;
+
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public Mono<UserLoginVO> getTestData(String userid, String password) throws Exception {
+	@Description(value = "로그인")
+	public Object getTestData(String userid, String password) throws Exception {
 		log.info("=== Login Controller ===");
 		log.info("key : {}", propertyData.getData("test.menu1.key"));
+
 		UserLoginVO data = loginService.getLogin(userid, password);
 
 		return Mono.just(data);
 	}
 
-	@RequestMapping(value = "/error", method = RequestMethod.GET)
+	@RequestMapping(value = "/getApiList", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	public String getErrorData() throws Exception {
-		String res = "{\"result\":\"API URL/Auth Error\"}";
-		return res;
-	}
+	@Description(value = "API 리스트 정보")
+	public List<Map<String, String>> getApiList(HttpServletRequest request) {
 
-	// TODO
-	@RequestMapping("/getAllRequestUrl")
-	public List<Map<String, Object>> getAllRequestUrl(HttpServletRequest request) {
+		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+		Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping.getHandlerMethods();
 
-		// Url 리스트를 Map 형식으로 가져오기
-		RequestMappingHandlerMapping requestMappingHandlerMapping = new RequestMappingHandlerMapping();
+		for (Entry<RequestMappingInfo, HandlerMethod> elem : map.entrySet()) {
 
-		Map<RequestMappingInfo, HandlerMethod> handlerMap = requestMappingHandlerMapping.getHandlerMethods();
-		Iterator<RequestMappingInfo> it = handlerMap.keySet().iterator();
-
-		List<Map<String, Object>> mappingInfoList = new ArrayList<Map<String, Object>>();
-		RequestMappingInfo requestMappingInfo = null;
-		Set<String> patterns;
-		Object[] sArr;
-		String url, beanName;
-
-		log.info("start : {}", it);
-
-		while (it.hasNext()) {
-			requestMappingInfo = it.next();
-			patterns = requestMappingInfo.getPatternsCondition().getPatterns();
-
-			log.info("{}", patterns);
-
-			if (!patterns.isEmpty()) {
-				sArr = patterns.toArray();
-				if (sArr.length == 1) { // annotaion에 지정된 URL 값
-					url = (String) sArr[0]; // URL이 지정되어있는 컨트롤러 이름
-					beanName = (String) handlerMap.get(requestMappingInfo).getBean();
-
-					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("ID", beanName.replace("Controller", ""));
-					map.put("URL", url);
-					mappingInfoList.add(map);
-				}
+			RequestMappingInfo key = elem.getKey();
+			HandlerMethod method = elem.getValue();
+			
+			Map<String, String> item = new HashMap<String, String>();
+			
+			if (key.getMethodsCondition().getMethods().iterator().hasNext() == true) {
+				item.put("method", key.getMethodsCondition().getMethods().iterator().next().name());
+			} else {
+				item.put("method", "");
 			}
+			
+			item.put("path", key.getPatternsCondition().getPatterns().toArray()[0].toString());
+//			item.put("class", method.getMethod().getDeclaringClass().getSimpleName()+"."+method.getMethod().getName());
+			
+			Description desc = method.getMethodAnnotation(Description.class);
+			if (desc != null) {
+				item.put("desc", desc.value());
+			}
+
+			StringBuffer sb = new StringBuffer();
+
+			for (MethodParameter param : method.getMethodParameters()) {
+				sb.append(param.getParameter().getType().getSimpleName()+" "+param.getParameter().getName()).append(", ");
+			}
+			
+			if (sb.toString().length() > 0) {
+				item.put("param", sb.toString().substring(0, sb.toString().length() - 2));
+			} else {
+				item.put("param", "");
+			}
+			
+			item.put("return", method.getMethod().getReturnType().getSimpleName());
+			result.add(item);
 		}
 
-		return mappingInfoList;
+		return result;
 	}
 
 }

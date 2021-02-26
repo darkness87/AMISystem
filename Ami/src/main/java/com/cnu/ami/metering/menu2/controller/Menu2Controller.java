@@ -30,7 +30,7 @@ public class Menu2Controller {
 	@Autowired
 	PropertyData propertyData;
 
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
+//	@RequestMapping(value = "/test", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	public Object getTestData() throws Exception {
 		log.info("=== Menu1 Controller ===");
