@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 import com.cnu.ami.login.models.UserLoginVO;
 
 @Repository
-public interface LoginDAO extends JpaRepository<UserLoginVO, String>{
+public interface LoginDAO extends JpaRepository<UserLoginVO, String> {
 
-	public UserLoginVO findByUseridAndPassword(String userid, String password); 
-	
+	public UserLoginVO findByUseridAndPassword(String userid, String password);
+
+	public UserLoginVO findByUserid(String userid);
+
 }

@@ -44,6 +44,5 @@ public abstract class LoginDAOImpl implements LoginDAO {
 
 		return loginData;
 	}
-
 	
 }

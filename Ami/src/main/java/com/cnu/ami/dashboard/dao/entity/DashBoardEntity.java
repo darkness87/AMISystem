@@ -1,4 +1,4 @@
-package com.cnu.ami.dashboard.models;
+package com.cnu.ami.dashboard.dao.entity;
 
 import java.util.Date;
 
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "TEST_LP_DATA")
-public class DashBoardVO {
+public class DashBoardEntity {
 
 	@Id
 	@GeneratedValue // Auto IncId Generator

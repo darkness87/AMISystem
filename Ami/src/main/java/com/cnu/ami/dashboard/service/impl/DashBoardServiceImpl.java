@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cnu.ami.dashboard.dao.DashBoardDAO;
+import com.cnu.ami.dashboard.dao.entity.DashBoardEntity;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
-import com.cnu.ami.dashboard.models.DashBoardVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
@@ -37,22 +37,22 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		log.info("{}", dashBoardDAO.getOne((long) 25));
 
-		DashBoardVO test = (DashBoardVO) dashBoardDAO.getOne((long) 25);
+		DashBoardEntity test = (DashBoardEntity) dashBoardDAO.getOne((long) 25);
 
 		log.info("{}", test.getId());
 		log.info("{}", test.getMeterid());
 
-		DashBoardVO dashBoardVO = new DashBoardVO();
+		DashBoardEntity dashBoardEntity = new DashBoardEntity();
 
-		dashBoardVO.setId(test.getId());
-		dashBoardVO.setMeterid(test.getMeterid());
+		dashBoardEntity.setId(test.getId());
+		dashBoardEntity.setMeterid(test.getMeterid());
 
-		return dashBoardVO;
+		return dashBoardEntity;
 	}
 
-	public List<DashBoardVO> testSelectData() throws Exception {
+	public List<DashBoardEntity> testSelectData() throws Exception {
 
-		List<DashBoardVO> test = dashBoardDAO.findById(25);
+		List<DashBoardEntity> test = dashBoardDAO.findById(25);
 
 		log.info("testData : {}", test);
 
