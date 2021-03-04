@@ -2,7 +2,6 @@ package com.cnu.ami.dashboard.service;
 
 import java.util.List;
 
-import com.cnu.ami.dashboard.dao.entity.DashBoardEntity;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
@@ -12,11 +11,6 @@ import com.cnu.ami.dashboard.models.UseDayHourAllVO;
 import com.cnu.ami.dashboard.models.WeatherVO;
 
 public interface DashBoardService {
-
-	// TEST
-	public Object testReadData() throws Exception;
-
-	public List<DashBoardEntity> testSelectData() throws Exception;
 
 	// DashBoard
 	public UseDayHourAllVO getElectricUseDayHourAll() throws Exception;

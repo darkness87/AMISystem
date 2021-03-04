@@ -39,7 +39,7 @@ public abstract class Menu1DAOImpl implements Menu1DAO {
 		criteriaQuery.where(restrictions);
 
 		criteriaQuery.orderBy(criteriaBuilder.desc(root.get("date"))); // 정렬 orderBy - asc/desc // 쿼리에 따라 필요 유무 결정하여 사용
-
+		
 		TypedQuery<Menu1VO> boardListQuery = entityManager.createQuery(criteriaQuery); // 생성된 쿼리문으로 리턴
 
 		List<Menu1VO> testData = boardListQuery.getResultList(); // 결과값 객체 담기

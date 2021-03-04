@@ -1,5 +1,11 @@
 package com.cnu.ami.common;
 
+/**
+ * Exception 코드
+ * 
+ * @author sookwon
+ *
+ */
 public class ExceptionConst {
 	// STATUS
 	public static final int SUCCESS = 0;

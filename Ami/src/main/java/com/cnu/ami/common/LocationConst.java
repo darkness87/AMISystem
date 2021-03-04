@@ -1,5 +1,9 @@
 package com.cnu.ami.common;
 
+/**
+ * 확산사업 지역 위치 정보
+ * @author sookwon
+ */
 public class LocationConst {
 
 	// 1:서울, 2:인천, 3:경기, 4:강원, 5:충북, 6:충남, 7:대전, 8:전남, 9:경북, 10:제주

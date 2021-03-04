@@ -38,12 +38,7 @@ public class Menu1ServiceImpl implements Menu1Service {
 
 	public Object testReadData() throws Exception {
 
-		log.info("{}", menu1DAO.getOne((long) 25));
-
 		Menu1VO test = (Menu1VO) menu1DAO.getOne((long) 25);
-
-		log.info("{}", test.getId());
-		log.info("{}", test.getMeterid());
 
 		Menu1VO menu1VO = new Menu1VO();
 
@@ -56,8 +51,6 @@ public class Menu1ServiceImpl implements Menu1Service {
 	public List<Menu1VO> testSelectData() throws Exception {
 
 		List<Menu1VO> test = menu1DAO.findById(25);
-
-		log.info("testData : {}", test);
 
 		return test;
 	}
@@ -72,12 +65,9 @@ public class Menu1ServiceImpl implements Menu1Service {
 		menu1VO.setDate(date);
 		menu1VO.setInfo("create");
 
-		log.info("=== insert : {}", menu1VO);
-
 		try {
 			menu1DAO.save(menu1VO);
 		} catch (Exception e) {
-			log.info("{}", e);
 			return 2;
 		}
 
@@ -100,12 +90,7 @@ public class Menu1ServiceImpl implements Menu1Service {
 
 		List<lpTestDataVO> finddata_1 = lpTestJoinDAO.findAll();
 		List<lpTestInfoVO> finddata_2 = lpTestInfoDAO.findAll();
-		
 		List<lpTestInfoVO> finddata_3 = lpTestInfoDAO.findByMeterid("06290000123");
-
-		log.info("{}", finddata_1);
-		log.info("{}", finddata_2);
-		log.info("{}", finddata_3);
 
 		for (int i = 0; finddata_1.size() > i; i++) {
 			modelLpTestVO = new ModelLpTestVO();
@@ -131,6 +116,13 @@ public class Menu1ServiceImpl implements Menu1Service {
 		}
 
 		return data;
+	}
+	
+	public List<Menu1VO> testLimitData(String meterid) throws Exception {
+
+		List<Menu1VO> test = menu1DAO.findFirst2ByMeterid(meterid);
+
+		return test;
 	}
 
 }

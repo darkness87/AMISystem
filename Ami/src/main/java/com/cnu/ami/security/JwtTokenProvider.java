@@ -67,9 +67,9 @@ public class JwtTokenProvider { // JWT토큰 생성 및 유효성을 검증하�
 		return Jwts.parser().setSigningKey(secret_key).parseClaimsJws(token).getBody().getSubject();
 	}
 
-	// Request의 Header에서 token 값을 가져옵니다. "CNU-AMI-AUTH-TOKEN" : "TOKEN값'
+	// Request의 Header에서 token 값을 가져옵니다. "x-token" : "TOKEN값'
 	public String resolveToken(HttpServletRequest request) {
-		return request.getHeader("CNU-AMI-AUTH-TOKEN");
+		return request.getHeader("x-token");
 	}
 
 	// 토큰의 유효성 + 만료일자 확인

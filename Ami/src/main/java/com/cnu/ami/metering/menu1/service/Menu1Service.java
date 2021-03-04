@@ -17,5 +17,7 @@ public interface Menu1Service {
 	public List<Menu1MeterLpVO> testjoinData() throws Exception;
 
 	public List<ModelLpTestVO> testjoinLpData() throws Exception;
+	
+	public Object testLimitData(String meterid) throws Exception;
 
 }

@@ -9,8 +9,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cnu.ami.dashboard.dao.DashBoardDAO;
-import com.cnu.ami.dashboard.dao.entity.DashBoardEntity;
+import com.cnu.ami.dashboard.dao.DashDcuInfoDAO;
+import com.cnu.ami.dashboard.dao.DashMeterInfoDAO;
+import com.cnu.ami.dashboard.dao.DashModemInfoDAO;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
@@ -24,40 +25,17 @@ import com.cnu.ami.dashboard.models.WeatherVO;
 import com.cnu.ami.dashboard.service.DashBoardService;
 import com.sun.management.OperatingSystemMXBean;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 public class DashBoardServiceImpl implements DashBoardService {
-
+	
 	@Autowired
-	private DashBoardDAO dashBoardDAO;
-
-	public Object testReadData() throws Exception {
-
-		log.info("{}", dashBoardDAO.getOne((long) 25));
-
-		DashBoardEntity test = (DashBoardEntity) dashBoardDAO.getOne((long) 25);
-
-		log.info("{}", test.getId());
-		log.info("{}", test.getMeterid());
-
-		DashBoardEntity dashBoardEntity = new DashBoardEntity();
-
-		dashBoardEntity.setId(test.getId());
-		dashBoardEntity.setMeterid(test.getMeterid());
-
-		return dashBoardEntity;
-	}
-
-	public List<DashBoardEntity> testSelectData() throws Exception {
-
-		List<DashBoardEntity> test = dashBoardDAO.findById(25);
-
-		log.info("testData : {}", test);
-
-		return test;
-	}
+	private DashDcuInfoDAO dashDcuInfoDAO;
+	
+	@Autowired
+	private DashMeterInfoDAO dashMeterInfoDAO;
+	
+	@Autowired
+	private DashModemInfoDAO dashModemInfoDAO;
 
 	@Override
 	public UseDayHourAllVO getElectricUseDayHourAll() throws Exception {
@@ -230,21 +208,21 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		// DCU
 		deviceRegVO.setDeviceName("DCU");
-		deviceRegVO.setDeviceRegConut(2081);
+		deviceRegVO.setDeviceRegConut((int) dashDcuInfoDAO.count());
 		deviceRegVO.setType("electric");
 		list.add(deviceRegVO);
 
 		deviceRegVO = new DeviceRegVO();
 		// Modem
 		deviceRegVO.setDeviceName("Modem");
-		deviceRegVO.setDeviceRegConut(71234);
+		deviceRegVO.setDeviceRegConut((int) dashModemInfoDAO.count());
 		deviceRegVO.setType("electric");
 		list.add(deviceRegVO);
 
 		deviceRegVO = new DeviceRegVO();
 		// Meter
 		deviceRegVO.setDeviceName("Meter");
-		deviceRegVO.setDeviceRegConut(145000);
+		deviceRegVO.setDeviceRegConut((int) dashMeterInfoDAO.count());
 		deviceRegVO.setType("electric");
 		list.add(deviceRegVO);
 

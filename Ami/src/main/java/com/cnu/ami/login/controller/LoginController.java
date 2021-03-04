@@ -20,6 +20,10 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import com.cnu.ami.common.PropertyData;
+import com.cnu.ami.common.ResponseListVO;
+import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.login.models.LoginResponseVO;
+import com.cnu.ami.login.models.TokenVO;
 import com.cnu.ami.login.models.UserLoginVO;
 import com.cnu.ami.login.service.LoginService;
 import com.cnu.ami.security.JwtTokenProvider;
@@ -51,40 +55,38 @@ public class LoginController {
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "로그인")
-	public String getLoginData(@RequestParam String userid, @RequestParam String password) throws Exception {
-		log.info("=== Login Controller : /api/login ===");
-		log.info("key : {}", propertyData.getData("test.menu1.key"));
+	public Mono<ResponseVO<TokenVO>> getLoginData(HttpServletRequest request, @RequestParam String userid, @RequestParam String password) throws Exception {
 		UserLoginVO data = loginService.getLogin(userid, password);
 
-		return jwtTokenProvider.createToken(data.getUserid(), data.getRoles());
+		TokenVO tokenVO = new TokenVO();
+		tokenVO.setToken(jwtTokenProvider.createToken(data.getUserid(), data.getRoles()));
+
+		return Mono.just(new ResponseVO<TokenVO>(request, tokenVO));
 	}
 
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "회원 등록")
-	public Mono<Integer> setRegistration(@RequestBody UserLoginVO userLoginVO) throws Exception { // TODO 회원등록? 회원가입?
-		log.info("=== Login Controller : /api/registration ===");
+	public Mono<ResponseVO<LoginResponseVO>> setRegistration(HttpServletRequest request, @RequestBody UserLoginVO userLoginVO) throws Exception {
 		log.info("{}", userLoginVO);
+
 		int data = loginService.setRegistration(userLoginVO);
 
-//		{
-//		    "userid": "user003",
-//		    "password": "123",
-//		    "name": "채수권",
-//		    "phone": "010-0000-0000",
-//		    "email": "skchae@cnuglobal.com",
-//		    "info": "enginner",
-//		    "level": "1"
-//		}
+		LoginResponseVO loginResponseVO = new LoginResponseVO();
+		if (data == 0) { // 0: Success , 1: Fail
+			loginResponseVO.setResult(true);
+		} else {
+			loginResponseVO.setResult(false);
+		}
 
-		return Mono.just(data); // 0: Success , 1: Fail
+		return Mono.just(new ResponseVO<LoginResponseVO>(request, loginResponseVO));
 	}
 
 	@RequestMapping(value = "/getApiList", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "API 리스트 정보")
 	public Mono<List<Map<String, String>>> getApiList(HttpServletRequest request) {
-		log.info("=== get Api List : /api/getApiList ===");
+		log.info("=== get Api List : /api/getApiList === : {}", request);
 
 		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
 		Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping.getHandlerMethods();
@@ -96,6 +98,13 @@ public class LoginController {
 
 			Map<String, String> item = new HashMap<String, String>();
 
+			Description desc = method.getMethodAnnotation(Description.class); // @Description
+			if (desc != null) {
+				item.put("desc", desc.value());
+			} else if (desc == null) {
+				continue;
+			}
+
 			if (key.getMethodsCondition().getMethods().iterator().hasNext() == true) {
 				item.put("method", key.getMethodsCondition().getMethods().iterator().next().name());
 			} else {
@@ -103,12 +112,6 @@ public class LoginController {
 			}
 
 			item.put("path", key.getPatternsCondition().getPatterns().toArray()[0].toString());
-//			item.put("class", method.getMethod().getDeclaringClass().getSimpleName()+"."+method.getMethod().getName());
-
-			Description desc = method.getMethodAnnotation(Description.class); // @Description
-			if (desc != null) {
-				item.put("desc", desc.value());
-			}
 
 			StringBuffer sb = new StringBuffer();
 
@@ -128,6 +131,30 @@ public class LoginController {
 		}
 
 		return Mono.just(result);
+	}
+
+	@RequestMapping(value = "/login/test/object", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public Mono<ResponseVO<UserLoginVO>> getTestData(HttpServletRequest request) throws Exception {
+
+		UserLoginVO userLoginVO = new UserLoginVO();
+		userLoginVO.setUserid("user12345");
+
+		return Mono.just(new ResponseVO<UserLoginVO>(request, userLoginVO));
+	}
+
+	@RequestMapping(value = "/login/test/list", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	public Mono<ResponseListVO<UserLoginVO>> getTestDataList(HttpServletRequest request) throws Exception {
+
+		UserLoginVO userLoginVO = new UserLoginVO();
+		userLoginVO.setUserid("user12345");
+
+		List<UserLoginVO> user = new ArrayList<UserLoginVO>();
+		user.add(userLoginVO);
+		user.add(userLoginVO);
+
+		return Mono.just(new ResponseListVO<UserLoginVO>(request, user));
 	}
 
 }

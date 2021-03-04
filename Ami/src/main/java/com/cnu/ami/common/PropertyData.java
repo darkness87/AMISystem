@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Properties 파일 GET
+ * 
+ * @author sookwon
+ */
 @Slf4j
 @Component
 public class PropertyData {
