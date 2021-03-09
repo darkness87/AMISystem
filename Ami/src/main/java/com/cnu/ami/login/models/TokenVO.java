@@ -8,5 +8,6 @@ import lombok.Setter;
 public class TokenVO {
 
 	private String token;
+	private UserInfoVO user;
 
 }

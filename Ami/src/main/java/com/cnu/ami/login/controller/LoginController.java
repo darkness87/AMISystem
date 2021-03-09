@@ -24,6 +24,7 @@ import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.login.models.LoginResponseVO;
 import com.cnu.ami.login.models.TokenVO;
+import com.cnu.ami.login.models.UserInfoVO;
 import com.cnu.ami.login.models.UserLoginVO;
 import com.cnu.ami.login.service.LoginService;
 import com.cnu.ami.security.JwtTokenProvider;
@@ -55,22 +56,56 @@ public class LoginController {
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "로그인")
-	public Mono<ResponseVO<TokenVO>> getLoginData(HttpServletRequest request, @RequestParam String userid, @RequestParam String password) throws Exception {
+	public Mono<ResponseVO<TokenVO>> getLoginData(HttpServletRequest request, @RequestParam String userid,
+			@RequestParam String password) throws Exception {
 		UserLoginVO data = loginService.getLogin(userid, password);
 
 		TokenVO tokenVO = new TokenVO();
 		tokenVO.setToken(jwtTokenProvider.createToken(data.getUserid(), data.getRoles()));
 
+		UserInfoVO userInfoVO = loginService.getUserInfoData(data);
+		tokenVO.setUser(userInfoVO);
+
 		return Mono.just(new ResponseVO<TokenVO>(request, tokenVO));
+	}
+
+	@RequestMapping(value = "/user/info", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "사용자 정보")
+	public Mono<ResponseVO<UserInfoVO>> getUserData(HttpServletRequest request, @RequestParam String userid)
+			throws Exception {
+		UserInfoVO data = loginService.getUserData(userid);
+
+		return Mono.just(new ResponseVO<UserInfoVO>(request, data));
 	}
 
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "회원 등록")
-	public Mono<ResponseVO<LoginResponseVO>> setRegistration(HttpServletRequest request, @RequestBody UserLoginVO userLoginVO) throws Exception {
+	@Description(value = "사용자 등록")
+	public Mono<ResponseVO<LoginResponseVO>> setRegistration(HttpServletRequest request,
+			@RequestBody UserLoginVO userLoginVO) throws Exception {
 		log.info("{}", userLoginVO);
 
 		int data = loginService.setRegistration(userLoginVO);
+
+		LoginResponseVO loginResponseVO = new LoginResponseVO();
+		if (data == 0) { // 0: Success , 1: Fail
+			loginResponseVO.setResult(true);
+		} else {
+			loginResponseVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<LoginResponseVO>(request, loginResponseVO));
+	}
+
+	@RequestMapping(value = "/user/update", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "사용자 수정")
+	public Mono<ResponseVO<LoginResponseVO>> setUserUpdate(HttpServletRequest request,
+			@RequestBody UserLoginVO userLoginVO) throws Exception {
+		log.info("{}", userLoginVO);
+
+		int data = loginService.setUserUpdate(userLoginVO);
 
 		LoginResponseVO loginResponseVO = new LoginResponseVO();
 		if (data == 0) { // 0: Success , 1: Fail

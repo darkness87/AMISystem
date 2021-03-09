@@ -14,6 +14,7 @@ import com.cnu.ami.common.HashCode;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.login.dao.LoginDAO;
 import com.cnu.ami.login.models.PasswordMappingVO;
+import com.cnu.ami.login.models.UserInfoVO;
 import com.cnu.ami.login.models.UserLoginVO;
 import com.cnu.ami.login.models.UseridMappingVO;
 import com.cnu.ami.login.service.LoginService;
@@ -32,39 +33,39 @@ public class LoginServiceImpl implements LoginService {
 
 		UserLoginVO userLoginVO = new UserLoginVO();
 //		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		
+
 		PasswordMappingVO pw = loginDAO.findOneByUserid(userid);
-		
-		if(pw == null) {
-			throw new SystemException(HttpStatus.NOT_FOUND, ExceptionConst.NULL_EXCEPTION,"아이디 재확인 바랍니다.");
+
+		if (pw == null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "아이디 재확인 바랍니다.");
 		}
 		// PBKDF2
 //		if(HashCode.validatePassword(password, pw.getPassword())) {
 //		}
 		// Spring Security
 //		if(encoder.matches(password, pw.getPassword())) {
-			
-		if(HashCode.validatePassword(password, pw.getPassword())) {
+
+		if (HashCode.validatePassword(password, pw.getPassword())) {
 			userLoginVO = loginDAO.findByUserid(userid);
-			
-			if(userLoginVO == null) {
-				throw new SystemException(HttpStatus.NOT_FOUND, ExceptionConst.NULL_EXCEPTION,"회원정보 재확인 바랍니다.");
+
+			if (userLoginVO == null) {
+				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "회원정보 재확인 바랍니다.");
 			}
 
 			List<String> roles = new ArrayList<String>();
 
 			if (userLoginVO.getLevel() == 0) {
 				roles.add("ROLE_ADMIN");
-			} else if(userLoginVO.getLevel() == 1) {
+			} else if (userLoginVO.getLevel() == 1) {
 				roles.add("ROLE_USER");
 			} else {
-				throw new SystemException(HttpStatus.NOT_FOUND, ExceptionConst.DB_ERROR,"사용자 레벨이 지정되지 않았습니다.");
+				throw new SystemException(HttpStatus.FORBIDDEN, ExceptionConst.DB_ERROR, "사용자 레벨이 지정되지 않았습니다.");
 			}
 
 			userLoginVO.setRoles(roles);
-			
-		}else {
-			throw new SystemException(HttpStatus.NOT_FOUND, ExceptionConst.NULL_EXCEPTION,"패스워드 재확인 바랍니다.");
+
+		} else {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "패스워드 재확인 바랍니다.");
 		}
 
 		return userLoginVO;
@@ -74,11 +75,11 @@ public class LoginServiceImpl implements LoginService {
 	public int setRegistration(UserLoginVO userLoginVO) throws Exception {
 
 		UseridMappingVO userid = loginDAO.findOneByUserid_(userLoginVO.getUserid());
-		
-		if(userid != null) {
-			throw new SystemException(HttpStatus.METHOD_NOT_ALLOWED, ExceptionConst.ACCESS_DENIED,"가입할 수 없는 아이디 입니다.");
+
+		if (userid != null) {
+			throw new SystemException(HttpStatus.FORBIDDEN, ExceptionConst.ACCESS_DENIED, "가입할 수 없는 아이디 입니다.");
 		}
-		
+
 		// 패스워드 처리
 		String password = userLoginVO.getPassword();
 		// Spring Security
@@ -88,8 +89,11 @@ public class LoginServiceImpl implements LoginService {
 		String hashCode = HashCode.createHash(password);
 
 		userLoginVO.setPassword(hashCode);
-		userLoginVO.setRegData(new Date()); // 등록일시 (현재서버시간)
-		
+
+		Date date = new Date();
+		userLoginVO.setRegDate(date); // 등록일시 (현재서버시간)
+		userLoginVO.setUpdateDate(date);
+
 		try {
 			loginDAO.save(userLoginVO);
 			return 0;
@@ -117,6 +121,67 @@ public class LoginServiceImpl implements LoginService {
 		userLoginVO.setRoles(roles);
 
 		return userLoginVO;
+	}
+
+	@Override
+	public UserInfoVO getUserData(String userid) throws Exception {
+		UserLoginVO userLoginVO = loginDAO.findByUserid(userid);
+
+		UserInfoVO userInfoVO = new UserInfoVO();
+
+		userInfoVO.setUserid(userLoginVO.getUserid());
+		userInfoVO.setName(userLoginVO.getName());
+		userInfoVO.setPhone(userLoginVO.getPhone());
+		userInfoVO.setEmail(userLoginVO.getEmail());
+		userInfoVO.setInfo(userLoginVO.getInfo());
+		userInfoVO.setLevel(userLoginVO.getLevel());
+		userInfoVO.setEstateId(userLoginVO.getEstateId());
+		userInfoVO.setEstateName(userLoginVO.getEstateName());
+		userInfoVO.setRegDate(userLoginVO.getRegDate());
+		userInfoVO.setUpdateDate(userLoginVO.getUpdateDate());
+
+		return userInfoVO;
+	}
+
+	@Override
+	public int setUserUpdate(UserLoginVO userLoginVO) throws Exception {
+
+		UseridMappingVO userid = loginDAO.findOneByUserid_(userLoginVO.getUserid());
+
+		if (userid != null) {
+			throw new SystemException(HttpStatus.FORBIDDEN, ExceptionConst.ACCESS_DENIED,
+					"회원정보가 다르거나 수정할 수 없는 아이디 입니다.");
+		}
+
+		Date date = new Date();
+		userLoginVO.setUpdateDate(date);
+
+		try {
+			loginDAO.save(userLoginVO);
+			return 0;
+		} catch (Exception e) {
+			log.error("{}", e);
+			return 1;
+		}
+
+	}
+
+	@Override
+	public UserInfoVO getUserInfoData(UserLoginVO userLoginVO) throws Exception {
+		UserInfoVO userInfoVO = new UserInfoVO();
+
+		userInfoVO.setUserid(userLoginVO.getUserid());
+		userInfoVO.setName(userLoginVO.getName());
+		userInfoVO.setPhone(userLoginVO.getPhone());
+		userInfoVO.setEmail(userLoginVO.getEmail());
+		userInfoVO.setInfo(userLoginVO.getInfo());
+		userInfoVO.setLevel(userLoginVO.getLevel());
+		userInfoVO.setEstateId(userLoginVO.getEstateId());
+		userInfoVO.setEstateName(userLoginVO.getEstateName());
+		userInfoVO.setRegDate(userLoginVO.getRegDate());
+		userInfoVO.setUpdateDate(userLoginVO.getUpdateDate());
+
+		return userInfoVO;
 	}
 
 }

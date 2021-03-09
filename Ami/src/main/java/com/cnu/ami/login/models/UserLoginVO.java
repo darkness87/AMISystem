@@ -33,29 +33,38 @@ public class UserLoginVO implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "userid")
+	@Column(name = "USER_ID")
 	private String userid;
 
-	@Column(name = "password")
+	@Column(name = "PASSWORD")
 	private String password;
 
-	@Column(name = "name")
+	@Column(name = "NAME")
 	private String name;
 
-	@Column(name = "phone")
+	@Column(name = "PHONE")
 	private String phone;
 
-	@Column(name = "email")
+	@Column(name = "EMAIL")
 	private String email;
 
-	@Column(name = "info")
+	@Column(name = "INFO")
 	private String info;
 
-	@Column(name = "level")
+	@Column(name = "LEVEL")
 	private int level;
 
-	@Column(name = "regdate")
-	private Date regData;
+	@Column(name = "ESTATE_ID")
+	private String estateId;
+
+	@Column(name = "ESTATE_NAME")
+	private String estateName;
+
+	@Column(name = "RDATE")
+	private Date regDate;
+
+	@Column(name = "UDATE")
+	private Date updateDate;
 
 	@Transient
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -67,7 +76,7 @@ public class UserLoginVO implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return this.userid;
+		return this.name;
 	}
 
 	@Override

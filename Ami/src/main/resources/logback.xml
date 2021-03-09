@@ -25,7 +25,7 @@
             <pattern>%d{yy-MM-dd HH:mm:ss.SSS} %-5level %-4relative - [ %thread{10} ] %logger{20}.%M:%L : %msg%n</pattern>
         </encoder>
     </appender>
-    
+
     <appender name="SYSTEMLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
         <if condition='System.getProperty("os.name").toLowerCase().contains("windows")'>
@@ -50,12 +50,13 @@
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="ROLLING" />
 	</root>
-	
+
 	<logger name="com.cnu.ami.scheduler" additivity="false">
         <appender-ref ref="SYSTEMLOG"/>
     </logger>
 
 	<logger name="com.cnu.ami" level="DEBUG"/>
 	<logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
+	<logger name="org.springframework.http" level="DEBUG"/>
 
 </configuration>

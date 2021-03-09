@@ -44,34 +44,37 @@ public class DashBoardController {
 	@Autowired
 	PropertyData propertyData;
 
-	@RequestMapping(value = "/electric/use/dayhour/all", method = RequestMethod.GET)
+	@RequestMapping(value = "/useAll/dayhour", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 전국전력사용량")
-	public Mono<ResponseVO<UseDayHourAllVO>> getElectricUseDayHourAll(HttpServletRequest request, @RequestParam String day) throws Exception {
+	public Mono<ResponseVO<UseDayHourAllVO>> getElectricUseDayHourAll(HttpServletRequest request,
+			@RequestParam String day) throws Exception {
 		UseDayHourAllVO data = dashBoardService.getElectricUseDayHourAll();
 
 		return Mono.just(new ResponseVO<UseDayHourAllVO>(request, data));
 	}
 
-	@RequestMapping(value = "/electric/meterreadingrate/day/all", method = RequestMethod.GET)
+	@RequestMapping(value = "/readingrateAll/dayOne", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 검침률")
-	public Mono<ResponseVO<RateVO>> getElectricMeterReadingRateDayAll(HttpServletRequest request, @RequestParam String day) throws Exception {
+	public Mono<ResponseVO<RateVO>> getElectricMeterReadingRateDayAll(HttpServletRequest request,
+			@RequestParam String day) throws Exception {
 		RateVO data = dashBoardService.getElectricMeterReadingRateDayAll();
 
 		return Mono.just(new ResponseVO<RateVO>(request, data));
 	}
 
-	@RequestMapping(value = "/electric/failure/dayhour/all", method = RequestMethod.GET)
+	@RequestMapping(value = "/failureAll/dayhour", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 금일 장애")
-	public Mono<ResponseVO<FailureAllVO>> getElectricFailureDayHourAll(HttpServletRequest request, @RequestParam String day) throws Exception {
+	public Mono<ResponseVO<FailureAllVO>> getElectricFailureDayHourAll(HttpServletRequest request,
+			@RequestParam String day) throws Exception {
 		FailureAllVO data = dashBoardService.getElectricFailureDayHourAll();
 
 		return Mono.just(new ResponseVO<FailureAllVO>(request, data));
 	}
 
-	@RequestMapping(value = "/weather/realtime/all", method = RequestMethod.GET)
+	@RequestMapping(value = "/weather/realtime", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 오늘의 날씨")
 	public Mono<ResponseVO<WeatherVO>> getWeatherRealtimeAll(HttpServletRequest request) throws Exception {
@@ -80,7 +83,7 @@ public class DashBoardController {
 		return Mono.just(new ResponseVO<WeatherVO>(request, data));
 	}
 
-	@RequestMapping(value = "/weather/dataweather/all", method = RequestMethod.GET)
+	@RequestMapping(value = "/weather/data", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 데이터날씨")
 	public Mono<ResponseVO<WeatherVO>> getWeatherDataWeatherAll(HttpServletRequest request) throws Exception {
@@ -89,7 +92,7 @@ public class DashBoardController {
 		return Mono.just(new ResponseVO<WeatherVO>(request, data));
 	}
 
-	@RequestMapping(value = "/electric/location/failure/mapinfo", method = RequestMethod.GET)
+	@RequestMapping(value = "/location/failure/mapinfo", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 지도 정보")
 	public Mono<ResponseListVO<DashBoardMapVO>> getLocationFailureMapInfo(HttpServletRequest request) throws Exception {
@@ -107,16 +110,17 @@ public class DashBoardController {
 		return Mono.just(new ResponseVO<ServerManagementVO>(request, data));
 	}
 
-	@RequestMapping(value = "/electric/registration/device", method = RequestMethod.GET)
+	@RequestMapping(value = "/registration/device", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "현황판 : 등록장비")
-	public Mono<ResponseListVO<DeviceRegVO>> getElectricRegistrationDevice(HttpServletRequest request) throws Exception {
+	@Description(value = "현황판 : 등록설비")
+	public Mono<ResponseListVO<DeviceRegVO>> getElectricRegistrationDevice(HttpServletRequest request)
+			throws Exception {
 		List<DeviceRegVO> data = dashBoardService.getElectricRegistrationDevice();
 
 		return Mono.just(new ResponseListVO<DeviceRegVO>(request, data));
 	}
 
-	@RequestMapping(value = "/electric/location/use/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/location/use/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 지역별사용량")
 	public Mono<Object> getLocationUseList(HttpServletRequest request, @RequestParam String day) throws Exception {
