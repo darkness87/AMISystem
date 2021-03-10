@@ -15,7 +15,7 @@ import com.cnu.ami.common.SystemException;
 import com.cnu.ami.login.dao.LoginDAO;
 import com.cnu.ami.login.models.PasswordMappingVO;
 import com.cnu.ami.login.models.UserInfoVO;
-import com.cnu.ami.login.models.UserLoginVO;
+import com.cnu.ami.login.dao.entity.UserLoginVO;
 import com.cnu.ami.login.models.UseridMappingVO;
 import com.cnu.ami.login.service.LoginService;
 

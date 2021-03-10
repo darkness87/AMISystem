@@ -14,7 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.cnu.ami.login.models.UserLoginVO;
+import com.cnu.ami.login.dao.entity.UserLoginVO;
 import com.cnu.ami.login.service.LoginService;
 
 import io.jsonwebtoken.Claims;

@@ -13,7 +13,7 @@
             	<fileNamePattern>C:\logs\ami-waslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
             </then>
             <else>
-            	<fileNamePattern>./logs/ami-waslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
+            	<fileNamePattern>/javaApp/AmiWas/logs/ami-waslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
             </else>
         </if>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -33,7 +33,7 @@
             	<fileNamePattern>C:\logs\ami-syslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
             </then>
             <else>
-            	<fileNamePattern>./logs/ami-syslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
+            	<fileNamePattern>/javaApp/AmiWas/logs/ami-syslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
             </else>
         </if>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">

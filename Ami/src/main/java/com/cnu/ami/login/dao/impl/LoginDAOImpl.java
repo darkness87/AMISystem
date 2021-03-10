@@ -11,7 +11,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import com.cnu.ami.login.dao.LoginDAO;
-import com.cnu.ami.login.models.UserLoginVO;
+import com.cnu.ami.login.dao.entity.UserLoginVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,11 +38,11 @@ public abstract class LoginDAOImpl implements LoginDAO {
 
 		TypedQuery<UserLoginVO> boardListQuery = entityManager.createQuery(criteriaQuery); // 생성된 쿼리문으로 리턴
 
-		UserLoginVO loginData = boardListQuery.getSingleResult(); // 싱글일 경우 getSingleResult // List일 경우 getResultList // 결과값 객체 담기
+		UserLoginVO loginData = boardListQuery.getSingleResult(); // 싱글일 경우 getSingleResult // List일 경우 getResultList 결과값 객체 담기
 
 		log.info("LoginEnd : {}", loginData);
 
 		return loginData;
 	}
-	
+
 }

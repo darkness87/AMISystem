@@ -1,7 +1,7 @@
 package com.cnu.ami.login.service;
 
 import com.cnu.ami.login.models.UserInfoVO;
-import com.cnu.ami.login.models.UserLoginVO;
+import com.cnu.ami.login.dao.entity.UserLoginVO;
 
 public interface LoginService {
 

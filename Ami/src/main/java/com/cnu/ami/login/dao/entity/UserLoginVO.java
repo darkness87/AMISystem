@@ -1,4 +1,4 @@
-package com.cnu.ami.login.models;
+package com.cnu.ami.login.dao.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;

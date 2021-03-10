@@ -25,7 +25,7 @@ import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.login.models.LoginResponseVO;
 import com.cnu.ami.login.models.TokenVO;
 import com.cnu.ami.login.models.UserInfoVO;
-import com.cnu.ami.login.models.UserLoginVO;
+import com.cnu.ami.login.dao.entity.UserLoginVO;
 import com.cnu.ami.login.service.LoginService;
 import com.cnu.ami.security.JwtTokenProvider;
 
