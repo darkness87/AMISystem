@@ -13,10 +13,10 @@ public class UserInfoVO {
 	private String name;
 	private String phone;
 	private String email;
-	private String info;
+	private String position;
 	private int level;
-	private String estateId;
-	private String estateName;
+	private String gSeq;
+	private String gName;
 	private Date regDate;
 	private Date updateDate;
 

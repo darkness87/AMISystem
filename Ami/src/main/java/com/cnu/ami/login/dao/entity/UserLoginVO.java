@@ -2,7 +2,6 @@ package com.cnu.ami.login.dao.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,23 +47,23 @@ public class UserLoginVO implements UserDetails {
 	@Column(name = "EMAIL")
 	private String email;
 
-	@Column(name = "INFO")
-	private String info;
+	@Column(name = "POSITION")
+	private String position;
 
 	@Column(name = "LEVEL")
 	private int level;
 
-	@Column(name = "ESTATE_ID")
-	private String estateId;
+	@Column(name = "GSEQ")
+	private String gSeq;
 
-	@Column(name = "ESTATE_NAME")
-	private String estateName;
+	@Column(name = "GNAME")
+	private String gName;
 
 	@Column(name = "RDATE")
-	private Date regDate;
+	private long regDate;
 
 	@Column(name = "UDATE")
-	private Date updateDate;
+	private long updateDate;
 
 	@Transient
 	@ElementCollection(fetch = FetchType.EAGER)

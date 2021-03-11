@@ -91,8 +91,8 @@ public class LoginServiceImpl implements LoginService {
 		userLoginVO.setPassword(hashCode);
 
 		Date date = new Date();
-		userLoginVO.setRegDate(date); // 등록일시 (현재서버시간)
-		userLoginVO.setUpdateDate(date);
+		userLoginVO.setRegDate(date.getTime()/1000); // 등록일시 (현재서버시간)
+		userLoginVO.setUpdateDate(date.getTime()/1000);
 
 		try {
 			loginDAO.save(userLoginVO);
@@ -133,12 +133,12 @@ public class LoginServiceImpl implements LoginService {
 		userInfoVO.setName(userLoginVO.getName());
 		userInfoVO.setPhone(userLoginVO.getPhone());
 		userInfoVO.setEmail(userLoginVO.getEmail());
-		userInfoVO.setInfo(userLoginVO.getInfo());
+		userInfoVO.setPosition(userLoginVO.getPosition());
 		userInfoVO.setLevel(userLoginVO.getLevel());
-		userInfoVO.setEstateId(userLoginVO.getEstateId());
-		userInfoVO.setEstateName(userLoginVO.getEstateName());
-		userInfoVO.setRegDate(userLoginVO.getRegDate());
-		userInfoVO.setUpdateDate(userLoginVO.getUpdateDate());
+		userInfoVO.setGSeq(userLoginVO.getGSeq());
+		userInfoVO.setGName(userLoginVO.getGName());
+		userInfoVO.setRegDate(new Date(userLoginVO.getRegDate() * 1000));
+		userInfoVO.setUpdateDate(new Date(userLoginVO.getUpdateDate() * 1000));
 
 		return userInfoVO;
 	}
@@ -148,13 +148,13 @@ public class LoginServiceImpl implements LoginService {
 
 		UseridMappingVO userid = loginDAO.findOneByUserid_(userLoginVO.getUserid());
 
-		if (userid != null) {
+		if (userid == null) {
 			throw new SystemException(HttpStatus.FORBIDDEN, ExceptionConst.ACCESS_DENIED,
-					"회원정보가 다르거나 수정할 수 없는 아이디 입니다.");
+					"존재하지 않는 아이디 입니다.");
 		}
 
 		Date date = new Date();
-		userLoginVO.setUpdateDate(date);
+		userLoginVO.setUpdateDate(date.getTime()/1000);
 
 		try {
 			loginDAO.save(userLoginVO);
@@ -174,12 +174,12 @@ public class LoginServiceImpl implements LoginService {
 		userInfoVO.setName(userLoginVO.getName());
 		userInfoVO.setPhone(userLoginVO.getPhone());
 		userInfoVO.setEmail(userLoginVO.getEmail());
-		userInfoVO.setInfo(userLoginVO.getInfo());
+		userInfoVO.setPosition(userLoginVO.getPosition());
 		userInfoVO.setLevel(userLoginVO.getLevel());
-		userInfoVO.setEstateId(userLoginVO.getEstateId());
-		userInfoVO.setEstateName(userLoginVO.getEstateName());
-		userInfoVO.setRegDate(userLoginVO.getRegDate());
-		userInfoVO.setUpdateDate(userLoginVO.getUpdateDate());
+		userInfoVO.setGSeq(userLoginVO.getGSeq());
+		userInfoVO.setGName(userLoginVO.getGName());
+		userInfoVO.setRegDate(new Date(userLoginVO.getRegDate() * 1000));
+		userInfoVO.setUpdateDate(new Date(userLoginVO.getUpdateDate() * 1000));
 
 		return userInfoVO;
 	}
