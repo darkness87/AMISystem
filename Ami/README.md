@@ -7,6 +7,10 @@
 
 <hr/>
 
+* API Postman 문서: <https://web.postman.co/collections/2091090-d514c2a8-3ee1-56cf-fdb8-69f515104382?workspace=81c051f1-515b-48ca-84fb-dd7b238e6c6f>
+
+<hr/>
+
 # 패키지명
 >	src/main/java
 >	> com/cnu/ami/

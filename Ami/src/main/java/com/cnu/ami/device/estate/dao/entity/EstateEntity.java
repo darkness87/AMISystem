@@ -89,9 +89,9 @@ public class EstateEntity {
 	private int dayHeating;
 	
 	@Column(name = "WDATE")
-	private int wDate;
+	private long wDate;
 	
 	@Column(name = "UDATE")
-	private int uDate;
+	private long uDate;
 
 }

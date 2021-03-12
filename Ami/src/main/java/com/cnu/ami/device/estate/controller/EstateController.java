@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.common.ResultVO;
+import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.device.estate.models.EstateVO;
 import com.cnu.ami.device.estate.service.EstateService;
 
@@ -52,12 +55,30 @@ public class EstateController {
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:단지관리 : 단지상세정보")
-	public Mono<ResponseVO<EstateVO>> getEstateData(HttpServletRequest request, @RequestParam String estateId)
+	public Mono<ResponseVO<EstateVO>> getEstateData(HttpServletRequest request, @RequestParam String gId)
 			throws Exception {
 
-		EstateVO data = estateService.getEstateData(estateId);
+		EstateVO data = estateService.getEstateData(gId);
 
 		return Mono.just(new ResponseVO<EstateVO>(request, data));
+	}
+
+	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:단지관리 : 단지 등록")
+	public Mono<ResponseVO<ResultVO>> setEstateData(HttpServletRequest request, @RequestBody EstateEntity estateEntity)
+			throws Exception {
+
+		int data = estateService.setEstateData(estateEntity);
+
+		ResultVO resultVO = new ResultVO();
+		if (data == 0) {
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.cnu.ami.device.estate.models;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,7 +33,7 @@ public class EstateVO {
 	private int dayWater;
 	private int dayHot;
 	private int dayHeating;
-	private int wDate;
-	private int uDate;
+	private Date wDate;
+	private Date uDate;
 
 }
