@@ -2,6 +2,7 @@ package com.cnu.ami.device.building.dao.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -15,6 +16,7 @@ import lombok.Setter;
 public class BuildingEntity {
 
 	@Id
+	@GeneratedValue // Auto IncId Generator
 	@Column(name = "BSEQ")
 	private int bSeq;
 

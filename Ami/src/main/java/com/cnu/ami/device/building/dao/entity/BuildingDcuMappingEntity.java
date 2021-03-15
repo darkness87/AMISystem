@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "BUILDING_DCU_MAPP")
+@Table(name = "BUILDING_DCU_MAP")
 public class BuildingDcuMappingEntity {
 
 	@Id

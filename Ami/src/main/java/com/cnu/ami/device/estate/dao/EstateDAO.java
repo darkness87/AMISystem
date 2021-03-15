@@ -10,4 +10,6 @@ public interface EstateDAO extends JpaRepository<EstateEntity, String> { // 키 
 
 	public EstateEntity findBygId(String gId); // 찾고자 할때 find By 컬럼명(첫글자 대문자) 그 다음 컬럼 존재시 _ 로 이어져서 사용 // ** 함수명 중요 !!!
 
+	public EstateEntity findBygSeq(int gSeq);
+
 }

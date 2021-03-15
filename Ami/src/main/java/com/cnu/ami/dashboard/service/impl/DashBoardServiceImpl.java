@@ -9,7 +9,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cnu.ami.dashboard.dao.DashDcuInfoDAO;
 import com.cnu.ami.dashboard.dao.DashMeterInfoDAO;
 import com.cnu.ami.dashboard.dao.DashModemInfoDAO;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
@@ -23,13 +22,14 @@ import com.cnu.ami.dashboard.models.UseDayHourAllListVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllVO;
 import com.cnu.ami.dashboard.models.WeatherVO;
 import com.cnu.ami.dashboard.service.DashBoardService;
+import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
 import com.sun.management.OperatingSystemMXBean;
 
 @Service
 public class DashBoardServiceImpl implements DashBoardService {
 	
 	@Autowired
-	private DashDcuInfoDAO dashDcuInfoDAO;
+	private DcuInfoDAO dcuInfoDAO;
 	
 	@Autowired
 	private DashMeterInfoDAO dashMeterInfoDAO;
@@ -208,7 +208,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		// DCU
 		deviceRegVO.setDeviceName("DCU");
-		deviceRegVO.setDeviceRegConut((int) dashDcuInfoDAO.count());
+		deviceRegVO.setDeviceRegConut((int) dcuInfoDAO.count());
 		deviceRegVO.setType("electric");
 		list.add(deviceRegVO);
 

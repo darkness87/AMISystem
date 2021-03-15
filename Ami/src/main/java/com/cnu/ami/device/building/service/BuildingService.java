@@ -6,8 +6,10 @@ import com.cnu.ami.device.building.models.BuildingVO;
 
 public interface BuildingService {
 
-	public BuildingVO getBulidingData() throws Exception;
+	public BuildingVO getBulidingData(BuildingVO buildingVO) throws Exception;
 
-	public List<BuildingVO> getBuildingListData() throws Exception;
+	public List<BuildingVO> getBuildingListData(int gseq) throws Exception;
+
+	public int setBulidingData(BuildingVO buildingVO) throws Exception;
 
 }

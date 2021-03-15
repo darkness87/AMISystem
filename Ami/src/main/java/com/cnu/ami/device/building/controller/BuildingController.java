@@ -1,6 +1,5 @@
 package com.cnu.ami.device.building.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.device.building.models.BuildingVO;
 import com.cnu.ami.device.building.service.BuildingService;
 
@@ -43,9 +44,10 @@ public class BuildingController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동 리스트정보")
-	public Mono<ResponseListVO<BuildingVO>> getBuildingListData(HttpServletRequest request) throws Exception {
+	public Mono<ResponseListVO<BuildingVO>> getBuildingListData(HttpServletRequest request, @RequestParam int gseq)
+			throws Exception {
 
-		List<BuildingVO> data = new ArrayList<BuildingVO>();
+		List<BuildingVO> data = buildingService.getBuildingListData(gseq);
 
 		return Mono.just(new ResponseListVO<BuildingVO>(request, data));
 	}
@@ -53,12 +55,35 @@ public class BuildingController {
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동 상세정보")
-	public Mono<ResponseVO<BuildingVO>> getBuildingData(HttpServletRequest request, @RequestParam String id)
-			throws Exception {
+	public Mono<ResponseVO<BuildingVO>> getBuildingData(HttpServletRequest request, @RequestParam int gseq,
+			@RequestParam int bseq, @RequestParam String did) throws Exception {
 
-		BuildingVO data = new BuildingVO();
+		BuildingVO buildingVO = new BuildingVO();
+		buildingVO.setGSeq(gseq);
+		buildingVO.setBSeq(bseq);
+		buildingVO.setDId(did);
+
+		BuildingVO data = buildingService.getBulidingData(buildingVO);
 
 		return Mono.just(new ResponseVO<BuildingVO>(request, data));
+	}
+
+	@RequestMapping(value = "/registraion", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:동관리 : 동 등록")
+	public Mono<ResponseVO<ResultVO>> setBuildingData(HttpServletRequest request, @RequestBody BuildingVO buildingVO)
+			throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+		int data = buildingService.setBulidingData(buildingVO);
+
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
 }
