@@ -148,4 +148,29 @@ public class DcuInfoEntity {
 	@Column(name = "S_SYS_SECURITY_STATUS")
 	private int S_SYS_SECURITY_STATUS;
 
+	@Column(name = "S_SYS_RESET")
+	private int S_SYS_RESET;
+	@Column(name = "S_SYS_IP_ADDR_INFO")
+	private String S_SYS_IP_ADDR_INFO;
+	@Column(name = "S_SYS_TRAP_RECV_INFO")
+	private String S_SYS_TRAP_RECV_INFO;
+	@Column(name = "S_CPU_THRESH")
+	private float S_CPU_THRESH;
+	@Column(name = "S_MEM_THRESH")
+	private float S_MEM_THRESH;
+	@Column(name = "S_TEMP_THRESH")
+	private float S_TEMP_THRESH;
+	@Column(name = "S_UP_BPS_THRESH")
+	private float S_UP_BPS_THRESH;
+	@Column(name = "S_DOWN_BPS_THRESH")
+	private float S_DOWN_BPS_THRESH;
+	@Column(name = "IS_DELETE")
+	private int IS_DELETE;
+	@Column(name = "WDATE")
+	private long WDATE;
+	@Column(name = "UDATE")
+	private long UDATE;
+	@Column(name = "DSTATUS")
+	private int DSTATUS;
+
 }

@@ -44,10 +44,10 @@ public class BuildingController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동 리스트정보")
-	public Mono<ResponseListVO<BuildingVO>> getBuildingListData(HttpServletRequest request, @RequestParam int gseq)
+	public Mono<ResponseListVO<BuildingVO>> getBuildingListData(HttpServletRequest request, @RequestParam int estateSeq)
 			throws Exception {
 
-		List<BuildingVO> data = buildingService.getBuildingListData(gseq);
+		List<BuildingVO> data = buildingService.getBuildingListData(estateSeq);
 
 		return Mono.just(new ResponseListVO<BuildingVO>(request, data));
 	}
@@ -55,13 +55,13 @@ public class BuildingController {
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동 상세정보")
-	public Mono<ResponseVO<BuildingVO>> getBuildingData(HttpServletRequest request, @RequestParam int gseq,
-			@RequestParam int bseq, @RequestParam String did) throws Exception {
+	public Mono<ResponseVO<BuildingVO>> getBuildingData(HttpServletRequest request, @RequestParam int estateSeq,
+			@RequestParam int buildingSeq, @RequestParam String dcuId) throws Exception {
 
 		BuildingVO buildingVO = new BuildingVO();
-		buildingVO.setGSeq(gseq);
-		buildingVO.setBSeq(bseq);
-		buildingVO.setDId(did);
+		buildingVO.setEstateSeq(estateSeq);
+		buildingVO.setBuildingSeq(buildingSeq);
+		buildingVO.setDcuId(dcuId);
 
 		BuildingVO data = buildingService.getBulidingData(buildingVO);
 

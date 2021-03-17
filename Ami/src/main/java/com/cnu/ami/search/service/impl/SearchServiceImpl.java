@@ -61,10 +61,10 @@ public class SearchServiceImpl implements SearchService {
 
 		for (int i = 0; data.size() > i; i++) {
 			estateVO = new EstateVO();
-			estateVO.setGSeq(data.get(i).getGSeq());
-			estateVO.setRSeq(data.get(i).getRSeq());
-			estateVO.setGId(data.get(i).getGId());
-			estateVO.setGName(data.get(i).getGName());
+			estateVO.setEstateSeq(data.get(i).getGSeq());
+			estateVO.setRegionSeq(data.get(i).getRSeq());
+			estateVO.setEstateId(data.get(i).getGId());
+			estateVO.setEstateName(data.get(i).getGName());
 			list.add(estateVO);
 		}
 

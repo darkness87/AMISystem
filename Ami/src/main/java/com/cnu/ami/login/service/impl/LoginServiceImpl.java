@@ -135,8 +135,8 @@ public class LoginServiceImpl implements LoginService {
 		userInfoVO.setEmail(userLoginVO.getEmail());
 		userInfoVO.setPosition(userLoginVO.getPosition());
 		userInfoVO.setLevel(userLoginVO.getLevel());
-		userInfoVO.setGSeq(userLoginVO.getGSeq());
-		userInfoVO.setGName(userLoginVO.getGName());
+		userInfoVO.setEstateSeq(userLoginVO.getGSeq());
+		userInfoVO.setEstateName(userLoginVO.getGName());
 		userInfoVO.setRegDate(new Date(userLoginVO.getRegDate() * 1000));
 		userInfoVO.setUpdateDate(new Date(userLoginVO.getUpdateDate() * 1000));
 
@@ -176,8 +176,8 @@ public class LoginServiceImpl implements LoginService {
 		userInfoVO.setEmail(userLoginVO.getEmail());
 		userInfoVO.setPosition(userLoginVO.getPosition());
 		userInfoVO.setLevel(userLoginVO.getLevel());
-		userInfoVO.setGSeq(userLoginVO.getGSeq());
-		userInfoVO.setGName(userLoginVO.getGName());
+		userInfoVO.setEstateSeq(userLoginVO.getGSeq());
+		userInfoVO.setEstateName(userLoginVO.getGName());
 		userInfoVO.setRegDate(new Date(userLoginVO.getRegDate() * 1000));
 		userInfoVO.setUpdateDate(new Date(userLoginVO.getUpdateDate() * 1000));
 

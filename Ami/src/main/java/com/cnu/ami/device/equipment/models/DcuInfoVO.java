@@ -1,0 +1,93 @@
+package com.cnu.ami.device.equipment.models;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class DcuInfoVO {
+
+	private String dcuId; // DCU ID
+	private String fepIp; // FEP IP
+	private int fepPort; // FEP PORT
+	private String dcuIp; // DCU IP
+	private int dcuPort; // DCU PORT
+	private String macA; // 마스터 모뎀 A 맥어드레스
+	private String macB; // 마스터 모뎀 B 맥어드레스
+	private String macC; // 마스터 모뎀 C 맥어드레스
+	private int iTime; // DCU 현재 시각
+	private String firmwareVersion; // DCU FIRMWARE VERSION
+	private int wanCode; // 간성망 분류 코드 (1:HFC, 2:OPTICAL, 3:LTE)
+	private int commCode; // 인입망 통신기술 분류코드 (1:HS-PLC, 2:HPGP, 3:WI-SUN, 4:ZIGBEE)
+	private String tMask; // DCU에서 검침FEP으로 보내는 Trap 또는 자율보고 정보관리 금지 항목값 설정 (Default : 0x00000000, 모두 허용)
+	private int sTypePeriod; // 표준형 계기 현재 검침 수집 주기 조정
+	private int sTypeLpPeriod; // 표준형 계기 LP 수집 주기 조정
+	private int eTypelpPeriod; // E-TYPE 계기 LP 수집 주기 조정
+	private int gTypelpPeriod; // G-TYPE 계기 LP 수집 주기 조정
+	private int eaTypeLpPeriod; // EA-TYPE 계기 LP 수집 주기 조정
+	private int gTypeAvgVoltagePeriod; // G-TYPE 계기 평균 전압/전류 수집 주기 조정
+	private int gTypeInstVoltagePeriod; // G-TYPE 계기 순시 전압/전류 수집 주기 조정 
+	private int eaTypeAvgVoltagePeriod; // EA-TYPE 계기 평균 전압/전류 수집 주기 조정
+	private int eaTypeInstVoltagePeriod; // EA-TYPE 계기 순시 전압/전류 수집 주기 조정
+	private String firmwareBuild; // Firmware 관리번호, Firmware 빌드연번 혹은 빌드일자(연월일 BCD표현)
+	private int packetLength; // 검침FEP-DCU간 프로토콜 패킷 길이(bytes), 초기값 0x00의 경우, 통신망 혹은 DCU OS 기기 기본 MTU 설정치에서 TCP/IP 헤더길이를 뺀 길이 적용
+	private int timeOut; // DCU-FEP간 프로토콜상 Time out 시간, 초기값 : 3초
+	private int trapInterval; // DCU-FEP간 Trap 전송 실패시 재전송 Interval (단위 : 분), 초기값 : 15분
+	private int etypeTimeErrorLimit; // DCU와 E-type 전력량계간 시간오차 한계(Default 0x02, 2분)
+	private int gtypeTimeErrorLimit; // DCU와 G-type 전력량계간 시간오차 한계(Default 0x01, 1분)
+	private int eatypeTimeErrorLimit; // DCU와 Ea-type 전력량계간 시간오차 한계(Default 0x01, 1분)
+	private int eTypeTimePeriod; // E-type 전력량계 시간확인 주기
+	private int gTypeTimePeriod; // G-type 전력량계 시간확인 주기 (Default 0x0F, 15분)
+	private int eaTypeTimePeriod; // Ea-type 전력량계 시간확인 주기 (Default 0x0F, 15분)
+	private int cpuReset; // CPU 자동 reset 기능 활성화/비활성화
+	
+	
+	private String PNID; // 콘솔 무선 모듈의 PNID
+	private String ACODE_RO; // 인증권한 코드 (READ ONLY)
+	private String ACODE_RW; // 인증권한코드 (READ / WRITE)
+	private String SNMP_PW_RO; // SNMP COMMUNITY VALUE (READ ONLY)
+	private String SNMP_PW_RW; // SNMP COMMUNITY VALUE (READ / WRITE)
+	private String S_SYS_DESCR; // DCU 관련 설명, 제조사명, 제조사 유지보수 담당 연락처 필수 추가사항 자율 // ex> AAA co., 042-865-0000, asd sdsd
+	private String S_SYS_NAME; // 통신 단말 장치(DCU)명 // 값> AMI-DCU(fixed-Value)
+	private String S_DCU_ID; // DCU ID (DCU 설치 위치- 전주번호) // 검침FEP-DCU간 프로토콜 주소와 일치 (DID/SID)
+	private String S_SYS_UP_TIME; // DCU 동작시간 // ex> 3 day, 21Hours, 53 minutes, 4 seconds
+	private String S_SYS_SERIAL; // DCU 고유번호 (검침FEP-DCU간 프로토콜과 일치) // VCode+YYMM+NUM (검침FEP-DCU간 프로토콜상 BCD 형태의 YYMM은 ASCII string 로 변환하여 표기) // ex> 제조사코드 : 31, 생산연월 : 15년 08월, 제조연번 : 1234567 => 3115081234567
+	private String S_SYS_MODEL; // DCU 모델번호 // ex> M0012351556
+	private String S_SYS_OBJECT_ID; // 제조사 모델 식별키 (Optional) // ex> 1.3.6.1.4.1.8072.3.2.10
+	private String S_SYS_MAC; // WAN용 ethernet 포트 맥 주소 // ex> 00:0c:93:71:80:81
+	private String S_SYS_OS_VERS; // OS 버전 // ex> Linux 2.6.18-164.11.1.el5
+	private String S_SYS_HW_VERS; // 하드웨어 버전(업체 자율 관리) // ex> HWVers.02
+	private String S_SYS_FW_VERS; // Firmware 관리번호 : Firmware 빌드연번 혹은 빌드일자(연월일 BCD표현) // ex> 0x120412(F-build) -> 120412
+	private String S_SYS_MIB_VERS; // MIB 정보 버전 번호 // > 2.0
+	private String S_SYS_DOWN_TIME; // DCU 정전시간 // ex> 3 day, 21Hours, 53 minutes, 4 seconds
+	private String S_SYS_CON_MAC; // Console용 ethernet 포트 맥 주소 // ex> 00:0c:93:71:80:81
+	private int S_SYS_MIB_ENCRYPT; // SNMP 암호화 여부 // 0 : 암호화 미적용, 1 : PDU의 value값 암호화
+	private String S_SYS_MR_AGENT_UP_TIME; // DCU 검침 Agent 동작시간 // ex> 3 day, 21Hours, 53 minutes, 4 seconds
+	private String S_SYS_SNMP_AGENT_UP_TIME; // DCU SNMP Agent 동작시간 // ex> 3 day, 21Hours, 53 minutes, 4 seconds 
+	private int S_WAN_CODE; // 간선망 분류코드 // 01 : HFC, 02 : Optical, 03 : LTE
+	private int S_COMM_CODE; // 인입망 통신기술 분류코드 // 01 : HS-PLC(ISO/IEC12139-1) , 02 : HPGP , 03 : Wi-SUN , 04 : Zigbee
+	private int S_DCU_TYPE; // DCU 종류 // 1 : TDU 내장된 DCU , 2 : TDU 내장되지 않은 DCU
+	private int S_SYS_STATE; // DCU 동작상태  // 0 : 이상 , 1 : 정상
+	private int S_SYS_UP_BPS; // DCU 평균 업로드 BPS(Bit/Sec)
+	private int S_SYS_DN_BPS; // DCU 평균 다운로드 BPS(Bit/Sec)
+	private int S_SYS_CPU_USAGE; // DCU CPU 사용률 (%) // 10초 주기로 수집하여 계산된 1분 평균값
+	private int S_SYS_MEM_USAGE; // DCU MEMORY 사용률 (%) // 10초 주기로 수집하여 계산된 1분 평균값
+	private int S_SYS_TEMP_VALUE; // 설비 온도 (optional) // 10초 주기로 수집하여 계산된 1분 평균값
+	private int S_DCU_COVER_STATUS; // DCU Cover 개폐상태 // 0 : OPEN , 1 : CLOSED
+	private int S_SYS_SECURITY_STATUS; // SNMP Agent 암복호화 기능 상태 // 0 : 정상 , 1 : DCU 보안키 Not Found , 2 : 암호모듈 초기화 실패, 3 : 암호모듈 연동 실패 , 4 : 암호화 실패 , 5 : 복호화 실패 , 6 : 기타(정의되지 않는 오류)
+	
+	
+	private int S_SYS_RESET; // DCU의 프로세스를 리셋하거나 DCU 자체를 Rebooting // 0 : Normal, 1 : All Reset (DCU의 검침 Agent와 SNMP Agent의 프로세스를 kill한 후 다시 시작함), 2 : 검침 Agent만 Reset, 3 : SNMP Agnet만 Reset, 4 : Reboot (DCU의 OS를 리부팅함)
+	private String S_SYS_IP_ADDR_INFO; // DCU 아이피 정보 // ex> 192.168.100.100
+	private String S_SYS_TRAP_RECV_INFO; // DCU SNMP Trap 수신서버 정보 // ex>192.168.100.100:162 (Manager Ip : Port)
+	private float S_CPU_THRESH; // DCU CPU 임계치(%)
+	private float S_MEM_THRESH; // DCU 메모리 임계치(%)
+	private float S_TEMP_THRESH; // DCU 온도 임계치(optional)
+	private float S_UP_BPS_THRESH; // 검침FEP-DCU간 업로드 BPS 임계치
+	private float S_DOWN_BPS_THRESH; // 검침FEP-DCU간 다운로드 BPS 임계치
+	private int IS_DELETE; // 삭제유무
+	private long WDATE; // 등록시각
+	private long UDATE; // 수정시각
+	private int DSTATUS; // 
+
+}

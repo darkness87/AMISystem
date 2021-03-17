@@ -55,10 +55,10 @@ public class EstateController {
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:단지관리 : 단지상세정보")
-	public Mono<ResponseVO<EstateVO>> getEstateData(HttpServletRequest request, @RequestParam String gId)
+	public Mono<ResponseVO<EstateVO>> getEstateData(HttpServletRequest request, @RequestParam String estateId)
 			throws Exception {
 
-		EstateVO data = estateService.getEstateData(gId);
+		EstateVO data = estateService.getEstateData(estateId);
 
 		return Mono.just(new ResponseVO<EstateVO>(request, data));
 	}

@@ -1,7 +1,5 @@
 package com.cnu.ami.device.building.models;
 
-import javax.persistence.Column;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,25 +7,12 @@ import lombok.Setter;
 @Setter
 public class BuildingVO {
 
-	@Column(name = "BSEQ")
-	private int bSeq;
-
-	@Column(name = "GSEQ")
-	private int gSeq;
-
-	@Column(name = "BNAME")
-	private String bName;
-
-	@Column(name = "GID")
-	private String gId;
-
-	@Column(name = "GNAME")
-	private String gName;
-
-	@Column(name = "DID")
-	private String dId;
-
-	@Column(name = "S_SYS_STATE")
-	private int sSysState;
+	private int buildingSeq; // 동 건물 Seq번호
+	private int estateSeq; // 단지 Seq번호
+	private String buildingName; // 동명
+	private String estategId; // 단지ID
+	private String estateName; // 단지명
+	private String dcuId; // DCU ID
+	private int systmeState; // 시스템 상태
 
 }

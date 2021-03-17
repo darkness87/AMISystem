@@ -9,8 +9,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cnu.ami.dashboard.dao.DashMeterInfoDAO;
-import com.cnu.ami.dashboard.dao.DashModemInfoDAO;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
@@ -23,19 +21,21 @@ import com.cnu.ami.dashboard.models.UseDayHourAllVO;
 import com.cnu.ami.dashboard.models.WeatherVO;
 import com.cnu.ami.dashboard.service.DashBoardService;
 import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
+import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
+import com.cnu.ami.device.equipment.dao.ModemInfoDAO;
 import com.sun.management.OperatingSystemMXBean;
 
 @Service
 public class DashBoardServiceImpl implements DashBoardService {
-	
+
 	@Autowired
 	private DcuInfoDAO dcuInfoDAO;
-	
+
 	@Autowired
-	private DashMeterInfoDAO dashMeterInfoDAO;
-	
+	private MeterInfoDAO meterInfoDAO;
+
 	@Autowired
-	private DashModemInfoDAO dashModemInfoDAO;
+	private ModemInfoDAO modemInfoDAO;
 
 	@Override
 	public UseDayHourAllVO getElectricUseDayHourAll() throws Exception {
@@ -215,14 +215,14 @@ public class DashBoardServiceImpl implements DashBoardService {
 		deviceRegVO = new DeviceRegVO();
 		// Modem
 		deviceRegVO.setDeviceName("Modem");
-		deviceRegVO.setDeviceRegConut((int) dashModemInfoDAO.count());
+		deviceRegVO.setDeviceRegConut((int) modemInfoDAO.count());
 		deviceRegVO.setType("electric");
 		list.add(deviceRegVO);
 
 		deviceRegVO = new DeviceRegVO();
 		// Meter
 		deviceRegVO.setDeviceName("Meter");
-		deviceRegVO.setDeviceRegConut((int) dashMeterInfoDAO.count());
+		deviceRegVO.setDeviceRegConut((int) meterInfoDAO.count());
 		deviceRegVO.setType("electric");
 		list.add(deviceRegVO);
 

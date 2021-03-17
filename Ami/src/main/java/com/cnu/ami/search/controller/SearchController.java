@@ -45,8 +45,8 @@ public class SearchController {
 	@RequestMapping(value = "/estate", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "검색: 단지정보 : => PARAM region = 0: 전체")
-	public Mono<ResponseListVO<EstateVO>> getEstateList(HttpServletRequest request , @RequestParam int region) throws Exception {
-		List<EstateVO> data = searchService.getEstateList(region);
+	public Mono<ResponseListVO<EstateVO>> getEstateList(HttpServletRequest request , @RequestParam int regionSeq) throws Exception {
+		List<EstateVO> data = searchService.getEstateList(regionSeq);
 		return Mono.just(new ResponseListVO<EstateVO>(request, data));
 	}
 

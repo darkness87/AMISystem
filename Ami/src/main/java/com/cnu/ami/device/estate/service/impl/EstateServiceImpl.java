@@ -32,32 +32,32 @@ public class EstateServiceImpl implements EstateService {
 		for (int i = 0; data.size() > i; i++) {
 			estateVO = new EstateVO();
 
-			estateVO.setGSeq(data.get(i).getGSeq());
-			estateVO.setRSeq(data.get(i).getRSeq());
-			estateVO.setGId(data.get(i).getGId());
-			estateVO.setGName(data.get(i).getGName());
-			estateVO.setCntHouse(data.get(i).getCntHouse());
+			estateVO.setEstateSeq(data.get(i).getGSeq());
+			estateVO.setRegionSeq(data.get(i).getRSeq());
+			estateVO.setEstateId(data.get(i).getGId());
+			estateVO.setEstateName(data.get(i).getGName());
+			estateVO.setHouseCount(data.get(i).getCntHouse());
 			estateVO.setAddress(data.get(i).getAddress());
-			estateVO.setTelGroup(data.get(i).getTelGroup());
+			estateVO.setTelEstate(data.get(i).getTelGroup());
 			estateVO.setManager1(data.get(i).getManager1());
 			estateVO.setTelManager1(data.get(i).getTelManager1());
 			estateVO.setManager2(data.get(i).getManager2());
 			estateVO.setTelManager2(data.get(i).getTelManager2());
-			estateVO.setCntDcu(data.get(i).getCntDcu());
-			estateVO.setCntModem(data.get(i).getCntModem());
-			estateVO.setCntMeter(data.get(i).getCntMeter());
-			estateVO.setChkPower(data.get(i).getChkPower());
-			estateVO.setChkGas(data.get(i).getChkGas());
-			estateVO.setChkWater(data.get(i).getChkWater());
-			estateVO.setChkHot(data.get(i).getChkHot());
-			estateVO.setChkHeating(data.get(i).getChkHeating());
+			estateVO.setDcuCount(data.get(i).getCntDcu());
+			estateVO.setModemCount(data.get(i).getCntModem());
+			estateVO.setMeterCount(data.get(i).getCntMeter());
+			estateVO.setCheckPower(data.get(i).getChkPower());
+			estateVO.setCheckGas(data.get(i).getChkGas());
+			estateVO.setCheckWater(data.get(i).getChkWater());
+			estateVO.setCheckHot(data.get(i).getChkHot());
+			estateVO.setCheckHeating(data.get(i).getChkHeating());
 			estateVO.setDayPower(data.get(i).getDayPower());
 			estateVO.setDayGas(data.get(i).getDayGas());
 			estateVO.setDayWater(data.get(i).getDayWater());
 			estateVO.setDayHot(data.get(i).getDayHot());
 			estateVO.setDayHeating(data.get(i).getDayHeating());
-			estateVO.setWDate(new Date(data.get(i).getWDate() * 1000));
-			estateVO.setUDate(new Date(data.get(i).getUDate() * 1000));
+			estateVO.setWriteDate(new Date(data.get(i).getWDate() * 1000));
+			estateVO.setUpdateDate(new Date(data.get(i).getUDate() * 1000));
 
 			list.add(estateVO);
 		}
@@ -76,32 +76,32 @@ public class EstateServiceImpl implements EstateService {
 
 		EstateVO estateVO = new EstateVO();
 
-		estateVO.setGSeq(data.getGSeq());
-		estateVO.setRSeq(data.getRSeq());
-		estateVO.setGId(data.getGId());
-		estateVO.setGName(data.getGName());
-		estateVO.setCntHouse(data.getCntHouse());
+		estateVO.setEstateSeq(data.getGSeq());
+		estateVO.setRegionSeq(data.getRSeq());
+		estateVO.setEstateId(data.getGId());
+		estateVO.setEstateName(data.getGName());
+		estateVO.setHouseCount(data.getCntHouse());
 		estateVO.setAddress(data.getAddress());
-		estateVO.setTelGroup(data.getTelGroup());
+		estateVO.setTelEstate(data.getTelGroup());
 		estateVO.setManager1(data.getManager1());
 		estateVO.setTelManager1(data.getTelManager1());
 		estateVO.setManager2(data.getManager2());
 		estateVO.setTelManager2(data.getTelManager2());
-		estateVO.setCntDcu(data.getCntDcu());
-		estateVO.setCntModem(data.getCntModem());
-		estateVO.setCntMeter(data.getCntMeter());
-		estateVO.setChkPower(data.getChkPower());
-		estateVO.setChkGas(data.getChkGas());
-		estateVO.setChkWater(data.getChkWater());
-		estateVO.setChkHot(data.getChkHot());
-		estateVO.setChkHeating(data.getChkHeating());
+		estateVO.setDcuCount(data.getCntDcu());
+		estateVO.setModemCount(data.getCntModem());
+		estateVO.setModemCount(data.getCntMeter());
+		estateVO.setCheckPower(data.getChkPower());
+		estateVO.setCheckGas(data.getChkGas());
+		estateVO.setCheckWater(data.getChkWater());
+		estateVO.setCheckHot(data.getChkHot());
+		estateVO.setCheckHeating(data.getChkHeating());
 		estateVO.setDayPower(data.getDayPower());
 		estateVO.setDayGas(data.getDayGas());
 		estateVO.setDayWater(data.getDayWater());
 		estateVO.setDayHot(data.getDayHot());
 		estateVO.setDayHeating(data.getDayHeating());
-		estateVO.setWDate(new Date(data.getWDate() * 1000));
-		estateVO.setUDate(new Date(data.getUDate() * 1000));
+		estateVO.setWriteDate(new Date(data.getWDate() * 1000));
+		estateVO.setUpdateDate(new Date(data.getUDate() * 1000));
 
 		return estateVO;
 	}

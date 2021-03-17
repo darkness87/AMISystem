@@ -1,6 +1,5 @@
 package com.cnu.ami.device.equipment.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.common.ResultVO;
+import com.cnu.ami.device.equipment.models.DcuInfoListVO;
+import com.cnu.ami.device.equipment.models.DcuInfoVO;
+import com.cnu.ami.device.equipment.models.DcuRegVO;
+import com.cnu.ami.device.equipment.service.EquipmentService;
 
 import reactor.core.publisher.Mono;
 
@@ -32,26 +37,46 @@ import reactor.core.publisher.Mono;
 public class EquipmentController {
 
 	@Autowired
+	EquipmentService equipmentService;
+	
+	@Autowired
 	PropertyData propertyData;
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/dcu/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "설비:장비관리 : 리스트정보")
-	public Mono<ResponseListVO<Object>> getTestListData(HttpServletRequest request) throws Exception {
+	@Description(value = "설비:장비관리 : DCU 목록")
+	public Mono<ResponseListVO<DcuInfoListVO>> getDcuListData(HttpServletRequest request, @RequestParam int estateSeq) throws Exception {
 
-		List<Object> data = new ArrayList<Object>();
+		List<DcuInfoListVO> data = equipmentService.getDcuListData(estateSeq);
 
-		return Mono.just(new ResponseListVO<Object>(request, data));
+		return Mono.just(new ResponseListVO<DcuInfoListVO>(request, data));
 	}
 
-	@RequestMapping(value = "/info", method = RequestMethod.GET)
+	@RequestMapping(value = "/dcu/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "설비:장비관리 : 상세정보")
-	public Mono<ResponseVO<Object>> getTestData(HttpServletRequest request, @RequestParam String id) throws Exception {
+	@Description(value = "설비:장비관리 : DCU 상세정보")
+	public Mono<ResponseVO<DcuInfoVO>> getDCUData(HttpServletRequest request, @RequestParam String dcuId) throws Exception {
 
-		Object data = new Object();
+		DcuInfoVO data = equipmentService.getDcuData(dcuId);
 
-		return Mono.just(new ResponseVO<Object>(request, data));
+		return Mono.just(new ResponseVO<DcuInfoVO>(request, data));
+	}
+	
+	@RequestMapping(value = "/dcu/registration", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU 등록 - 기본정보")
+	public Mono<ResponseVO<ResultVO>> setDCUData(HttpServletRequest request, @RequestBody DcuRegVO dcuRegVO) throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+		int data = equipmentService.setDcuData(dcuRegVO);
+		
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
 }

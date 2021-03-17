@@ -9,6 +9,7 @@ import com.cnu.ami.init.AmiBeanNameGenerator;
 @SpringBootApplication
 @PropertySource("classpath:application.properties")
 //@EnableScheduling // 스케줄
+//@EnableWebFlux // 웹플럭스
 public class AmiApplication {
 
 	public static void main(String[] args) {

@@ -7,9 +7,9 @@ import lombok.Setter;
 @Setter
 public class EstateVO {
 
-	private int gSeq;
-	private int rSeq;
-	private String gId;
-	private String gName;
+	private int estateSeq;
+	private int regionSeq;
+	private String estateId;
+	private String estateName;
 
 }

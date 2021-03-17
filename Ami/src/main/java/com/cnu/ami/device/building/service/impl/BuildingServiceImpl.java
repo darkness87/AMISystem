@@ -21,10 +21,10 @@ import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 public class BuildingServiceImpl implements BuildingService {
 
 	@Autowired
-	private BuildingDAO buildingDAO;
+	BuildingDAO buildingDAO;
 
 	@Autowired
-	private EstateDAO estateDAO;
+	EstateDAO estateDAO;
 
 	@Autowired
 	DcuInfoDAO dcuInfoDAO;
@@ -32,19 +32,18 @@ public class BuildingServiceImpl implements BuildingService {
 	@Override
 	public BuildingVO getBulidingData(BuildingVO buildingVO) throws Exception {
 
-		BuildingEntity building = buildingDAO.findBybSeq(buildingVO.getBSeq());
-//		EstateEntity data2 = estateDAO.findBygId(buildingVO.getGId());
-		EstateEntity estate = estateDAO.findBygSeq(buildingVO.getGSeq());
-		DcuInfoEntity dcu = dcuInfoDAO.findByDID(buildingVO.getDId());
+		BuildingEntity building = buildingDAO.findBybSeq(buildingVO.getBuildingSeq());
+		EstateEntity estate = estateDAO.findBygSeq(buildingVO.getEstateSeq());
+		DcuInfoEntity dcu = dcuInfoDAO.findByDID(buildingVO.getDcuId());
 
 		BuildingVO buildingData = new BuildingVO();
-		buildingData.setBName(building.getBName());
-		buildingData.setBSeq(building.getBSeq());
-		buildingData.setGId(estate.getGId());
-		buildingData.setGName(estate.getGName());
-		buildingData.setGSeq(estate.getGSeq());
-		buildingData.setDId(dcu.getDID());
-		buildingData.setSSysState(dcu.getS_SYS_STATE());
+		buildingData.setBuildingName(building.getBName());
+		buildingData.setBuildingSeq(building.getBSeq());
+		buildingData.setEstategId(estate.getGId());
+		buildingData.setEstateName(estate.getGName());
+		buildingData.setEstateSeq(estate.getGSeq());
+		buildingData.setDcuId(dcu.getDID());
+		buildingData.setSystmeState(dcu.getS_SYS_STATE());
 
 		return buildingData;
 	}
@@ -67,13 +66,13 @@ public class BuildingServiceImpl implements BuildingService {
 		for (int i = 0; data.size() > i; i++) {
 			buildingVO = new BuildingVO();
 
-			buildingVO.setBSeq(data.get(i).getBseq());
-			buildingVO.setGSeq(data.get(i).getGseq());
-			buildingVO.setBName(data.get(i).getBname());
-			buildingVO.setGId(data.get(i).getGid());
-			buildingVO.setGName(data.get(i).getGname());
-			buildingVO.setDId(data.get(i).getDid());
-			buildingVO.setSSysState(data.get(i).getS_Sys_State());
+			buildingVO.setBuildingSeq(data.get(i).getBseq());
+			buildingVO.setEstateSeq(data.get(i).getGseq());
+			buildingVO.setBuildingName(data.get(i).getBname());
+			buildingVO.setEstategId(data.get(i).getGid());
+			buildingVO.setEstateName(data.get(i).getGname());
+			buildingVO.setDcuId(data.get(i).getDid());
+			buildingVO.setSystmeState(data.get(i).getS_Sys_State());
 
 			list.add(buildingVO);
 		}
@@ -85,8 +84,8 @@ public class BuildingServiceImpl implements BuildingService {
 	public int setBulidingData(BuildingVO buildingVO) throws Exception {
 
 		BuildingEntity buildingEntity = new BuildingEntity();
-		buildingEntity.setGSeq(buildingVO.getGSeq());
-		buildingEntity.setBName(buildingVO.getBName());
+		buildingEntity.setGSeq(buildingVO.getEstateSeq());
+		buildingEntity.setBName(buildingVO.getBuildingName());
 		buildingEntity.setWDate(new Date().getTime() / 1000);
 
 		try {

@@ -1,4 +1,4 @@
-package com.cnu.ami.dashboard.dao.entity;
+package com.cnu.ami.device.equipment.dao.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,8 +15,8 @@ import lombok.Setter;
 public class ModemInfoEntity {
 
 	@Id
-	@Column
+	@Column(name = "MAC")
 	private String MAC;
-	@Column
+	@Column(name = "DID")
 	private String DID;
 }
