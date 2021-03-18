@@ -27,18 +27,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "AMI_USER_INFO")
+@Table(name = "USER_INFO")
 public class UserLoginVO implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name = "USER_ID")
+	@Column(name = "UID")
 	private String userid;
 
-	@Column(name = "PASSWORD")
+	@Column(name = "UPW")
 	private String password;
 
-	@Column(name = "NAME")
+	@Column(name = "UNAME")
 	private String name;
 
 	@Column(name = "PHONE")
@@ -53,16 +53,16 @@ public class UserLoginVO implements UserDetails {
 	@Column(name = "LEVEL")
 	private int level;
 
-	@Column(name = "GSEQ")
-	private String gSeq;
+//	@Column(name = "GSEQ")
+//	private String gSeq;
+//
+//	@Column(name = "GNAME")
+//	private String gName;
 
-	@Column(name = "GNAME")
-	private String gName;
-
-	@Column(name = "RDATE")
+	@Column(name = "WDATE")
 	private long regDate;
 
-	@Column(name = "UDATE")
+	@Column(name = "LDATE")
 	private long updateDate;
 
 	@Transient

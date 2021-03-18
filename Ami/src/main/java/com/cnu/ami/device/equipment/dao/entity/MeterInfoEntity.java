@@ -16,7 +16,7 @@ public class MeterInfoEntity {
 
 	@Id
 	@Column(name = "METER_ID")
-	private String METER_ID;
+	private String METERID;
 	@Column(name = "MAC")
 	private String MAC;
 	@Column(name = "DID")

@@ -15,9 +15,13 @@ import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
 import com.cnu.ami.device.equipment.dao.ModemInfoDAO;
 import com.cnu.ami.device.equipment.dao.entity.DcuInfoEntity;
 import com.cnu.ami.device.equipment.dao.entity.DcuInfoInterfaceVO;
+import com.cnu.ami.device.equipment.dao.entity.MeterInfoEntity;
+import com.cnu.ami.device.equipment.dao.entity.MeterInfoInterfaceVO;
 import com.cnu.ami.device.equipment.models.DcuInfoListVO;
 import com.cnu.ami.device.equipment.models.DcuInfoVO;
 import com.cnu.ami.device.equipment.models.DcuRegVO;
+import com.cnu.ami.device.equipment.models.MeterInfoListVO;
+import com.cnu.ami.device.equipment.models.MeterInfoVO;
 import com.cnu.ami.device.equipment.service.EquipmentService;
 
 @Service
@@ -77,7 +81,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "검색 확인 바랍니다.");
 		} else {
 			DcuInfoEntity dcu = dcuInfoDAO.findByDID(did);
-			
+
 			if (dcu == null) {
 				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "데이터가 없습니다.");
 			}
@@ -125,15 +129,76 @@ public class EquipmentServiceImpl implements EquipmentService {
 	public int setDcuData(DcuRegVO dcuRegVO) throws Exception {
 
 		DcuInfoEntity dcuInfoEntity = new DcuInfoEntity();
-		
+
 		dcuInfoEntity.setDID(dcuRegVO.getDcuId());
 		dcuInfoEntity.setDCU_IP(dcuRegVO.getDcuIp());
-		dcuInfoEntity.setWDATE(new Date().getTime()/1000);
-		dcuInfoEntity.setUDATE(new Date().getTime()/1000);
-		
+		dcuInfoEntity.setWDATE(new Date().getTime() / 1000);
+		dcuInfoEntity.setUDATE(new Date().getTime() / 1000);
+
 		dcuInfoDAO.save(dcuInfoEntity);
-		
+
 		return 0;
+	}
+
+	@Override
+	public List<MeterInfoListVO> getMeterListData(int gseq) throws Exception {
+
+		List<MeterInfoInterfaceVO> meter = meterInfoDAO.getMeterList(gseq);
+
+		List<MeterInfoListVO> list = new ArrayList<MeterInfoListVO>();
+		MeterInfoListVO meterInfoListVO = new MeterInfoListVO();
+
+		for (int i = 0; meter.size() > i; i++) {
+			meterInfoListVO = new MeterInfoListVO();
+
+			meterInfoListVO.setRegionSeq(meter.get(i).getRSeq());
+			meterInfoListVO.setEstateSeq(meter.get(i).getGSeq());
+			meterInfoListVO.setBuildingSeq(meter.get(i).getBSeq());
+			meterInfoListVO.setRegionName(meter.get(i).getRName());
+			meterInfoListVO.setEstateId(meter.get(i).getGId());
+			meterInfoListVO.setEstateName(meter.get(i).getGName());
+			meterInfoListVO.setBuildingName(meter.get(i).getBName());
+			meterInfoListVO.setHouseName(meter.get(i).getHo());
+			meterInfoListVO.setDcuId(meter.get(i).getDId());
+			meterInfoListVO.setMeterId(meter.get(i).getMeter_Id());
+			meterInfoListVO.setMac(meter.get(i).getMac());
+
+			list.add(meterInfoListVO);
+		}
+
+		return list;
+	}
+
+	@Override
+	public MeterInfoVO getMeterData(String meterid) throws Exception {
+
+		MeterInfoEntity meter = meterInfoDAO.findByMETERID(meterid);
+
+		if (meter == null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "Meter ID 정보를 확인해주세요.");
+		}
+		
+		MeterInfoVO meterInfoVO = new MeterInfoVO();
+
+		meterInfoVO.setMeterId(meter.getMETERID());
+		meterInfoVO.setMac(meter.getMAC());
+		meterInfoVO.setDcuId(meter.getDID());
+		meterInfoVO.setDeviceName(meter.getDEVICE_NAME());
+		meterInfoVO.setMeterReadingDay(meter.getMRD());
+		meterInfoVO.setDcuTime(new Date(meter.getITIME() * 1000));
+		meterInfoVO.setMeterTime(new Date(meter.getMTIME() * 1000));
+		meterInfoVO.setLpPeriod(meter.getLP_PERIOD());
+		meterInfoVO.setAcon(meter.getACON());
+		meterInfoVO.setRcon(meter.getRCON());
+		meterInfoVO.setPcon(meter.getPCON());
+		meterInfoVO.setNetMetering(meter.getNET_METERING());
+		meterInfoVO.setMComp(meter.getMCOMP());
+		meterInfoVO.setMtype(meter.getMTYPE());
+		meterInfoVO.setIsDelete(meter.getIS_DELETE());
+		meterInfoVO.setWriteDate(new Date(meter.getWDATE() * 1000));
+		meterInfoVO.setUpdateDate(new Date(meter.getUDATE() * 1000));
+
+		return meterInfoVO;
 	}
 
 }

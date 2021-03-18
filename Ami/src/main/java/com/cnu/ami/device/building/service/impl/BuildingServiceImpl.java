@@ -43,7 +43,7 @@ public class BuildingServiceImpl implements BuildingService {
 		buildingData.setEstateName(estate.getGName());
 		buildingData.setEstateSeq(estate.getGSeq());
 		buildingData.setDcuId(dcu.getDID());
-		buildingData.setSystmeState(dcu.getS_SYS_STATE());
+		buildingData.setSystemState(dcu.getS_SYS_STATE());
 
 		return buildingData;
 	}
@@ -72,7 +72,7 @@ public class BuildingServiceImpl implements BuildingService {
 			buildingVO.setEstategId(data.get(i).getGid());
 			buildingVO.setEstateName(data.get(i).getGname());
 			buildingVO.setDcuId(data.get(i).getDid());
-			buildingVO.setSystmeState(data.get(i).getS_Sys_State());
+			buildingVO.setSystemState(data.get(i).getS_Sys_State());
 
 			list.add(buildingVO);
 		}

@@ -13,6 +13,6 @@ public class BuildingVO {
 	private String estategId; // 단지ID
 	private String estateName; // 단지명
 	private String dcuId; // DCU ID
-	private int systmeState; // 시스템 상태
+	private int systemState; // 시스템 상태
 
 }

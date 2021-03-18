@@ -15,8 +15,11 @@ public class UserInfoVO {
 	private String email;
 	private String position;
 	private int level;
-	private String estateSeq;
+	private int estateSeq;
 	private String estateName;
+	private String estateId;
+	private int regionSeq;
+	private String regionName;
 	private Date regDate;
 	private Date updateDate;
 

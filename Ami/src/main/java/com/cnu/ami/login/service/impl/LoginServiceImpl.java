@@ -14,6 +14,7 @@ import com.cnu.ami.common.HashCode;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.login.dao.LoginDAO;
 import com.cnu.ami.login.models.PasswordMappingVO;
+import com.cnu.ami.login.models.UserEstateVO;
 import com.cnu.ami.login.models.UserInfoVO;
 import com.cnu.ami.login.dao.entity.UserLoginVO;
 import com.cnu.ami.login.models.UseridMappingVO;
@@ -135,8 +136,19 @@ public class LoginServiceImpl implements LoginService {
 		userInfoVO.setEmail(userLoginVO.getEmail());
 		userInfoVO.setPosition(userLoginVO.getPosition());
 		userInfoVO.setLevel(userLoginVO.getLevel());
-		userInfoVO.setEstateSeq(userLoginVO.getGSeq());
-		userInfoVO.setEstateName(userLoginVO.getGName());
+
+		if(userLoginVO.getLevel()==0) {
+			userInfoVO.setEstateSeq(0);
+			userInfoVO.setEstateName("단지 슈퍼관리자");
+		}else{
+			UserEstateVO userEstateVO = loginDAO.getUserEstate(userLoginVO.getUserid());
+			userInfoVO.setEstateSeq(userEstateVO.getGseq());
+			userInfoVO.setEstateName(userEstateVO.getGname());
+			userInfoVO.setEstateId(userEstateVO.getGid());
+			userInfoVO.setRegionSeq(userEstateVO.getRseq());
+			userInfoVO.setRegionName(userEstateVO.getRname());
+		}
+		
 		userInfoVO.setRegDate(new Date(userLoginVO.getRegDate() * 1000));
 		userInfoVO.setUpdateDate(new Date(userLoginVO.getUpdateDate() * 1000));
 
@@ -176,8 +188,19 @@ public class LoginServiceImpl implements LoginService {
 		userInfoVO.setEmail(userLoginVO.getEmail());
 		userInfoVO.setPosition(userLoginVO.getPosition());
 		userInfoVO.setLevel(userLoginVO.getLevel());
-		userInfoVO.setEstateSeq(userLoginVO.getGSeq());
-		userInfoVO.setEstateName(userLoginVO.getGName());
+		
+		if(userLoginVO.getLevel()==0) {
+			userInfoVO.setEstateSeq(0);
+			userInfoVO.setEstateName("단지 슈퍼관리자");
+		}else{
+			UserEstateVO userEstateVO = loginDAO.getUserEstate(userLoginVO.getUserid());
+			userInfoVO.setEstateSeq(userEstateVO.getGseq());
+			userInfoVO.setEstateName(userEstateVO.getGname());
+			userInfoVO.setEstateId(userEstateVO.getGid());
+			userInfoVO.setRegionSeq(userEstateVO.getRseq());
+			userInfoVO.setRegionName(userEstateVO.getRname());
+		}
+		
 		userInfoVO.setRegDate(new Date(userLoginVO.getRegDate() * 1000));
 		userInfoVO.setUpdateDate(new Date(userLoginVO.getUpdateDate() * 1000));
 
