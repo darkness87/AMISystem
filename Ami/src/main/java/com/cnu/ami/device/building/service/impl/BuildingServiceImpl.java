@@ -5,8 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.cnu.ami.common.ExceptionConst;
+import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.building.dao.BuildingDAO;
 import com.cnu.ami.device.building.dao.entity.BuildingEntity;
 import com.cnu.ami.device.building.dao.entity.BuildingInterfaceVO;
@@ -33,8 +36,22 @@ public class BuildingServiceImpl implements BuildingService {
 	public BuildingVO getBulidingData(BuildingVO buildingVO) throws Exception {
 
 		BuildingEntity building = buildingDAO.findBybSeq(buildingVO.getBuildingSeq());
+
+		if (building == null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "건물 동에 대한 정보가 없습니다.");
+		}
+
 		EstateEntity estate = estateDAO.findBygSeq(buildingVO.getEstateSeq());
+
+		if (estate == null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "단지에 대한 정보가 없습니다.");
+		}
+
 		DcuInfoEntity dcu = dcuInfoDAO.findByDID(buildingVO.getDcuId());
+
+		if (dcu == null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "DCU에 대한 정보가 없습니다.");
+		}
 
 		BuildingVO buildingData = new BuildingVO();
 		buildingData.setBuildingName(building.getBName());
@@ -57,6 +74,10 @@ public class BuildingServiceImpl implements BuildingService {
 			data = buildingDAO.getBuildingList();
 		} else {
 			data = buildingDAO.getBuildingList(gseq);
+		}
+
+		if (data == null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "정보가 없습니다.");
 		}
 
 		List<BuildingVO> list = new ArrayList<BuildingVO>();

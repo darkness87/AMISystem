@@ -135,16 +135,28 @@ public class EquipmentServiceImpl implements EquipmentService {
 		dcuInfoEntity.setWDATE(new Date().getTime() / 1000);
 		dcuInfoEntity.setUDATE(new Date().getTime() / 1000);
 
-		dcuInfoDAO.save(dcuInfoEntity);
-
-		return 0;
+		try {
+			dcuInfoDAO.save(dcuInfoEntity);
+			return 0;	
+		}catch (Exception e) {
+			return 1;
+		}
+		
 	}
 
 	@Override
 	public List<MeterInfoListVO> getMeterListData(int gseq) throws Exception {
 
+		if (gseq == 0) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "검색 확인 바랍니다.");
+		}
+		
 		List<MeterInfoInterfaceVO> meter = meterInfoDAO.getMeterList(gseq);
 
+		if (meter == null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "조회된 결과가 없습니다.");
+		}
+		
 		List<MeterInfoListVO> list = new ArrayList<MeterInfoListVO>();
 		MeterInfoListVO meterInfoListVO = new MeterInfoListVO();
 
@@ -171,6 +183,10 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Override
 	public MeterInfoVO getMeterData(String meterid) throws Exception {
+		
+		if (meterid.length() != 11) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "계량기 번호는 11자리입니다.");
+		}
 
 		MeterInfoEntity meter = meterInfoDAO.findByMETERID(meterid);
 

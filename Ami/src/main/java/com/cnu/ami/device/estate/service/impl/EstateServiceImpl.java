@@ -25,6 +25,10 @@ public class EstateServiceImpl implements EstateService {
 
 		List<EstateEntity> data = estateDAO.findAll();
 
+		if (data == null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "정보가 없습니다.");
+		}
+
 		List<EstateVO> list = new ArrayList<EstateVO>();
 
 		EstateVO estateVO = new EstateVO();
@@ -71,7 +75,8 @@ public class EstateServiceImpl implements EstateService {
 		EstateEntity data = estateDAO.findBygId(gId);
 
 		if (data == null) {
-			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "요청하신 단지ID가 존재하지 않습니다.");
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION,
+					"요청하신 단지ID에 대한 정보가 없습니다.");
 		}
 
 		EstateVO estateVO = new EstateVO();
@@ -110,10 +115,10 @@ public class EstateServiceImpl implements EstateService {
 	public int setEstateData(EstateEntity estateEntity) throws Exception {
 
 		// TODO 중복아이디 체크 필요
-		
-		estateEntity.setWDate(new Date().getTime()/1000);
-		estateEntity.setUDate(new Date().getTime()/1000);
-		
+
+		estateEntity.setWDate(new Date().getTime() / 1000);
+		estateEntity.setUDate(new Date().getTime() / 1000);
+
 		try {
 			estateDAO.saveAndFlush(estateEntity);
 			return 0;
