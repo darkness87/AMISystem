@@ -5,21 +5,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.PropertyData;
-import com.cnu.ami.metering.mboard.service.Menu1Service;
+import com.cnu.ami.metering.mboard.service.FBoardService;
 
 /**
  * 
  * @author skchae@cnuglobal.com
- * @apiNote Menu1 api
+ * @apiNote fboard api
  *
  */
 
 @RestController
-@RequestMapping(value = "/api/metering/menu1")
-public class Menu1Controller {
+@RequestMapping(value = "/api/metering/fboard")
+public class FBoardController {
 
 	@Autowired
-	Menu1Service menu1Service;
+	FBoardService fBoardService;
 
 	@Autowired
 	PropertyData propertyData;

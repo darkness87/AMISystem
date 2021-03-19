@@ -98,12 +98,32 @@ public class EquipmentController {
 	@RequestMapping(value = "/meter/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : METER 상세정보")
-	public Mono<ResponseVO<Object>> getMeterData(HttpServletRequest request, @RequestParam String meterId)
+	public Mono<ResponseVO<MeterInfoVO>> getMeterData(HttpServletRequest request, @RequestParam String meterId)
 			throws Exception {
 
 		MeterInfoVO data = equipmentService.getMeterData(meterId);
 
-		return Mono.just(new ResponseVO<Object>(request, data));
+		return Mono.just(new ResponseVO<MeterInfoVO>(request, data));
+	}
+	
+	@RequestMapping(value = "/other/list", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : 가스,수도,온수,난방 미터 목록")
+	public Mono<ResponseListVO<Object>> getOtherListData(HttpServletRequest request,
+			@RequestParam int estateSeq, @RequestParam int meterType) throws Exception {
+
+
+		return Mono.just(new ResponseListVO<Object>(request, null));
+	}
+
+	@RequestMapping(value = "/other/info", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : 가스,수도,온수,난방 미터 상세정보")
+	public Mono<ResponseVO<Object>> getOtherData(HttpServletRequest request, @RequestParam String meterId)
+			throws Exception {
+
+
+		return Mono.just(new ResponseVO<Object>(request, null));
 	}
 
 }
