@@ -2,6 +2,9 @@ package com.cnu.ami.dashboard.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
@@ -30,4 +33,8 @@ public interface DashBoardService {
 	public List<DeviceRegVO> getElectricRegistrationDevice() throws Exception;
 
 	public Object getLocationUseList() throws Exception;
+
+	public ResponseVO<RateVO> getFluxElectricMeterReadingRateDayAll(HttpServletRequest request) throws Exception;
+
+	public ResponseVO<ServerManagementVO> getFluxServerManagementInfo(HttpServletRequest request) throws Exception;
 }

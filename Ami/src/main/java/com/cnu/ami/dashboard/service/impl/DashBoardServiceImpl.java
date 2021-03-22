@@ -5,10 +5,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
@@ -69,11 +73,13 @@ public class DashBoardServiceImpl implements DashBoardService {
 		RateVO rateVO = new RateVO();
 		RateSubVO rate = new RateSubVO();
 
-		rateVO.setMeterReadingRate(99.9f);
-		rateVO.setResponsibility(100f);
+		Random random = new Random();
 
-		rate.setTodayRate(99.9f);
-		rate.setYesterdayRate(99.9f);
+		rateVO.setMeterReadingRate(random.nextFloat() * 100);
+		rateVO.setResponsibility(random.nextFloat() * 100);
+
+		rate.setTodayRate(random.nextFloat() * 100);
+		rate.setYesterdayRate(random.nextFloat() * 100);
 
 		rateVO.setRate(rate);
 
@@ -233,6 +239,57 @@ public class DashBoardServiceImpl implements DashBoardService {
 	public Object getLocationUseList() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ResponseVO<RateVO> getFluxElectricMeterReadingRateDayAll(HttpServletRequest request) throws Exception {
+
+		RateVO rateVO = new RateVO();
+		RateSubVO rate = new RateSubVO();
+
+		Random random = new Random();
+
+		rateVO.setMeterReadingRate(random.nextFloat() * 100);
+		rateVO.setResponsibility(random.nextFloat() * 100);
+
+		rate.setTodayRate(random.nextFloat() * 100);
+		rate.setYesterdayRate(random.nextFloat() * 100);
+
+		rateVO.setRate(rate);
+
+		return new ResponseVO<RateVO>(request, rateVO);
+
+	}
+
+	@SuppressWarnings("restriction")
+	@Override
+	public ResponseVO<ServerManagementVO> getFluxServerManagementInfo(HttpServletRequest request) throws Exception {
+
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		ServerManagementVO serverManagementVO = new ServerManagementVO();
+
+		// JVM memory
+		float gb = 1024 * 1024 * 1024;
+		long heapSize = Runtime.getRuntime().totalMemory();
+		long heapMaxSize = Runtime.getRuntime().maxMemory();
+		long heapFreeSize = Runtime.getRuntime().freeMemory();
+		long heapUseSize = heapSize - heapFreeSize;
+
+		// OS
+		OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+
+		serverManagementVO.setDate(dateFormat.format(date));
+		serverManagementVO.setOsCpu(String.format("%.3f", osBean.getSystemCpuLoad() * 100));
+		serverManagementVO.setOsMemory(
+				String.format("%.3f", ((osBean.getTotalPhysicalMemorySize() - osBean.getFreePhysicalMemorySize()) / gb)
+						/ (osBean.getTotalPhysicalMemorySize() / gb) * 100));
+		serverManagementVO.setJvmUsed(String.format("%.3f", (double) heapUseSize / gb));
+		serverManagementVO.setJvmFree(String.format("%.3f", (double) heapFreeSize / gb));
+		serverManagementVO.setJvmTotal(String.format("%.3f", (double) heapSize / gb));
+		serverManagementVO.setJvmMax(String.format("%.3f", (double) heapMaxSize / gb));
+
+		return new ResponseVO<ServerManagementVO>(request, serverManagementVO);
 	}
 
 }
