@@ -38,7 +38,7 @@ public class RegularController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "월검침 : 목록")
 	public Mono<ResponseListVO<RegularMonthVO>> getMonthListData(HttpServletRequest request,
-			@RequestParam int estateSeq) throws Exception {
+			@RequestParam int estateSeq, @RequestParam int yearMonth) throws Exception {
 
 		List<RegularMonthVO> data = regularService.getMonthRegularData(estateSeq);
 

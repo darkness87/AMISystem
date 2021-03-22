@@ -125,6 +125,10 @@ public class DashBoardController {
 //		ServerManagementVO data = dashBoardService.getServerManagementInfo();
 //		return Mono.just(new ResponseVO<ServerManagementVO>(request, data));
 
+		if (duration == 0) { // 0일 경우 디폴트 15초
+			duration = 15;
+		}
+
 		return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 			try {
 				return dashBoardService.getFluxServerManagementInfo(request);

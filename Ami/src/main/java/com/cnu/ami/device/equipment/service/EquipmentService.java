@@ -7,6 +7,7 @@ import com.cnu.ami.device.equipment.models.DcuInfoVO;
 import com.cnu.ami.device.equipment.models.DcuRegVO;
 import com.cnu.ami.device.equipment.models.MeterInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterInfoVO;
+import com.cnu.ami.device.equipment.models.MeterOtherInfoListVO;
 
 public interface EquipmentService {
 
@@ -19,5 +20,7 @@ public interface EquipmentService {
 	public List<MeterInfoListVO> getMeterListData(int gseq) throws Exception;
 
 	public MeterInfoVO getMeterData(String meterid) throws Exception;
+
+	public List<MeterOtherInfoListVO> getOtherMeterListData(int gseq, int meterType) throws Exception;
 
 }

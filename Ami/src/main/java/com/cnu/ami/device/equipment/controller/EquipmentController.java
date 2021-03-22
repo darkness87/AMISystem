@@ -23,6 +23,7 @@ import com.cnu.ami.device.equipment.models.DcuInfoVO;
 import com.cnu.ami.device.equipment.models.DcuRegVO;
 import com.cnu.ami.device.equipment.models.MeterInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterInfoVO;
+import com.cnu.ami.device.equipment.models.MeterOtherInfoListVO;
 import com.cnu.ami.device.equipment.service.EquipmentService;
 
 import reactor.core.publisher.Mono;
@@ -105,15 +106,16 @@ public class EquipmentController {
 
 		return Mono.just(new ResponseVO<MeterInfoVO>(request, data));
 	}
-	
+
 	@RequestMapping(value = "/other/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : 가스,수도,온수,난방 미터 목록")
-	public Mono<ResponseListVO<Object>> getOtherListData(HttpServletRequest request,
+	public Mono<ResponseListVO<MeterOtherInfoListVO>> getOtherListData(HttpServletRequest request,
 			@RequestParam int estateSeq, @RequestParam int meterType) throws Exception {
 
+		List<MeterOtherInfoListVO> data = equipmentService.getOtherMeterListData(estateSeq, meterType);
 
-		return Mono.just(new ResponseListVO<Object>(request, null));
+		return Mono.just(new ResponseListVO<MeterOtherInfoListVO>(request, data));
 	}
 
 	@RequestMapping(value = "/other/info", method = RequestMethod.GET)
@@ -121,7 +123,6 @@ public class EquipmentController {
 	@Description(value = "설비:장비관리 : 가스,수도,온수,난방 미터 상세정보")
 	public Mono<ResponseVO<Object>> getOtherData(HttpServletRequest request, @RequestParam String meterId)
 			throws Exception {
-
 
 		return Mono.just(new ResponseVO<Object>(request, null));
 	}

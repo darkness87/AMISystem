@@ -22,6 +22,7 @@ import com.cnu.ami.device.equipment.models.DcuInfoVO;
 import com.cnu.ami.device.equipment.models.DcuRegVO;
 import com.cnu.ami.device.equipment.models.MeterInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterInfoVO;
+import com.cnu.ami.device.equipment.models.MeterOtherInfoListVO;
 import com.cnu.ami.device.equipment.service.EquipmentService;
 
 @Service
@@ -137,11 +138,11 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		try {
 			dcuInfoDAO.save(dcuInfoEntity);
-			return 0;	
-		}catch (Exception e) {
+			return 0;
+		} catch (Exception e) {
 			return 1;
 		}
-		
+
 	}
 
 	@Override
@@ -150,13 +151,13 @@ public class EquipmentServiceImpl implements EquipmentService {
 		if (gseq == 0) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "검색 확인 바랍니다.");
 		}
-		
+
 		List<MeterInfoInterfaceVO> meter = meterInfoDAO.getMeterList(gseq);
 
 		if (meter == null) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "조회된 결과가 없습니다.");
 		}
-		
+
 		List<MeterInfoListVO> list = new ArrayList<MeterInfoListVO>();
 		MeterInfoListVO meterInfoListVO = new MeterInfoListVO();
 
@@ -183,7 +184,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Override
 	public MeterInfoVO getMeterData(String meterid) throws Exception {
-		
+
 		if (meterid.length() != 11) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "계량기 번호는 11자리입니다.");
 		}
@@ -193,7 +194,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		if (meter == null) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "Meter ID 정보를 확인해주세요.");
 		}
-		
+
 		MeterInfoVO meterInfoVO = new MeterInfoVO();
 
 		meterInfoVO.setMeterId(meter.getMETERID());
@@ -215,6 +216,32 @@ public class EquipmentServiceImpl implements EquipmentService {
 		meterInfoVO.setUpdateDate(new Date(meter.getUDATE() * 1000));
 
 		return meterInfoVO;
+	}
+
+	@Override
+	public List<MeterOtherInfoListVO> getOtherMeterListData(int gseq, int meterType) throws Exception {
+
+		if (meterType != 1 || meterType != 2 || meterType != 3 || meterType != 4 || meterType != 5) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "계량기 타입이 존재하지 않습니다.");
+		}
+
+		List<MeterOtherInfoListVO> list = new ArrayList<MeterOtherInfoListVO>();
+
+		MeterOtherInfoListVO meterOtherInfoListVO = new MeterOtherInfoListVO();
+
+		for (int i = 0; 10 > i; i++) {
+			meterOtherInfoListVO = new MeterOtherInfoListVO();
+
+			meterOtherInfoListVO.setGatewayId("gateway");
+			meterOtherInfoListVO.setMeterId("meter" + i);
+			meterOtherInfoListVO.setMeterType(meterType);
+			meterOtherInfoListVO.setRegDate(new Date());
+			;
+
+			list.add(meterOtherInfoListVO);
+		}
+
+		return list;
 	}
 
 }
