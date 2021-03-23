@@ -58,9 +58,19 @@ public class BuildingServiceImpl implements BuildingService {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "DCU에 대한 정보가 없습니다.");
 		}
 
+		List<RegionEntity> region = searchRegionDAO.findAll();
+
 		BuildingVO buildingData = new BuildingVO();
 		buildingData.setBuildingName(building.getBName());
 		buildingData.setBuildingSeq(building.getBSeq());
+
+		for (int r = 0; region.size() > r; r++) {
+			if (region.get(r).getRSeq() == estate.getRSeq()) {
+				buildingData.setRegionSeq(region.get(r).getRSeq());
+				buildingData.setRegionName(region.get(r).getRName());
+			}
+		}
+
 		buildingData.setEstategId(estate.getGId());
 		buildingData.setEstateName(estate.getGName());
 		buildingData.setEstateSeq(estate.getGSeq());
@@ -98,6 +108,7 @@ public class BuildingServiceImpl implements BuildingService {
 
 			for (int r = 0; region.size() > r; r++) {
 				if (region.get(r).getRSeq() == data.get(i).getRseq()) {
+					buildingVO.setRegionSeq(region.get(r).getRSeq());
 					buildingVO.setRegionName(region.get(r).getRName());
 				}
 			}

@@ -119,7 +119,7 @@ public class EstateServiceImpl implements EstateService {
 		estateVO.setTelManager2(data.getTelManager2());
 		estateVO.setDcuCount(data.getCntDcu());
 		estateVO.setModemCount(data.getCntModem());
-		estateVO.setModemCount(data.getCntMeter());
+		estateVO.setMeterCount(data.getCntMeter());
 		estateVO.setCheckPower(data.getChkPower());
 		estateVO.setCheckGas(data.getChkGas());
 		estateVO.setCheckWater(data.getChkWater());

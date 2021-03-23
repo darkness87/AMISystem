@@ -147,7 +147,6 @@ public class DcuInfoEntity {
 	private int S_DCU_COVER_STATUS;
 	@Column(name = "S_SYS_SECURITY_STATUS")
 	private int S_SYS_SECURITY_STATUS;
-
 	@Column(name = "S_SYS_RESET")
 	private int S_SYS_RESET;
 	@Column(name = "S_SYS_IP_ADDR_INFO")
@@ -165,12 +164,12 @@ public class DcuInfoEntity {
 	@Column(name = "S_DOWN_BPS_THRESH")
 	private float S_DOWN_BPS_THRESH;
 	@Column(name = "IS_DELETE")
-	private int IS_DELETE;
+	private String IS_DELETE;
 	@Column(name = "WDATE")
 	private long WDATE;
 	@Column(name = "UDATE")
 	private long UDATE;
 	@Column(name = "DSTATUS")
-	private int DSTATUS;
+	private String DSTATUS;
 
 }
