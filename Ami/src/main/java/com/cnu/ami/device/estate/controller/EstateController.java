@@ -19,6 +19,7 @@ import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
+import com.cnu.ami.device.estate.models.EstateListVO;
 import com.cnu.ami.device.estate.models.EstateVO;
 import com.cnu.ami.device.estate.service.EstateService;
 
@@ -45,11 +46,11 @@ public class EstateController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:단지관리 : 단지리스트정보")
-	public Mono<ResponseListVO<EstateVO>> getEstateListData(HttpServletRequest request) throws Exception {
+	public Mono<ResponseListVO<EstateListVO>> getEstateListData(HttpServletRequest request) throws Exception {
 
-		List<EstateVO> data = estateService.getEstateListData();
+		List<EstateListVO> data = estateService.getEstateListData();
 
-		return Mono.just(new ResponseListVO<EstateVO>(request, data));
+		return Mono.just(new ResponseListVO<EstateListVO>(request, data));
 	}
 
 	@RequestMapping(value = "/info", method = RequestMethod.GET)

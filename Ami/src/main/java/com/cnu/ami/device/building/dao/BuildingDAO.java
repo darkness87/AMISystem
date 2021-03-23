@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.cnu.ami.device.building.dao.entity.BuildingEntity;
+import com.cnu.ami.device.building.dao.entity.BuildingHouseCountInterfaceVO;
 import com.cnu.ami.device.building.dao.entity.BuildingInterfaceVO;
 
 @Repository
@@ -30,5 +31,8 @@ public interface BuildingDAO extends JpaRepository<BuildingEntity, Long> { // í‚
 	public List<BuildingInterfaceVO> getBuildingList(@Param("gseq") int gseq);
 
 	public BuildingEntity findBybSeq(int bSeq);
+
+	@Query(value = "SELECT COUNT(*) AS COUNT FROM BUILDING WHERE GSEQ=:gseq", nativeQuery = true)
+	public BuildingHouseCountInterfaceVO getBuildingRegCount(@Param("gseq") int gSeq);
 
 }

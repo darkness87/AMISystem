@@ -21,7 +21,7 @@ public class EstateEntity {
 
 	@Column(name = "RSEQ")
 	private int rSeq;
-	
+
 	@Column(name = "GID")
 	private String gId;
 
@@ -42,7 +42,7 @@ public class EstateEntity {
 
 	@Column(name = "TEL_MANAGER1")
 	private String telManager1;
-	
+
 	@Column(name = "MANAGER2")
 	private String manager2;
 
@@ -75,22 +75,22 @@ public class EstateEntity {
 
 	@Column(name = "DAY_POWER")
 	private int dayPower;
-	
+
 	@Column(name = "DAY_GAS")
 	private int dayGas;
-	
+
 	@Column(name = "DAY_WATER")
 	private int dayWater;
-	
+
 	@Column(name = "DAY_HOT")
 	private int dayHot;
-	
+
 	@Column(name = "DAY_HEATING")
 	private int dayHeating;
-	
+
 	@Column(name = "WDATE")
 	private long wDate;
-	
+
 	@Column(name = "UDATE")
 	private long uDate;
 

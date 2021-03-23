@@ -35,5 +35,7 @@ public class EstateVO {
 	private int dayHeating; // 검침일 난방
 	private Date writeDate; // 등록일
 	private Date updateDate; // 수정일
+	private int buildingRegCount; // 동 등록 수
+	private int houseRegCount; // 호 등록 수
 
 }

@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.ExceptionConst;
 import com.cnu.ami.common.SystemException;
+import com.cnu.ami.device.building.dao.BuildingDAO;
+import com.cnu.ami.device.building.dao.HouseDAO;
+import com.cnu.ami.device.building.dao.entity.BuildingHouseCountInterfaceVO;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
+import com.cnu.ami.device.estate.models.EstateListVO;
 import com.cnu.ami.device.estate.models.EstateVO;
 import com.cnu.ami.device.estate.service.EstateService;
 
@@ -21,7 +25,13 @@ public class EstateServiceImpl implements EstateService {
 	@Autowired
 	private EstateDAO estateDAO;
 
-	public List<EstateVO> getEstateListData() throws Exception {
+	@Autowired
+	private BuildingDAO buildingDAO;
+
+	@Autowired
+	private HouseDAO houseDAO;
+
+	public List<EstateListVO> getEstateListData() throws Exception {
 
 		List<EstateEntity> data = estateDAO.findAll();
 
@@ -29,41 +39,28 @@ public class EstateServiceImpl implements EstateService {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "정보가 없습니다.");
 		}
 
-		List<EstateVO> list = new ArrayList<EstateVO>();
+		List<EstateListVO> list = new ArrayList<EstateListVO>();
 
-		EstateVO estateVO = new EstateVO();
+		EstateListVO estateListVO = new EstateListVO();
 
 		for (int i = 0; data.size() > i; i++) {
-			estateVO = new EstateVO();
+			estateListVO = new EstateListVO();
 
-			estateVO.setEstateSeq(data.get(i).getGSeq());
-			estateVO.setRegionSeq(data.get(i).getRSeq());
-			estateVO.setEstateId(data.get(i).getGId());
-			estateVO.setEstateName(data.get(i).getGName());
-			estateVO.setHouseCount(data.get(i).getCntHouse());
-			estateVO.setAddress(data.get(i).getAddress());
-			estateVO.setTelEstate(data.get(i).getTelGroup());
-			estateVO.setManager1(data.get(i).getManager1());
-			estateVO.setTelManager1(data.get(i).getTelManager1());
-			estateVO.setManager2(data.get(i).getManager2());
-			estateVO.setTelManager2(data.get(i).getTelManager2());
-			estateVO.setDcuCount(data.get(i).getCntDcu());
-			estateVO.setModemCount(data.get(i).getCntModem());
-			estateVO.setMeterCount(data.get(i).getCntMeter());
-			estateVO.setCheckPower(data.get(i).getChkPower());
-			estateVO.setCheckGas(data.get(i).getChkGas());
-			estateVO.setCheckWater(data.get(i).getChkWater());
-			estateVO.setCheckHot(data.get(i).getChkHot());
-			estateVO.setCheckHeating(data.get(i).getChkHeating());
-			estateVO.setDayPower(data.get(i).getDayPower());
-			estateVO.setDayGas(data.get(i).getDayGas());
-			estateVO.setDayWater(data.get(i).getDayWater());
-			estateVO.setDayHot(data.get(i).getDayHot());
-			estateVO.setDayHeating(data.get(i).getDayHeating());
-			estateVO.setWriteDate(new Date(data.get(i).getWDate() * 1000));
-			estateVO.setUpdateDate(new Date(data.get(i).getUDate() * 1000));
+			estateListVO.setEstateSeq(data.get(i).getGSeq());
+			estateListVO.setRegionSeq(data.get(i).getRSeq());
+			estateListVO.setEstateId(data.get(i).getGId());
+			estateListVO.setEstateName(data.get(i).getGName());
+			estateListVO.setHouseCount(data.get(i).getCntHouse());
+			estateListVO.setAddress(data.get(i).getAddress());
+			estateListVO.setCheckPower(data.get(i).getChkPower());
+			estateListVO.setCheckGas(data.get(i).getChkGas());
+			estateListVO.setCheckWater(data.get(i).getChkWater());
+			estateListVO.setCheckHot(data.get(i).getChkHot());
+			estateListVO.setCheckHeating(data.get(i).getChkHeating());
+			estateListVO.setWriteDate(new Date(data.get(i).getWDate() * 1000));
+			estateListVO.setUpdateDate(new Date(data.get(i).getUDate() * 1000));
 
-			list.add(estateVO);
+			list.add(estateListVO);
 		}
 
 		return list;
@@ -107,6 +104,21 @@ public class EstateServiceImpl implements EstateService {
 		estateVO.setDayHeating(data.getDayHeating());
 		estateVO.setWriteDate(new Date(data.getWDate() * 1000));
 		estateVO.setUpdateDate(new Date(data.getUDate() * 1000));
+
+		BuildingHouseCountInterfaceVO buildingCount = buildingDAO.getBuildingRegCount(data.getGSeq());
+		BuildingHouseCountInterfaceVO houseCount = houseDAO.getHouseRegCount(data.getGSeq());
+
+		if (buildingCount == null) {
+			estateVO.setBuildingRegCount(0);
+		} else {
+			estateVO.setBuildingRegCount(buildingCount.getCount());
+		}
+
+		if (houseCount == null) {
+			estateVO.setHouseRegCount(0);
+		} else {
+			estateVO.setHouseRegCount(houseCount.getCount());
+		}
 
 		return estateVO;
 	}
