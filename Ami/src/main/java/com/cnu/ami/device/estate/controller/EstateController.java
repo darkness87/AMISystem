@@ -18,7 +18,6 @@ import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.ResultVO;
-import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.device.estate.models.EstateListVO;
 import com.cnu.ami.device.estate.models.EstateVO;
 import com.cnu.ami.device.estate.service.EstateService;
@@ -67,10 +66,10 @@ public class EstateController {
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:단지관리 : 단지 등록")
-	public Mono<ResponseVO<ResultVO>> setEstateData(HttpServletRequest request, @RequestBody EstateEntity estateEntity)
+	public Mono<ResponseVO<ResultVO>> setEstateData(HttpServletRequest request, @RequestBody EstateVO estateVO)
 			throws Exception {
 
-		int data = estateService.setEstateData(estateEntity);
+		int data = estateService.setEstateData(estateVO);
 
 		ResultVO resultVO = new ResultVO();
 		if (data == 0) {

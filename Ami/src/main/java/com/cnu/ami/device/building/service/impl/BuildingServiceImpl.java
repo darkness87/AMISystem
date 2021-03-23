@@ -19,6 +19,8 @@ import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
 import com.cnu.ami.device.equipment.dao.entity.DcuInfoEntity;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
+import com.cnu.ami.search.dao.SearchRegionDAO;
+import com.cnu.ami.search.dao.entity.RegionEntity;
 
 @Service
 public class BuildingServiceImpl implements BuildingService {
@@ -31,6 +33,9 @@ public class BuildingServiceImpl implements BuildingService {
 
 	@Autowired
 	DcuInfoDAO dcuInfoDAO;
+
+	@Autowired
+	SearchRegionDAO searchRegionDAO;
 
 	@Override
 	public BuildingVO getBulidingData(BuildingVO buildingVO) throws Exception {
@@ -80,8 +85,9 @@ public class BuildingServiceImpl implements BuildingService {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "정보가 없습니다.");
 		}
 
-		List<BuildingVO> list = new ArrayList<BuildingVO>();
+		List<RegionEntity> region = searchRegionDAO.findAll();
 
+		List<BuildingVO> list = new ArrayList<BuildingVO>();
 		BuildingVO buildingVO = new BuildingVO();
 
 		for (int i = 0; data.size() > i; i++) {
@@ -89,6 +95,13 @@ public class BuildingServiceImpl implements BuildingService {
 
 			buildingVO.setBuildingSeq(data.get(i).getBseq());
 			buildingVO.setEstateSeq(data.get(i).getGseq());
+
+			for (int r = 0; region.size() > r; r++) {
+				if (region.get(r).getRSeq() == data.get(i).getRseq()) {
+					buildingVO.setRegionName(region.get(r).getRName());
+				}
+			}
+
 			buildingVO.setBuildingName(data.get(i).getBname());
 			buildingVO.setEstategId(data.get(i).getGid());
 			buildingVO.setEstateName(data.get(i).getGname());

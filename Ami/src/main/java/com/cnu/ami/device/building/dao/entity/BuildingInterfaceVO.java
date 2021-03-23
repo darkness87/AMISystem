@@ -5,6 +5,8 @@ public interface BuildingInterfaceVO {
 	int getBseq();
 
 	int getGseq();
+	
+	int getRseq();
 
 	String getBname();
 

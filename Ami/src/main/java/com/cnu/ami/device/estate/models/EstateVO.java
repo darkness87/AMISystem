@@ -21,7 +21,7 @@ public class EstateVO {
 	private String manager2; // 관리자2
 	private String telManager2; // 관리자2 연락처
 	private int dcuCount; // 설치 DCU 수
-	private int modemCount; // 설치 DCU 수
+	private int modemCount; // 설치 모뎀 수
 	private int meterCount; // 설치 METER 수
 	private String checkPower; // 체크 전기
 	private String checkGas; // 체크 가스

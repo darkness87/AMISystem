@@ -18,6 +18,8 @@ import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.device.estate.models.EstateListVO;
 import com.cnu.ami.device.estate.models.EstateVO;
 import com.cnu.ami.device.estate.service.EstateService;
+import com.cnu.ami.search.dao.SearchRegionDAO;
+import com.cnu.ami.search.dao.entity.RegionEntity;
 
 @Service
 public class EstateServiceImpl implements EstateService {
@@ -31,6 +33,9 @@ public class EstateServiceImpl implements EstateService {
 	@Autowired
 	private HouseDAO houseDAO;
 
+	@Autowired
+	private SearchRegionDAO searchRegionDAO;
+
 	public List<EstateListVO> getEstateListData() throws Exception {
 
 		List<EstateEntity> data = estateDAO.findAll();
@@ -39,8 +44,9 @@ public class EstateServiceImpl implements EstateService {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "정보가 없습니다.");
 		}
 
-		List<EstateListVO> list = new ArrayList<EstateListVO>();
+		List<RegionEntity> region = searchRegionDAO.findAll();
 
+		List<EstateListVO> list = new ArrayList<EstateListVO>();
 		EstateListVO estateListVO = new EstateListVO();
 
 		for (int i = 0; data.size() > i; i++) {
@@ -48,15 +54,37 @@ public class EstateServiceImpl implements EstateService {
 
 			estateListVO.setEstateSeq(data.get(i).getGSeq());
 			estateListVO.setRegionSeq(data.get(i).getRSeq());
+
+			for (int r = 0; region.size() > r; r++) {
+				if (region.get(r).getRSeq() == data.get(i).getRSeq()) {
+					estateListVO.setRegionName(region.get(r).getRName());
+				}
+			}
+
 			estateListVO.setEstateId(data.get(i).getGId());
 			estateListVO.setEstateName(data.get(i).getGName());
 			estateListVO.setHouseCount(data.get(i).getCntHouse());
 			estateListVO.setAddress(data.get(i).getAddress());
-			estateListVO.setCheckPower(data.get(i).getChkPower());
-			estateListVO.setCheckGas(data.get(i).getChkGas());
-			estateListVO.setCheckWater(data.get(i).getChkWater());
-			estateListVO.setCheckHot(data.get(i).getChkHot());
-			estateListVO.setCheckHeating(data.get(i).getChkHeating());
+			estateListVO
+					.setDeviceCount(data.get(i).getCntDcu() + data.get(i).getCntModem() + data.get(i).getCntMeter());
+
+			int count = 0;
+			if (data.get(i).getChkPower().equals("Y")) {
+				count = count + 1;
+			}
+			if (data.get(i).getChkGas().equals("Y")) {
+				count = count + 1;
+			}
+			if (data.get(i).getChkWater().equals("Y")) {
+				count = count + 1;
+			}
+			if (data.get(i).getChkHot().equals("Y")) {
+				count = count + 1;
+			}
+			if (data.get(i).getChkHeating().equals("Y")) {
+				count = count + 1;
+			}
+			estateListVO.setMeteringTypeCount(count);
 			estateListVO.setWriteDate(new Date(data.get(i).getWDate() * 1000));
 			estateListVO.setUpdateDate(new Date(data.get(i).getUDate() * 1000));
 
@@ -124,9 +152,39 @@ public class EstateServiceImpl implements EstateService {
 	}
 
 	@Override
-	public int setEstateData(EstateEntity estateEntity) throws Exception {
+	public int setEstateData(EstateVO estateVO) throws Exception {
 
-		// TODO 중복아이디 체크 필요
+		EstateEntity data = estateDAO.findBygId(estateVO.getEstateId());
+
+		if (data != null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "동일한 단지 ID가 존재합니다.");
+		}
+
+		EstateEntity estateEntity = new EstateEntity();
+
+		estateEntity.setRSeq(estateVO.getRegionSeq());
+		estateEntity.setGId(estateVO.getEstateId());
+		estateEntity.setGName(estateVO.getEstateName());
+		estateEntity.setCntHouse(estateVO.getHouseCount());
+		estateEntity.setAddress(estateVO.getAddress());
+		estateEntity.setTelGroup(estateVO.getTelEstate());
+		estateEntity.setManager1(estateVO.getManager1());
+		estateEntity.setTelManager1(estateVO.getTelManager1());
+		estateEntity.setManager2(estateVO.getManager2());
+		estateEntity.setTelManager2(estateVO.getTelManager2());
+		estateEntity.setCntDcu(estateVO.getDcuCount());
+		estateEntity.setCntModem(estateVO.getModemCount());
+		estateEntity.setCntMeter(estateVO.getMeterCount());
+		estateEntity.setChkPower(estateVO.getCheckPower());
+		estateEntity.setChkGas(estateVO.getCheckGas());
+		estateEntity.setChkWater(estateVO.getCheckWater());
+		estateEntity.setChkHot(estateVO.getCheckHot());
+		estateEntity.setChkHeating(estateVO.getCheckHeating());
+		estateEntity.setDayPower(estateVO.getDayPower());
+		estateEntity.setDayGas(estateVO.getDayGas());
+		estateEntity.setDayWater(estateVO.getDayWater());
+		estateEntity.setDayHot(estateVO.getDayHot());
+		estateEntity.setDayHeating(estateVO.getDayHeating());
 
 		estateEntity.setWDate(new Date().getTime() / 1000);
 		estateEntity.setUDate(new Date().getTime() / 1000);
