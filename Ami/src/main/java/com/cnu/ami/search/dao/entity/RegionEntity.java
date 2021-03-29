@@ -20,6 +20,15 @@ public class RegionEntity {
 
 	@Column(name = "RNAME")
 	private String rName;
+	
+	@Column(name = "NX")
+	private int nx;
+	
+	@Column(name = "NY")
+	private int ny;
+	
+	@Column(name = "RCODE")
+	private long rCode;
 
 	@Column(name = "WDATE")
 	private long wDate;

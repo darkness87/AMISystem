@@ -1,4 +1,4 @@
-package com.cnu.ami.scheduler;
+package com.cnu.ami.scheduler.batch;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OsBatch {
 
 	@SuppressWarnings("restriction")
-	@Scheduled(fixedDelay = 1000 * 60) // TODO
+	@Scheduled(fixedDelay = 1000 * 60 * 5) // TODO
 	public void task() {
 		log.info("===================================================================================");
 		// JVM memory
