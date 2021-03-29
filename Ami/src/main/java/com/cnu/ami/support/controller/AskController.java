@@ -1,7 +1,6 @@
 package com.cnu.ami.support.controller;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.support.models.AskListVO;
 import com.cnu.ami.support.models.AskVO;
 import com.cnu.ami.support.service.AskService;
 
@@ -49,20 +49,21 @@ public class AskController {
 	@RequestMapping(value = "/ask/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "고객지원 : 문의게시판 목록")
-	public Mono<ResponseListVO<AskVO>> getAskListData(HttpServletRequest request, @RequestParam String day,
-			@RequestParam String userid) throws Exception {
+	public Mono<ResponseListVO<AskListVO>> getAskListData(HttpServletRequest request, @RequestParam int gSeq,
+			@RequestParam String ymd, @RequestParam String userId, @RequestParam int askType,
+			@RequestParam String pageSize, @RequestParam String pageNumber) throws Exception {
 
-		List<AskVO> askVO = new ArrayList<AskVO>();
+		List<AskListVO> data = askService.getAskListData(gSeq);
 
-		return Mono.just(new ResponseListVO<AskVO>(request, askVO));
+		return Mono.just(new ResponseListVO<AskListVO>(request, data));
 	}
 
 	@RequestMapping(value = "/ask/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "고객지원 : 문의게시판 상세")
-	public Mono<ResponseVO<AskVO>> getAskData(HttpServletRequest request, @RequestParam String id) throws Exception {
+	public Mono<ResponseVO<AskVO>> getAskData(HttpServletRequest request, @RequestParam long aSeq) throws Exception {
 
-		AskVO askVO = new AskVO();
+		AskVO askVO = askService.getAskData(aSeq);
 
 		return Mono.just(new ResponseVO<AskVO>(request, askVO));
 	}
@@ -83,23 +84,22 @@ public class AskController {
 
 		return null;
 	}
-	
+
 	@RequestMapping(value = "/ask/test/test", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "SSE : SSE 테스트")
 	public Flux<AskVO> getAskTest(HttpServletRequest request) throws Exception {
 
 		AskVO askVO = new AskVO();
-		
-		askVO.setInfo("SSE 테스트");
+
 		askVO.setWriteDate(new Date());
 
-		log.info("{}",askVO);
-		
+		log.info("{}", askVO);
+
 //		return Mono.just(new ResponseVO<AskVO>(request, askVO));
-		
+
 		return Flux.interval(Duration.ofSeconds(15)).map(response -> askVO).log();
-		
+
 	}
 
 }

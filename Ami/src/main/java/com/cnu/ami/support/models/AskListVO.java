@@ -7,19 +7,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AskVO {
+public class AskListVO {
 
 	private long askId;
 	private String userId;
-	private String estateId;
 	private String estateName;
 	private String buildingName;
+	private String regionName;
 	private int askCode;
 	private String askMessage;
-	private String replyMessage;
-	private String causeMessage;
 	private Date writeDate;
-	private Date udateDate;
-	private int status;
 
 }

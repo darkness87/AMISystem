@@ -20,20 +20,14 @@ public class AskEntity {
 	@Column(name = "ASEQ")
 	private long aSeq;
 
-	@Column(name = "USER_ID")
-	private String userId;
-
 	@Column(name = "GSEQ")
 	private int gSeq;
 
-	@Column(name = "GNAME")
-	private String gName;
+	@Column(name = "UID")
+	private String userId;
 
 	@Column(name = "BSEQ")
 	private int bSeq;
-
-	@Column(name = "BNAME")
-	private String bName;
 
 	@Column(name = "DCU_ID")
 	private String info;
@@ -50,10 +44,13 @@ public class AskEntity {
 	@Column(name = "CAUSE_MESSAGE")
 	private String causeMessage;
 
-	@Column(name = "IDATE")
-	private long iDate;
+	@Column(name = "WDATE")
+	private long wDate;
 
 	@Column(name = "UDATE")
 	private long uDate;
+
+	@Column(name = "STATUS")
+	private int status;
 
 }
