@@ -43,31 +43,36 @@ public class EquipmentServiceImpl implements EquipmentService {
 		List<DcuInfoListVO> list = new ArrayList<DcuInfoListVO>();
 		DcuInfoListVO dcuInfoListVO = new DcuInfoListVO();
 
+		List<DcuInfoInterfaceVO> data = null;
+
 		if (gseq == 0) {
-			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "검색 확인 바랍니다.");
+			data = dcuInfoDAO.getDcuList();
 		} else {
-			List<DcuInfoInterfaceVO> data = dcuInfoDAO.getDcuList(gseq);
+			data = dcuInfoDAO.getDcuList(gseq);
+		}
 
-			for (int i = 0; data.size() > i; i++) {
-				dcuInfoListVO = new DcuInfoListVO();
+		if (data == null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "조회된 결과가 없습니다.");
+		}
 
-				dcuInfoListVO.setBuildingSeq(data.get(i).getBSEQ());
-				dcuInfoListVO.setEstateSeq(data.get(i).getGSEQ());
-				dcuInfoListVO.setBuildingName(data.get(i).getBNAME());
-				dcuInfoListVO.setEstateId(data.get(i).getGID());
-				dcuInfoListVO.setEstateName(data.get(i).getGNAME());
-				dcuInfoListVO.setMeterCount(data.get(i).getCNT_METER());
-				dcuInfoListVO.setModemCount(data.get(i).getCNT_MODEM());
-				dcuInfoListVO.setRegionName(data.get(i).getRNAME());
-				dcuInfoListVO.setDcuId(data.get(i).getDID());
-				dcuInfoListVO.setDcuIp(data.get(i).getDCU_IP());
-				dcuInfoListVO.setFepIp(data.get(i).getFEP_IP());
-				dcuInfoListVO.setFirmwareVersion(data.get(i).getFWV());
-				dcuInfoListVO.setSystemState(data.get(i).getS_SYS_STATE());
+		for (int i = 0; data.size() > i; i++) {
+			dcuInfoListVO = new DcuInfoListVO();
 
-				list.add(dcuInfoListVO);
-			}
+			dcuInfoListVO.setBuildingSeq(data.get(i).getBSEQ());
+			dcuInfoListVO.setEstateSeq(data.get(i).getGSEQ());
+			dcuInfoListVO.setBuildingName(data.get(i).getBNAME());
+			dcuInfoListVO.setEstateId(data.get(i).getGID());
+			dcuInfoListVO.setEstateName(data.get(i).getGNAME());
+			dcuInfoListVO.setMeterCount(data.get(i).getCNT_METER());
+			dcuInfoListVO.setModemCount(data.get(i).getCNT_MODEM());
+			dcuInfoListVO.setRegionName(data.get(i).getRNAME());
+			dcuInfoListVO.setDcuId(data.get(i).getDID());
+			dcuInfoListVO.setDcuIp(data.get(i).getDCU_IP());
+			dcuInfoListVO.setFepIp(data.get(i).getFEP_IP());
+			dcuInfoListVO.setFirmwareVersion(data.get(i).getFWV());
+			dcuInfoListVO.setSystemState(data.get(i).getS_SYS_STATE());
 
+			list.add(dcuInfoListVO);
 		}
 
 		return list;
@@ -148,11 +153,13 @@ public class EquipmentServiceImpl implements EquipmentService {
 	@Override
 	public List<MeterInfoListVO> getMeterListData(int gseq) throws Exception {
 
-		if (gseq == 0) {
-			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "검색 확인 바랍니다.");
-		}
+		List<MeterInfoInterfaceVO> meter = null;
 
-		List<MeterInfoInterfaceVO> meter = meterInfoDAO.getMeterList(gseq);
+		if (gseq == 0) {
+			meter = meterInfoDAO.getMeterList();
+		} else {
+			meter = meterInfoDAO.getMeterList(gseq);
+		}
 
 		if (meter == null) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "조회된 결과가 없습니다.");
@@ -221,7 +228,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 	@Override
 	public List<MeterOtherInfoListVO> getOtherMeterListData(int gseq, int meterType) throws Exception {
 
-		if (meterType != 1 || meterType != 2 || meterType != 3 || meterType != 4 || meterType != 5) {
+		// gseq : 0 (전체), meterType : 0 (전체)
+
+		if (meterType >= 6) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "계량기 타입이 존재하지 않습니다.");
 		}
 
@@ -236,12 +245,28 @@ public class EquipmentServiceImpl implements EquipmentService {
 			meterOtherInfoListVO.setMeterId("meter" + i);
 			meterOtherInfoListVO.setMeterType(meterType);
 			meterOtherInfoListVO.setRegDate(new Date());
-			;
 
 			list.add(meterOtherInfoListVO);
 		}
 
 		return list;
+	}
+
+	@Override
+	public MeterOtherInfoListVO getOtherMeterData(String meterId, int meterType) throws Exception {
+
+		if (meterType >= 6) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "계량기 타입이 존재하지 않습니다.");
+		}
+
+		MeterOtherInfoListVO meterOtherInfoListVO = new MeterOtherInfoListVO();
+
+		meterOtherInfoListVO.setGatewayId("gateway");
+		meterOtherInfoListVO.setMeterId(meterId);
+		meterOtherInfoListVO.setMeterType(meterType);
+		meterOtherInfoListVO.setRegDate(new Date());
+
+		return meterOtherInfoListVO;
 	}
 
 }

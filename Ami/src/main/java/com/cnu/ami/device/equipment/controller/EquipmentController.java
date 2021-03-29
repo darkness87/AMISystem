@@ -121,10 +121,12 @@ public class EquipmentController {
 	@RequestMapping(value = "/other/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : 가스,수도,온수,난방 미터 상세정보")
-	public Mono<ResponseVO<Object>> getOtherData(HttpServletRequest request, @RequestParam String meterId)
-			throws Exception {
+	public Mono<ResponseVO<Object>> getOtherData(HttpServletRequest request, @RequestParam String meterId,
+			@RequestParam int meterType) throws Exception {
 
-		return Mono.just(new ResponseVO<Object>(request, null));
+		MeterOtherInfoListVO data = equipmentService.getOtherMeterData(meterId, meterType);
+
+		return Mono.just(new ResponseVO<Object>(request, data));
 	}
 
 }
