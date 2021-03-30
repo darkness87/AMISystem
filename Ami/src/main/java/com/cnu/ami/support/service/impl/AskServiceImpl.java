@@ -15,6 +15,8 @@ import com.cnu.ami.support.dao.AskDAO;
 import com.cnu.ami.support.dao.entity.AskEntity;
 import com.cnu.ami.support.dao.entity.AskInterfaceVO;
 import com.cnu.ami.support.models.AskListVO;
+import com.cnu.ami.support.models.AskSetVO;
+import com.cnu.ami.support.models.AskUpdateVO;
 import com.cnu.ami.support.models.AskVO;
 import com.cnu.ami.support.service.AskService;
 
@@ -92,6 +94,44 @@ public class AskServiceImpl implements AskService {
 		}
 
 		return list;
+	}
+
+	@Override
+	public int setAskData(AskSetVO askSetVO) throws Exception {
+		AskEntity askEntity = new AskEntity();
+
+		askEntity.setGSeq(askSetVO.getEstateSeq());
+		askEntity.setUserId(askSetVO.getUserId());
+		askEntity.setBSeq(askSetVO.getBuildingSeq());
+		askEntity.setDId(askSetVO.getDcuId());
+		askEntity.setAskCode(askSetVO.getAskCode());
+		askEntity.setAskMessage(askSetVO.getAskMessage());
+		askEntity.setReplyMessage(askSetVO.getReplyMessage());
+		askEntity.setCauseMessage(askSetVO.getCauseMessage());
+		askEntity.setWDate(new Date().getTime() / 1000);
+		askEntity.setUDate(new Date().getTime() / 1000);
+		askEntity.setStatus(askSetVO.getStatus());
+
+		try {
+			askDAO.save(askEntity);
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+
+	}
+
+	@Override
+	public int updateAskData(AskUpdateVO askUpdateVO) throws Exception {
+
+		try {
+			askDAO.updateAskData(askUpdateVO.getAskSeq(), askUpdateVO.getReplyMessage(), askUpdateVO.getCauseMessage(),
+					askUpdateVO.getStatus(), new Date().getTime() / 1000);
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+
 	}
 
 }

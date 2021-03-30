@@ -2,7 +2,6 @@ package com.cnu.ami.support.dao.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,7 +15,6 @@ import lombok.Setter;
 public class AskEntity {
 
 	@Id
-	@GeneratedValue // Auto IncId Generator
 	@Column(name = "ASEQ")
 	private long aSeq;
 
@@ -30,7 +28,7 @@ public class AskEntity {
 	private int bSeq;
 
 	@Column(name = "DCU_ID")
-	private String info;
+	private String dId;
 
 	@Column(name = "ASK_CODE")
 	private int askCode;
