@@ -30,11 +30,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class Weather {
-	
+
 	@Autowired
 	SchedulerService schedulerService;
 
-	@Scheduled(cron = "0/60 * * * * *") // 1시간 주기
+	@Scheduled(cron = "0 * * * * *") // 1시간 주기
 	public void task() throws Exception {
 
 		Date date = new Date();
@@ -42,9 +42,9 @@ public class Weather {
 		SimpleDateFormat format2 = new SimpleDateFormat("HH00");
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		
+
 		String time = format2.format(cal.getTime());
-		
+
 		cal.add(Calendar.HOUR, -1); // 1시간전
 
 		String ymd = format1.format(cal.getTime());
@@ -52,36 +52,36 @@ public class Weather {
 
 		List<RegionEntity> data = schedulerService.getRegionData();
 
-		if(data==null) {
+		if (data == null) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "좌표 정보가 없습니다.");
 		}
-		
-		for(int i = 0; data.size()>i;i++) {
+
+		for (int i = 0; data.size() > i; i++) {
 
 			String nx = String.valueOf(data.get(i).getNx());
 			String ny = String.valueOf(data.get(i).getNy());
 
 			String result = getWeatherData(ymd, hm, nx, ny);
-			
+
 			schedulerService.setResultData(data.get(i).getRSeq(), time, result);
-		
+
 		}
-		
-		log.info("weather scheduled End... (Count:{})",data.size());
+
+		log.info("weather scheduled End... (Count:{})", data.size());
 
 	}
 	
 	public String getWeatherData(String ymd, String hm, String nx, String ny) throws Exception {
-		log.info("weather scheduled task : 초단기예보 : {} / {} / {} / {}" , ymd, hm, nx, ny);
-		
+		log.info("weather scheduled task : 초단기예보 : {} / {} / {} / {}", ymd, hm, nx, ny);
+
 		String apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtFcst";
 		String serviceKey = "G%2FFGCoICYRoOQK3Jo14m46nxUnXLIhHLhkan2k9hRUuTBLBxc4XneGo3V0N5ao7CAtBOhOb7HpiLpKgHrRmfuQ%3D%3D";
 		// TODO 추후 운영 계정으로 바꿔야 함 (현재 개인 계정)
-		
+
 		String numOfRows = "100";
 		String pageNo = "1";
 		String dataType = "JSON";
-		
+
 		StringBuilder urlBuilder = new StringBuilder(apiUrl);
 		urlBuilder.append("?" + URLEncoder.encode("ServiceKey","UTF-8") + "="+serviceKey);
         urlBuilder.append("&" + URLEncoder.encode("pageNo","UTF-8") + "=" + URLEncoder.encode(pageNo, "UTF-8")); /*페이지번호*/
@@ -91,14 +91,14 @@ public class Weather {
         urlBuilder.append("&" + URLEncoder.encode("base_time","UTF-8") + "=" + URLEncoder.encode(hm, "UTF-8")); /*06시 발표(정시단위)*/
         urlBuilder.append("&" + URLEncoder.encode("nx","UTF-8") + "=" + URLEncoder.encode(nx, "UTF-8")); /*예보지점의 X 좌표값*/
         urlBuilder.append("&" + URLEncoder.encode("ny","UTF-8") + "=" + URLEncoder.encode(ny, "UTF-8")); /*예보지점 Y 좌표*/
-		
+
 		URL url = new URL(urlBuilder.toString());
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("Content-type", "application/json");
-		log.info("Response code: {}" , conn.getResponseCode());
+		log.info("Response code: {}", conn.getResponseCode());
 		BufferedReader rd;
-		if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+		if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
 			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		} else {
 			rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
@@ -111,10 +111,9 @@ public class Weather {
 		rd.close();
 		conn.disconnect();
 		String result = sb.toString();
-//		log.info("Result : {}", result);
 
 		return result;
 
 	};
-	
+
 }
