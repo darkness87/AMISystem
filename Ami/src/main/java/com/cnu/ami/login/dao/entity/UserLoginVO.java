@@ -51,7 +51,7 @@ public class UserLoginVO implements UserDetails {
 	private String position;
 
 	@Column(name = "LEVEL")
-	private int level;
+	private int level;	// 0:관리자, 1:운영자, 2:사용자
 
 //	@Column(name = "GSEQ")
 //	private String gSeq;

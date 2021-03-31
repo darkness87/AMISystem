@@ -55,10 +55,12 @@ public class LoginServiceImpl implements LoginService {
 
 			List<String> roles = new ArrayList<String>();
 
-			if (userLoginVO.getLevel() == 0) {
-				roles.add("ROLE_ADMIN");
+			if (userLoginVO.getLevel() == 0) { // Level에 따른 ROLE 설정
+				roles.add("ROLE_ADMIN"); // 관리자
 			} else if (userLoginVO.getLevel() == 1) {
-				roles.add("ROLE_USER");
+				roles.add("ROLE_OPER"); // 운영자
+			} else if (userLoginVO.getLevel() == 2) {
+				roles.add("ROLE_USER"); // 사용자
 			} else {
 				throw new SystemException(HttpStatus.FORBIDDEN, ExceptionConst.DB_ERROR, "사용자 레벨이 지정되지 않았습니다.");
 			}
@@ -92,8 +94,8 @@ public class LoginServiceImpl implements LoginService {
 		userLoginVO.setPassword(hashCode);
 
 		Date date = new Date();
-		userLoginVO.setRegDate(date.getTime()/1000); // 등록일시 (현재서버시간)
-		userLoginVO.setUpdateDate(date.getTime()/1000);
+		userLoginVO.setRegDate(date.getTime() / 1000); // 등록일시 (현재서버시간)
+		userLoginVO.setUpdateDate(date.getTime() / 1000);
 
 		try {
 			loginDAO.save(userLoginVO);
@@ -113,10 +115,12 @@ public class LoginServiceImpl implements LoginService {
 
 		List<String> roles = new ArrayList<String>();
 
-		if (userLoginVO.getLevel() == 1) { // Level에 따른 ROLE 설정
-			roles.add("ROLE_ADMIN");
-		} else {
-			roles.add("ROLE_USER");
+		if (userLoginVO.getLevel() == 0) { // Level에 따른 ROLE 설정
+			roles.add("ROLE_ADMIN"); // 관리자
+		} else if (userLoginVO.getLevel() == 1) {
+			roles.add("ROLE_OPER"); // 운영자
+		} else if (userLoginVO.getLevel() == 2) {
+			roles.add("ROLE_USER"); // 사용자
 		}
 
 		userLoginVO.setRoles(roles);
@@ -137,10 +141,13 @@ public class LoginServiceImpl implements LoginService {
 		userInfoVO.setPosition(userLoginVO.getPosition());
 		userInfoVO.setLevel(userLoginVO.getLevel());
 
-		if(userLoginVO.getLevel()==0) {
+		if (userLoginVO.getLevel() == 0) {
 			userInfoVO.setEstateSeq(0);
 			userInfoVO.setEstateName("단지 슈퍼관리자");
-		}else{
+		} else if (userLoginVO.getLevel() == 1) {
+			userInfoVO.setEstateSeq(0);
+			userInfoVO.setEstateName("단지 운영관리자");
+		} else {
 			UserEstateVO userEstateVO = loginDAO.getUserEstate(userLoginVO.getUserid());
 			userInfoVO.setEstateSeq(userEstateVO.getGseq());
 			userInfoVO.setEstateName(userEstateVO.getGname());
@@ -148,7 +155,7 @@ public class LoginServiceImpl implements LoginService {
 			userInfoVO.setRegionSeq(userEstateVO.getRseq());
 			userInfoVO.setRegionName(userEstateVO.getRname());
 		}
-		
+
 		userInfoVO.setRegDate(new Date(userLoginVO.getRegDate() * 1000));
 		userInfoVO.setUpdateDate(new Date(userLoginVO.getUpdateDate() * 1000));
 
@@ -161,12 +168,11 @@ public class LoginServiceImpl implements LoginService {
 		UseridMappingVO userid = loginDAO.findOneByUserid_(userLoginVO.getUserid());
 
 		if (userid == null) {
-			throw new SystemException(HttpStatus.FORBIDDEN, ExceptionConst.ACCESS_DENIED,
-					"존재하지 않는 아이디 입니다.");
+			throw new SystemException(HttpStatus.FORBIDDEN, ExceptionConst.ACCESS_DENIED, "존재하지 않는 아이디 입니다.");
 		}
 
 		Date date = new Date();
-		userLoginVO.setUpdateDate(date.getTime()/1000);
+		userLoginVO.setUpdateDate(date.getTime() / 1000);
 
 		try {
 			loginDAO.save(userLoginVO);
@@ -188,11 +194,14 @@ public class LoginServiceImpl implements LoginService {
 		userInfoVO.setEmail(userLoginVO.getEmail());
 		userInfoVO.setPosition(userLoginVO.getPosition());
 		userInfoVO.setLevel(userLoginVO.getLevel());
-		
-		if(userLoginVO.getLevel()==0) {
+
+		if (userLoginVO.getLevel() == 0) {
 			userInfoVO.setEstateSeq(0);
 			userInfoVO.setEstateName("단지 슈퍼관리자");
-		}else{
+		} else if (userLoginVO.getLevel() == 1) {
+			userInfoVO.setEstateSeq(0);
+			userInfoVO.setEstateName("단지 운영관리자");
+		} else {
 			UserEstateVO userEstateVO = loginDAO.getUserEstate(userLoginVO.getUserid());
 			userInfoVO.setEstateSeq(userEstateVO.getGseq());
 			userInfoVO.setEstateName(userEstateVO.getGname());
@@ -200,7 +209,7 @@ public class LoginServiceImpl implements LoginService {
 			userInfoVO.setRegionSeq(userEstateVO.getRseq());
 			userInfoVO.setRegionName(userEstateVO.getRname());
 		}
-		
+
 		userInfoVO.setRegDate(new Date(userLoginVO.getRegDate() * 1000));
 		userInfoVO.setUpdateDate(new Date(userLoginVO.getUpdateDate() * 1000));
 
