@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.ResponseListVO;
+import com.cnu.ami.metering.info.models.CollectDcuVO;
+import com.cnu.ami.metering.info.models.CollectMeterVO;
 import com.cnu.ami.metering.info.models.RealTimeVO;
 import com.cnu.ami.metering.info.service.InfoService;
 
@@ -36,12 +38,34 @@ public class InfoController {
 	@RequestMapping(value = "/realtime", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "실시간 검침 : 단지별")
-	public Mono<ResponseListVO<RealTimeVO>> getMonthListData(HttpServletRequest request, @RequestParam int estateSeq)
+	public Mono<ResponseListVO<RealTimeVO>> getRealTimeData(HttpServletRequest request, @RequestParam int estateSeq)
 			throws Exception {
 
 		List<RealTimeVO> data = infoService.getRealTimeData(estateSeq);
 
 		return Mono.just(new ResponseListVO<RealTimeVO>(request, data));
+	}
+
+	@RequestMapping(value = "/collection/dcu", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "수집정보 : 단지별 DCU")
+	public Mono<ResponseListVO<CollectDcuVO>> getDcuListData(HttpServletRequest request, @RequestParam int estateSeq)
+			throws Exception {
+
+		List<CollectDcuVO> data = infoService.getDcuData(estateSeq);
+
+		return Mono.just(new ResponseListVO<CollectDcuVO>(request, data));
+	}
+
+	@RequestMapping(value = "/collection/meter", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "수집정보 : 단지별 METER")
+	public Mono<ResponseListVO<CollectMeterVO>> getMeterListData(HttpServletRequest request, @RequestParam String day,
+			@RequestParam String dcuId) throws Exception {
+
+		List<CollectMeterVO> data = infoService.getMeterData(day, dcuId);
+
+		return Mono.just(new ResponseListVO<CollectMeterVO>(request, data));
 	}
 
 }
