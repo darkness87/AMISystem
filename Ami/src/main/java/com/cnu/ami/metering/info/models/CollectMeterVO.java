@@ -18,6 +18,7 @@ public class CollectMeterVO {
 	private int countLp;
 	private int countOn;
 	private int totalLp;
+	private int totalOn;
 	private float rateLp;
 	private float rateOn;
 

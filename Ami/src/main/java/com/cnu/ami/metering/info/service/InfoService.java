@@ -14,4 +14,6 @@ public interface InfoService {
 
 	public List<CollectMeterVO> getMeterData(String day, String dcuId) throws Exception;
 
+	public List<CollectMeterVO> getMeterAggrData(int gseq, String day, String dcuId) throws Exception;
+
 }

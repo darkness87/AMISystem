@@ -60,10 +60,21 @@ public class InfoController {
 	@RequestMapping(value = "/collection/meter", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "수집정보 : 단지별 METER")
-	public Mono<ResponseListVO<CollectMeterVO>> getMeterListData(HttpServletRequest request, @RequestParam String day,
+	public Mono<ResponseListVO<CollectMeterVO>> getMeterListData(HttpServletRequest request, @RequestParam int estateSeq, @RequestParam String day,
 			@RequestParam String dcuId) throws Exception {
 
 		List<CollectMeterVO> data = infoService.getMeterData(day, dcuId);
+
+		return Mono.just(new ResponseListVO<CollectMeterVO>(request, data));
+	}
+	
+	@RequestMapping(value = "/collection/meterAggr", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "수집정보 : 단지별 METER")
+	public Mono<ResponseListVO<CollectMeterVO>> getMeterListAggrData(HttpServletRequest request, @RequestParam int estateSeq, @RequestParam String day,
+			@RequestParam String dcuId) throws Exception {
+
+		List<CollectMeterVO> data = infoService.getMeterAggrData(estateSeq, day, dcuId);
 
 		return Mono.just(new ResponseListVO<CollectMeterVO>(request, data));
 	}
