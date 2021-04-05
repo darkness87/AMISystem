@@ -3,6 +3,7 @@ package com.cnu.ami.support.dao.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -11,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@IdClass(AskPk.class)
 @Table(name = "ASK")
 public class AskEntity {
 
@@ -18,9 +20,11 @@ public class AskEntity {
 	@Column(name = "ASEQ")
 	private long aSeq;
 
+	@Id
 	@Column(name = "GSEQ")
 	private int gSeq;
 
+	@Id
 	@Column(name = "UID")
 	private String userId;
 
