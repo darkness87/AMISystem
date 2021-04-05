@@ -35,7 +35,7 @@ public class WeatherEntity {
 	private int PTY; // 0: 없음, 1: 비, 2: 비/눈(진눈개비), 3: 눈, 4: 소나기, 5: 빗방울, 6: 빗방울/눈날림, 7: 눈날림
 
 	@Column(name = "RN1") // 1시간 강수량 (mm)
-	private int RN1;
+	private float RN1;
 
 	@Column(name = "SKY") // 하늘상태
 	private int SKY; // 1: 맑음, 3: 구름많음, 4: 흐림

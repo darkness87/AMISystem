@@ -80,7 +80,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 				} else if (category.toString().replaceAll("\"", "").equals("PTY")) {
 					weatherEntity.setPTY(Integer.valueOf(value.toString().replaceAll("\"", "")));
 				} else if (category.toString().replaceAll("\"", "").equals("RN1")) {
-					weatherEntity.setRN1(Integer.valueOf(value.toString().replaceAll("\"", "")));
+					weatherEntity.setRN1(Float.valueOf(value.toString().replaceAll("\"", "")));
 				} else if (category.toString().replaceAll("\"", "").equals("SKY")) {
 					weatherEntity.setSKY(Integer.valueOf(value.toString().replaceAll("\"", "")));
 				} else if (category.toString().replaceAll("\"", "").equals("T1H")) {
