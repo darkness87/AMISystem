@@ -1,0 +1,12 @@
+package com.cnu.ami.failure.code.service;
+
+import java.util.List;
+
+import com.cnu.ami.failure.code.models.CodeValueVO;
+
+public interface CodeService {
+
+	public List<CodeValueVO> getDataList(int gseq, String dcuId, String startDay, String endDay, int statusCode)
+			throws Exception;
+
+}

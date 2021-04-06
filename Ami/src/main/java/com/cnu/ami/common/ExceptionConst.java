@@ -45,25 +45,25 @@ public class ExceptionConst {
 
 	// 중복 (7xx)
 	public static final int DUPLICATION = 701;
-	
-	// LOGIC
-	public static final int RSA_NO_SUCH_ALGORITHM = 1401;
-	public static final int RSA_INVALID_KEY_SPEC = 1402;
-	public static final int RSA_ENCRYPTION_ERROR = 1403;
-	public static final int RSA_DECRYPTION_ERROR = 1404;
 
-	// VALIDATION (15xx)
-	public static final int VALIDATION_COMMON = 1500;
-	public static final int VALIDATION_PARAMETER = 1501;
-	public static final int VALIDATION_MEMBER = 1502;
-	public static final int VALIDATION_DATE = 1503;
-	public static final int VALIDATION_WORK_END = 1504;
-	public static final int VALIDATION_LP_DAT = 1505;
+	// LOGIC (8xx)
+	public static final int RSA_NO_SUCH_ALGORITHM = 801;
+	public static final int RSA_INVALID_KEY_SPEC = 802;
+	public static final int RSA_ENCRYPTION_ERROR = 803;
+	public static final int RSA_DECRYPTION_ERROR = 804;
 
-	// DB (20xx)
-	public static final int DB_COMMIT_FAILURE = 2000;
-	public static final int TRANSACTION_WAS_NOT_STARTED = 2001;
-	public static final int DB_NULL = 2002;
-	public static final int DB_ERROR = 2099;
+	// VALIDATION (11xx)
+	public static final int VALIDATION_COMMON = 1100;
+	public static final int VALIDATION_PARAMETER = 1101;
+	public static final int VALIDATION_MEMBER = 1102;
+	public static final int VALIDATION_DATE = 1103;
+	public static final int VALIDATION_WORK_END = 1104;
+	public static final int VALIDATION_LP_DAT = 1105;
+
+	// DB (12xx)
+	public static final int DB_COMMIT_FAILURE = 1200;
+	public static final int TRANSACTION_WAS_NOT_STARTED = 1201;
+	public static final int DB_NULL = 1202;
+	public static final int DB_ERROR = 1299;
 
 }

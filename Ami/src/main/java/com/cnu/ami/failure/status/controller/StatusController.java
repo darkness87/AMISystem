@@ -21,7 +21,7 @@ import com.cnu.ami.common.ResponseVO;
 import reactor.core.publisher.Mono;
 
 /**
- * 장애 상태코드
+ * 네트워크 상태코드
  * @author sookwon
  * @apiNote status api
  */
@@ -35,7 +35,7 @@ public class StatusController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "장애:상태관리 : 리스트정보")
+	@Description(value = "장애:네트워크 상태관리 : 리스트정보")
 	public Mono<ResponseListVO<Object>> getTestListData(HttpServletRequest request) throws Exception {
 
 		List<Object> data = new ArrayList<Object>();
@@ -45,7 +45,7 @@ public class StatusController {
 
 	@RequestMapping(value = "/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "장애:상태관리 : 상세정보")
+	@Description(value = "장애:네트워크 상태관리 : 상세정보")
 	public Mono<ResponseVO<Object>> getTestData(HttpServletRequest request, @RequestParam String id) throws Exception {
 
 		Object data = new Object();
