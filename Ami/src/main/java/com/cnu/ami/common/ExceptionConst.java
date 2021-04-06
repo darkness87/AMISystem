@@ -9,13 +9,13 @@ package com.cnu.ami.common;
 public class ExceptionConst {
 	// STATUS
 	public static final int SUCCESS = 0;
-	public static final int FAIL = 999;
-	public static final int NULL_EXCEPTION = 9999;
+	public static final int FAIL = 99;
+	public static final int NULL_EXCEPTION = 999;
 
-	// SYSTEM (0~199)
-	public static final int SESSION_EXPIRED = 20;
-	public static final int ACCESS_DENIED = 31;
-	public static final int AUTHENTICATION_NEEDED = 32;
+	// SYSTEM (1xx)
+	public static final int SESSION_EXPIRED = 120;
+	public static final int ACCESS_DENIED = 131;
+	public static final int AUTHENTICATION_NEEDED = 132;
 	public static final int INVALID_LOGINID = 101;
 	public static final int INVALID_PASSWORD = 102;
 	public static final int UNREGISTERED_USER = 103;
@@ -37,15 +37,15 @@ public class ExceptionConst {
 	public static final int PROPERTIES_READ_FAIL = 305;
 	public static final int PROPERTIES_WRITE_FAIL = 306;
 
-	// SXSSF (Excel)
-	public static final int EXCEL_FILE_NOT_FOUND = 351;
-
 	// NETWORK (5xx)
 	public static final int UNKNOWN_HOST = 501;
 
 	// COMMON (6xx)
 	public static final int COMMON_JSON_PARSING_FAIL = 601;
 
+	// 중복 (7xx)
+	public static final int DUPLICATION = 701;
+	
 	// LOGIC
 	public static final int RSA_NO_SUCH_ALGORITHM = 1401;
 	public static final int RSA_INVALID_KEY_SPEC = 1402;

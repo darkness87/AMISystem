@@ -157,7 +157,7 @@ public class EstateServiceImpl implements EstateService {
 		EstateEntity data = estateDAO.findBygId(estateVO.getEstateId());
 
 		if (data != null) {
-			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "동일한 단지 ID가 존재합니다.");
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.DUPLICATION, "동일한 단지 ID가 존재합니다.");
 		}
 
 		EstateEntity estateEntity = new EstateEntity();
