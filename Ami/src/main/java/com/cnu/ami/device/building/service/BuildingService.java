@@ -8,7 +8,7 @@ public interface BuildingService {
 
 	public BuildingVO getBulidingData(BuildingVO buildingVO) throws Exception;
 
-	public List<BuildingVO> getBuildingListData(int gseq) throws Exception;
+	public List<BuildingVO> getBuildingListData(int rseq, int gseq) throws Exception;
 
 	public int setBulidingData(BuildingVO buildingVO) throws Exception;
 

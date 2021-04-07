@@ -5,7 +5,7 @@ public interface BuildingInterfaceVO {
 	int getBseq();
 
 	int getGseq();
-	
+
 	int getRseq();
 
 	String getBname();
@@ -17,5 +17,7 @@ public interface BuildingInterfaceVO {
 	String getDid();
 
 	int getS_Sys_State();
+
+	String getRname();
 
 }

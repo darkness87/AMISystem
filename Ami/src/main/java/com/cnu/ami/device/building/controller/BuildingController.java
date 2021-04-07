@@ -44,10 +44,10 @@ public class BuildingController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동 리스트정보")
-	public Mono<ResponseListVO<BuildingVO>> getBuildingListData(HttpServletRequest request, @RequestParam int estateSeq)
+	public Mono<ResponseListVO<BuildingVO>> getBuildingListData(HttpServletRequest request, @RequestParam int regionSeq, @RequestParam int estateSeq)
 			throws Exception {
 
-		List<BuildingVO> data = buildingService.getBuildingListData(estateSeq);
+		List<BuildingVO> data = buildingService.getBuildingListData(regionSeq,estateSeq);
 
 		return Mono.just(new ResponseListVO<BuildingVO>(request, data));
 	}

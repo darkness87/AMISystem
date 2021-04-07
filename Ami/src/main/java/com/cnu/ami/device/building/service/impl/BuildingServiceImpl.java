@@ -22,6 +22,10 @@ import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.search.dao.SearchRegionDAO;
 import com.cnu.ami.search.dao.entity.RegionEntity;
 
+import jdk.internal.jline.internal.Log;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class BuildingServiceImpl implements BuildingService {
 
@@ -81,12 +85,14 @@ public class BuildingServiceImpl implements BuildingService {
 	}
 
 	@Override
-	public List<BuildingVO> getBuildingListData(int gseq) throws Exception {
+	public List<BuildingVO> getBuildingListData(int rseq, int gseq) throws Exception {
 
 		List<BuildingInterfaceVO> data = new ArrayList<BuildingInterfaceVO>();
 
-		if (gseq == 0) {
+		if (rseq == 0 && gseq == 0) {
 			data = buildingDAO.getBuildingList();
+		} else if (rseq != 0 && gseq == 0) {
+			data = buildingDAO.getBuildingRegionList(rseq);
 		} else {
 			data = buildingDAO.getBuildingList(gseq);
 		}
@@ -95,7 +101,7 @@ public class BuildingServiceImpl implements BuildingService {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "정보가 없습니다.");
 		}
 
-		List<RegionEntity> region = searchRegionDAO.findAll();
+//		List<RegionEntity> region = searchRegionDAO.findAll();
 
 		List<BuildingVO> list = new ArrayList<BuildingVO>();
 		BuildingVO buildingVO = new BuildingVO();
@@ -106,12 +112,15 @@ public class BuildingServiceImpl implements BuildingService {
 			buildingVO.setBuildingSeq(data.get(i).getBseq());
 			buildingVO.setEstateSeq(data.get(i).getGseq());
 
-			for (int r = 0; region.size() > r; r++) {
-				if (region.get(r).getRSeq() == data.get(i).getRseq()) {
-					buildingVO.setRegionSeq(region.get(r).getRSeq());
-					buildingVO.setRegionName(region.get(r).getRName());
-				}
-			}
+			buildingVO.setRegionSeq(data.get(i).getRseq());
+			buildingVO.setRegionName(data.get(i).getRname());
+
+//			for (int r = 0; region.size() > r; r++) {
+//				if (region.get(r).getRSeq() == data.get(i).getRseq()) {
+//					buildingVO.setRegionSeq(region.get(r).getRSeq());
+//					buildingVO.setRegionName(region.get(r).getRName());
+//				}
+//			}
 
 			buildingVO.setBuildingName(data.get(i).getBname());
 			buildingVO.setEstategId(data.get(i).getGid());
