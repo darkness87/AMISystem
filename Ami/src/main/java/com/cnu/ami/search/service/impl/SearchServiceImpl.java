@@ -43,10 +43,6 @@ public class SearchServiceImpl implements SearchService {
 		List<RegionVO> list = new ArrayList<RegionVO>();
 		RegionVO regionVO = new RegionVO();
 
-		regionVO.setRegionSeq(0);
-		regionVO.setRegionName("전체");
-		list.add(regionVO);
-
 		for (int i = 0; data.size() > i; i++) {
 			regionVO = new RegionVO();
 			regionVO.setRegionSeq(data.get(i).getRSeq());
