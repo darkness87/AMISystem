@@ -16,9 +16,9 @@ import com.cnu.ami.dashboard.models.WeatherVO;
 public interface DashBoardService {
 
 	// DashBoard
-	public UseDayHourAllVO getElectricUseDayHourAll() throws Exception;
+	public ResponseVO<UseDayHourAllVO> getElectricUseDayHourAll(HttpServletRequest request) throws Exception;
 
-	public RateVO getElectricMeterReadingRateDayAll() throws Exception;
+	public ResponseVO<RateVO> getElectricMeterReadingRateDayAll(HttpServletRequest request) throws Exception;
 
 	public FailureAllVO getElectricFailureDayHourAll() throws Exception;
 
@@ -28,13 +28,10 @@ public interface DashBoardService {
 
 	public List<DashBoardMapVO> getLocationFailureMapInfo() throws Exception;
 
-	public ServerManagementVO getServerManagementInfo() throws Exception;
+	public ResponseVO<ServerManagementVO> getServerManagementInfo(HttpServletRequest request) throws Exception;
 
 	public List<DeviceRegVO> getElectricRegistrationDevice() throws Exception;
 
 	public Object getLocationUseList() throws Exception;
 
-	public ResponseVO<RateVO> getFluxElectricMeterReadingRateDayAll(HttpServletRequest request) throws Exception;
-
-	public ResponseVO<ServerManagementVO> getFluxServerManagementInfo(HttpServletRequest request) throws Exception;
 }

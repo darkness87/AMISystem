@@ -49,14 +49,25 @@ public class DashBoardController {
 	@Autowired
 	PropertyData propertyData;
 
-	@RequestMapping(value = "/useAll/dayhour", method = RequestMethod.GET)
+	@RequestMapping(value = "/useAll/dayhour", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 전국전력사용량")
-	public Mono<ResponseVO<UseDayHourAllVO>> getElectricUseDayHourAll(HttpServletRequest request,
-			@RequestParam String day) throws Exception {
-		UseDayHourAllVO data = dashBoardService.getElectricUseDayHourAll();
+	public Flux<ResponseVO<UseDayHourAllVO>> getElectricUseDayHourAll(HttpServletRequest request,
+			@RequestParam int duration) throws Exception {
 
-		return Mono.just(new ResponseVO<UseDayHourAllVO>(request, data));
+		if (duration == 0) { // 0일 경우 1회 전달
+			return Flux.just(dashBoardService.getElectricUseDayHourAll(request));
+		} else {
+
+			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
+				try {
+					return dashBoardService.getElectricUseDayHourAll(request);
+				} catch (Exception e) {
+					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
+				}
+			}).log();
+		}
+
 	}
 
 	@RequestMapping(value = "/readingrateAll/dayOne", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -64,27 +75,24 @@ public class DashBoardController {
 	@Description(value = "현황판 : 검침률")
 	public Flux<ResponseVO<RateVO>> getElectricMeterReadingRateDayAll(HttpServletRequest request,
 			@RequestParam int duration) throws Exception {
-//		RateVO data = dashBoardService.getFluxElectricMeterReadingRateDayAll(request);
-//		return Mono.just(new ResponseVO<RateVO>(request, data));
-		if (duration == 0) { // 0일 경우 디폴트 15초
-			duration = 15;
+		if (duration == 0) { // 0일 경우 1회 전달
+			return Flux.just(dashBoardService.getElectricMeterReadingRateDayAll(request));
+		} else {
+			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
+				try {
+					return dashBoardService.getElectricMeterReadingRateDayAll(request);
+				} catch (Exception e) {
+					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
+				}
+			}).log();
 		}
-
-		return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
-			try {
-				return dashBoardService.getFluxElectricMeterReadingRateDayAll(request);
-			} catch (Exception e) {
-				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
-			}
-		});
 
 	}
 
 	@RequestMapping(value = "/failureAll/dayhour", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 금일 장애")
-	public Mono<ResponseVO<FailureAllVO>> getElectricFailureDayHourAll(HttpServletRequest request,
-			@RequestParam String day) throws Exception {
+	public Mono<ResponseVO<FailureAllVO>> getElectricFailureDayHourAll(HttpServletRequest request) throws Exception {
 		FailureAllVO data = dashBoardService.getElectricFailureDayHourAll();
 
 		return Mono.just(new ResponseVO<FailureAllVO>(request, data));
@@ -122,8 +130,6 @@ public class DashBoardController {
 	@Description(value = "현황판 : 서버운영정보")
 	public Flux<ResponseVO<ServerManagementVO>> getServerManagementInfo(HttpServletRequest request,
 			@RequestParam int duration) throws Exception {
-//		ServerManagementVO data = dashBoardService.getServerManagementInfo();
-//		return Mono.just(new ResponseVO<ServerManagementVO>(request, data));
 
 		if (duration == 0) { // 0일 경우 디폴트 15초
 			duration = 15;
@@ -131,7 +137,7 @@ public class DashBoardController {
 
 		return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 			try {
-				return dashBoardService.getFluxServerManagementInfo(request);
+				return dashBoardService.getServerManagementInfo(request);
 			} catch (Exception e) {
 				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 			}
@@ -158,45 +164,45 @@ public class DashBoardController {
 		return Mono.just(new ResponseVO<Object>(request, data));
 	}
 
-	@RequestMapping(value = "/sse/test/test", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "SSE : SSE 테스트")
-	public Flux<RateVO> getSSETest(HttpServletRequest request) throws Exception {
-
-		RateVO data = dashBoardService.getElectricMeterReadingRateDayAll();
-
-		return Flux.interval(Duration.ofSeconds(15)).map(response -> data).log();
-
-	}
-
-	@RequestMapping(value = "/sse/test/test2", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "SSE : SSE 테스트2")
-	public Flux<RateVO> getSSETest2(HttpServletRequest request) throws Exception {
-
-		return Flux.interval(Duration.ofSeconds(15)).map(response -> {
-			try {
-				return dashBoardService.getElectricMeterReadingRateDayAll();
-			} catch (Exception e) {
-				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
-			}
-		}).log();
-
-	}
-
-	@RequestMapping(value = "/sse/test/test3", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "SSE : SSE 테스트3")
-	public Flux<ResponseVO<RateVO>> getSSETest3(HttpServletRequest request) throws Exception {
-
-		return Flux.interval(Duration.ofSeconds(15)).map(response -> {
-			try {
-				return dashBoardService.getFluxElectricMeterReadingRateDayAll(request);
-			} catch (Exception e) {
-				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
-			}
-		}).log();
-
-	}
+//	@RequestMapping(value = "/sse/test/test", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+//	@ResponseStatus(value = HttpStatus.OK)
+//	@Description(value = "SSE : SSE 테스트")
+//	public Flux<RateVO> getSSETest(HttpServletRequest request) throws Exception {
+//
+//		RateVO data = dashBoardService.getElectricMeterReadingRateDayAll();
+//
+//		return Flux.interval(Duration.ofSeconds(15)).map(response -> data).log();
+//
+//	}
+//
+//	@RequestMapping(value = "/sse/test/test2", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+//	@ResponseStatus(value = HttpStatus.OK)
+//	@Description(value = "SSE : SSE 테스트2")
+//	public Flux<RateVO> getSSETest2(HttpServletRequest request) throws Exception {
+//
+//		return Flux.interval(Duration.ofSeconds(15)).map(response -> {
+//			try {
+//				return dashBoardService.getElectricMeterReadingRateDayAll();
+//			} catch (Exception e) {
+//				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
+//			}
+//		}).log();
+//
+//	}
+//
+//	@RequestMapping(value = "/sse/test/test3", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+//	@ResponseStatus(value = HttpStatus.OK)
+//	@Description(value = "SSE : SSE 테스트3")
+//	public Flux<ResponseVO<RateVO>> getSSETest3(HttpServletRequest request) throws Exception {
+//
+//		return Flux.interval(Duration.ofSeconds(15)).map(response -> {
+//			try {
+//				return dashBoardService.getFluxElectricMeterReadingRateDayAll(request);
+//			} catch (Exception e) {
+//				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
+//			}
+//		}).log();
+//
+//	}
 
 }

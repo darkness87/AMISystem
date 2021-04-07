@@ -3,21 +3,29 @@ package com.cnu.ami.dashboard.service.impl;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.stereotype.Service;
 
+import com.cnu.ami.common.CnuAggregationOperation;
+import com.cnu.ami.common.CollectionNameFormat;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.dashboard.dao.document.DayRateTemp;
+import com.cnu.ami.dashboard.dao.document.UseDayHourTemp;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
-import com.cnu.ami.dashboard.models.RateSubVO;
 import com.cnu.ami.dashboard.models.RateVO;
 import com.cnu.ami.dashboard.models.ServerManagementVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllListVO;
@@ -29,6 +37,9 @@ import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
 import com.cnu.ami.device.equipment.dao.ModemInfoDAO;
 import com.sun.management.OperatingSystemMXBean;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class DashBoardServiceImpl implements DashBoardService {
 
@@ -41,49 +52,158 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Autowired
 	private ModemInfoDAO modemInfoDAO;
 
+	@Autowired
+	MongoTemplate mongoTemplate;
+
 	@Override
-	public UseDayHourAllVO getElectricUseDayHourAll() throws Exception {
+	public ResponseVO<UseDayHourAllVO> getElectricUseDayHourAll(HttpServletRequest request) throws Exception {
+
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		String today = dateFormat.format(cal.getTime());
+
+		cal.add(Calendar.DATE, -1);
+
+		String yesterday = dateFormat.format(cal.getTime());
+
+		log.info("{},{}", today, yesterday);
+
+		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+		String collectionName = collectionNameFormat.formatDcu(today);
+
+		String[] jsonRawString = { String.format("{ $match: { '$or':[{'day':'%s'},{'day':'%s'}] } }", today, yesterday)
+//				  String.format("{ $match: { 'day':'%s' } }", today)
+				, String.format("{ $unwind: { path: '$mids' } }"),
+				String.format("{ $unwind: { path: '$mids.v',includeArrayIndex:'hour' } }"),
+				"{ $group: { _id: {'day':'$day','hour':'$hour'} ,sum:{ '$sum':'$mids.v' } } }",
+				"{ $project: { day: '$_id.day', hour: '$_id.hour', sum: '$sum' } }",
+				"{ $sort: { '_id.day':1, '_id.hour':1 } }" };
+
+		Aggregation aggregation = Aggregation.newAggregation(
+				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[3])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[4])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[5])));
+
+		AggregationResults<UseDayHourTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+				UseDayHourTemp.class);
+
+		log.info("{}", result.getRawResults());
+
+		List<UseDayHourTemp> data = result.getMappedResults();
+
+		log.info("size : {}", data.size());
 
 		UseDayHourAllVO useDayHourAllVO = new UseDayHourAllVO();
 
-		useDayHourAllVO.setUseAll(123456.789f);
-		useDayHourAllVO.setDate(new Date());
-		useDayHourAllVO.setType("electric , 임시값");
-
-		// DB에서 실 데이터 가져와야함
-		List<UseDayHourAllListVO> list = new ArrayList<UseDayHourAllListVO>();
+		List<UseDayHourAllListVO> todaylist = new ArrayList<UseDayHourAllListVO>();
+		List<UseDayHourAllListVO> yesterdaylist = new ArrayList<UseDayHourAllListVO>();
 		UseDayHourAllListVO useDayHourAllListVO = new UseDayHourAllListVO();
 
-		for (int i = 1; i < 25; i++) {
-			useDayHourAllListVO = new UseDayHourAllListVO();
-			useDayHourAllListVO.setTime(i);
-			useDayHourAllListVO.setUse(789.123f);
+		for (int i = 0; i < data.size(); i++) {
 
-			list.add(useDayHourAllListVO);
+			if (i == 24 || i == 49) { // 중간 사이값 삭제 // 전일에서 금일 사이 중복 값
+				log.info("i continue : {}", i);
+				continue;
+			}
+
+			log.info("i : {}, {}, {}", i, data.get(i).getHour(), data.get(i).getSum());
+
+			useDayHourAllListVO = new UseDayHourAllListVO();
+
+			if (data.get(i).getDay().equals(today)) {
+				useDayHourAllListVO.setTime(data.get(i).getHour());
+				if (data.get(i + 1).getSum() == 0) {
+					useDayHourAllListVO.setUse(0);
+				} else {
+					useDayHourAllListVO.setUse(data.get(i + 1).getSum() - data.get(i).getSum());
+				}
+
+				todaylist.add(useDayHourAllListVO);
+			} else if (data.get(i).getDay().equals(yesterday)) {
+				useDayHourAllListVO.setTime(data.get(i).getHour());
+				if (data.get(i + 1).getSum() == 0) {
+					useDayHourAllListVO.setUse(0);
+				} else {
+					useDayHourAllListVO.setUse(data.get(i + 1).getSum() - data.get(i).getSum());
+				}
+
+				yesterdaylist.add(useDayHourAllListVO);
+			}
 		}
 
-		useDayHourAllVO.setArrayData(list);
+		int sumUse = 0;
+		for (UseDayHourAllListVO sum : todaylist) {
+			sumUse = sum.getUse() + sumUse;
+		}
 
-		return useDayHourAllVO;
+		useDayHourAllVO.setTodayUseAll(sumUse);
+		useDayHourAllVO.setDay(today);
+		useDayHourAllVO.setType("electric");
+
+		useDayHourAllVO.setTodayData(todaylist);
+		useDayHourAllVO.setYesterdayData(yesterdaylist);
+
+		return new ResponseVO<UseDayHourAllVO>(request, useDayHourAllVO);
 	}
 
 	@Override
-	public RateVO getElectricMeterReadingRateDayAll() throws Exception {
+	public ResponseVO<RateVO> getElectricMeterReadingRateDayAll(HttpServletRequest request) throws Exception {
+
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		String today = dateFormat.format(cal.getTime());
+
+		cal.add(Calendar.DATE, -1);
+
+		String yesterday = dateFormat.format(cal.getTime());
+
+		log.info("{},{}", today, yesterday);
+
+		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+		String collectionName = collectionNameFormat.formatDcu(today);
+
+		String[] jsonRawString = {
+				String.format("{$match: { $or: [ { day: '%s' }, { day: '%s' } ] }}", today, yesterday),
+				"{$group: { _id: '$day', on: { $sum: '$cntOn' }, lp: { $sum: '$cntLp' }, total: { $sum: '$cntTotal' } }}",
+				"{$sort: { _id: 1 }}" };
+
+		Aggregation aggregation = Aggregation.newAggregation(
+				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
+
+		AggregationResults<DayRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+				DayRateTemp.class);
+
+		log.info("{}", result.getRawResults());
+
+		List<DayRateTemp> data = result.getMappedResults();
 
 		RateVO rateVO = new RateVO();
-		RateSubVO rate = new RateSubVO();
 
-		Random random = new Random();
+		for (DayRateTemp rate : data) {
+			if (rate.get_id().equals(today)) {
+				rateVO.setTodayMeterReadingRate((Float.valueOf(rate.getLp()) / rate.getTotal()) * 100f);
+				rateVO.setTodayTimelyRate((Float.valueOf(rate.getOn()) / rate.getTotal()) * 100f);
+			} else if (rate.get_id().equals(yesterday)) {
+				rateVO.setYesterdayMeterReadingRate((Float.valueOf(rate.getLp()) / rate.getTotal()) * 100f);
+				rateVO.setYesterdayTimelyRate((Float.valueOf(rate.getOn()) / rate.getTotal()) * 100f);
+			}
+		}
 
-		rateVO.setMeterReadingRate(random.nextFloat() * 100);
-		rateVO.setResponsibility(random.nextFloat() * 100);
+		log.info("{},{},{},{}", rateVO.getTodayMeterReadingRate(), rateVO.getTodayTimelyRate(),
+				rateVO.getYesterdayMeterReadingRate(), rateVO.getYesterdayTimelyRate());
 
-		rate.setTodayRate(random.nextFloat() * 100);
-		rate.setYesterdayRate(random.nextFloat() * 100);
-
-		rateVO.setRate(rate);
-
-		return rateVO;
+		return new ResponseVO<RateVO>(request, rateVO);
 	}
 
 	@Override
@@ -174,7 +294,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 	@SuppressWarnings("restriction")
 	@Override
-	public ServerManagementVO getServerManagementInfo() throws Exception {
+	public ResponseVO<ServerManagementVO> getServerManagementInfo(HttpServletRequest request) throws Exception {
 
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -200,7 +320,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 		serverManagementVO.setJvmTotal(String.format("%.3f", (double) heapSize / gb));
 		serverManagementVO.setJvmMax(String.format("%.3f", (double) heapMaxSize / gb));
 
-		return serverManagementVO;
+		return new ResponseVO<ServerManagementVO>(request, serverManagementVO);
 	}
 
 	@Override
@@ -239,57 +359,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 	public Object getLocationUseList() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public ResponseVO<RateVO> getFluxElectricMeterReadingRateDayAll(HttpServletRequest request) throws Exception {
-
-		RateVO rateVO = new RateVO();
-		RateSubVO rate = new RateSubVO();
-
-		Random random = new Random();
-
-		rateVO.setMeterReadingRate(random.nextFloat() * 100);
-		rateVO.setResponsibility(random.nextFloat() * 100);
-
-		rate.setTodayRate(random.nextFloat() * 100);
-		rate.setYesterdayRate(random.nextFloat() * 100);
-
-		rateVO.setRate(rate);
-
-		return new ResponseVO<RateVO>(request, rateVO);
-
-	}
-
-	@SuppressWarnings("restriction")
-	@Override
-	public ResponseVO<ServerManagementVO> getFluxServerManagementInfo(HttpServletRequest request) throws Exception {
-
-		Date date = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		ServerManagementVO serverManagementVO = new ServerManagementVO();
-
-		// JVM memory
-		float gb = 1024 * 1024 * 1024;
-		long heapSize = Runtime.getRuntime().totalMemory();
-		long heapMaxSize = Runtime.getRuntime().maxMemory();
-		long heapFreeSize = Runtime.getRuntime().freeMemory();
-		long heapUseSize = heapSize - heapFreeSize;
-
-		// OS
-		OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-
-		serverManagementVO.setDate(dateFormat.format(date));
-		serverManagementVO.setOsCpu(String.format("%.3f", osBean.getSystemCpuLoad() * 100));
-		serverManagementVO.setOsMemory(
-				String.format("%.3f", ((osBean.getTotalPhysicalMemorySize() - osBean.getFreePhysicalMemorySize()) / gb)
-						/ (osBean.getTotalPhysicalMemorySize() / gb) * 100));
-		serverManagementVO.setJvmUsed(String.format("%.3f", (double) heapUseSize / gb));
-		serverManagementVO.setJvmFree(String.format("%.3f", (double) heapFreeSize / gb));
-		serverManagementVO.setJvmTotal(String.format("%.3f", (double) heapSize / gb));
-		serverManagementVO.setJvmMax(String.format("%.3f", (double) heapMaxSize / gb));
-
-		return new ResponseVO<ServerManagementVO>(request, serverManagementVO);
 	}
 
 }
