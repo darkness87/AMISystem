@@ -22,10 +22,6 @@ import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.search.dao.SearchRegionDAO;
 import com.cnu.ami.search.dao.entity.RegionEntity;
 
-import jdk.internal.jline.internal.Log;
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 public class BuildingServiceImpl implements BuildingService {
 
