@@ -11,7 +11,8 @@ public class DcuRegVO {
 
 	private String dcuId; // DCU ID
 	private String dcuIp; // DCU IP
-	private Date regDate; // DCU 등록(설치)일자
+	private String routerIp; // 라우터 IP
+	private Date installDate; // DCU 등록(설치)일자
 	private float latitude; // 위도
 	private float longitude; // 경도
 

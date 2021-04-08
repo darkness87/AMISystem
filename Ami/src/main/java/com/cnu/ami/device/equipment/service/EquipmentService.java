@@ -16,6 +16,8 @@ public interface EquipmentService {
 	public DcuInfoVO getDcuData(String did) throws Exception;
 
 	public int setDcuData(DcuRegVO dcuRegVO) throws Exception;
+	
+	public int setDcuDelete(String did) throws Exception;
 
 	public List<MeterInfoListVO> getMeterListData(int gseq) throws Exception;
 

@@ -1,5 +1,7 @@
 package com.cnu.ami.device.equipment.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +27,7 @@ import com.cnu.ami.device.equipment.models.MeterInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterInfoVO;
 import com.cnu.ami.device.equipment.models.MeterOtherInfoListVO;
 import com.cnu.ami.device.equipment.service.EquipmentService;
+import com.cnu.network.client.fep.CnuComm;
 
 import reactor.core.publisher.Mono;
 
@@ -85,6 +88,24 @@ public class EquipmentController {
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
+	@RequestMapping(value = "/dcu/delete", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU 삭제")
+	public Mono<ResponseVO<ResultVO>> deleteDCUData(HttpServletRequest request, @RequestParam String dcuId)
+			throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+		int data = equipmentService.setDcuDelete(dcuId);
+
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
 	@RequestMapping(value = "/meter/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : METER 목록")
@@ -127,6 +148,25 @@ public class EquipmentController {
 		MeterOtherInfoListVO data = equipmentService.getOtherMeterData(meterId, meterType);
 
 		return Mono.just(new ResponseVO<Object>(request, data));
+	}
+
+	@RequestMapping(value = "/test/dcu/setting", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU 설정")
+	public Mono<ResponseVO<ResultVO>> setDcuCommSet(HttpServletRequest request) throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		// TODO // 서버의 시간을 클라이언트에게 제공하고 사용자는 시간확인 후 설정 요청 이상시 수정필요
+		CnuComm comm = new CnuComm("CNU_TEST_1", "192.168.123.208"); // DCU ID, DCU IP
+		boolean bool = comm.setDcuTime(dateFormat.format(date));
+
+		resultVO.setResult(bool);
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
 }

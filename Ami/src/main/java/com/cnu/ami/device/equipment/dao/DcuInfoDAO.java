@@ -36,5 +36,7 @@ public interface DcuInfoDAO extends JpaRepository<DcuInfoEntity, String> { // í‚
 			+ "LEFT JOIN BUILDING_DCU_MAP AS D\r\n" + "ON C.DID=D.DID) BB\r\n"
 			+ "ON AA.BSEQ=BB.BSEQ", nativeQuery = true)
 	public List<DcuInfoInterfaceVO> getDcuList(@Param("gseq") int gseq);
+	
+	public void deleteByDID(String did);
 
 }

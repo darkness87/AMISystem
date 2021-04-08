@@ -151,6 +151,18 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
+	public int setDcuDelete(String did) throws Exception {
+
+		try {
+			dcuInfoDAO.deleteByDID(did);
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+
+	}
+
+	@Override
 	public List<MeterInfoListVO> getMeterListData(int gseq) throws Exception {
 
 		List<MeterInfoInterfaceVO> meter = null;
