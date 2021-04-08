@@ -22,11 +22,11 @@ public class WeatherEntity {
 
 	@Id
 	@Column(name = "FCST_DATE") // 예측일자
-	private String fcstDate;
+	private String FCSTDATE;
 
 	@Id
 	@Column(name = "FCST_TIME") // 예측시간
-	private String fcstTime;
+	private String FCSTTIME;
 
 	@Column(name = "LGT") // 낙뢰
 	private int LGT; // 0: 없음, 1: 있음
@@ -62,9 +62,9 @@ public class WeatherEntity {
 	private long WDATE;
 
 	@Column(name = "BASE_DATE") // 발표일자
-	private String baseDate;
+	private String BASEDATE;
 
 	@Column(name = "BASE_TIME") // 발표시간
-	private String baseTime;
+	private String BASETIME;
 
 }

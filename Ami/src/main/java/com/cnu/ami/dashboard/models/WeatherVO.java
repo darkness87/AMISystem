@@ -10,10 +10,7 @@ import lombok.Setter;
 public class WeatherVO {
 
 	private float temperature;
-	private float maxTemperature;
-	private float minTemperature;
 	private String location;
 	private int codeValue;
 	private Date date;
-	private String describe;
 }

@@ -8,4 +8,5 @@ import com.cnu.ami.scheduler.dao.entity.WeatherEntity;
 @Repository
 public interface WeatherDAO extends JpaRepository<WeatherEntity, Long> {
 
+	WeatherEntity findFirstByRSEQAndFCSTDATEOrderByFCSTTIMEDesc(long rseq, String fcstDate);
 }

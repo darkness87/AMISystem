@@ -9,7 +9,7 @@ public class WeatherPk implements Serializable {
 	private static final long serialVersionUID = -1662347560528354547L;
 
 	private long RSEQ;
-	private String fcstDate;
-	private String fcstTime;
+	private String FCSTDATE;
+	private String FCSTTIME;
 
 }

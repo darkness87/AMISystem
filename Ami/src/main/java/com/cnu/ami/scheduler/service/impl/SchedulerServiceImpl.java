@@ -70,10 +70,10 @@ public class SchedulerServiceImpl implements SchedulerService {
 //						+ " : " + value.toString().replaceAll("\"", ""));
 
 				weatherEntity.setRSEQ(rseq);
-				weatherEntity.setBaseDate(baseDate.toString().replaceAll("\"", ""));
-				weatherEntity.setBaseTime(baseTime.toString().replaceAll("\"", ""));
-				weatherEntity.setFcstDate(fcstDate.toString().replaceAll("\"", ""));
-				weatherEntity.setFcstTime(fcstTime.toString().replaceAll("\"", ""));
+				weatherEntity.setBASEDATE(baseDate.toString().replaceAll("\"", ""));
+				weatherEntity.setBASETIME(baseTime.toString().replaceAll("\"", ""));
+				weatherEntity.setFCSTDATE(fcstDate.toString().replaceAll("\"", ""));
+				weatherEntity.setFCSTTIME(fcstTime.toString().replaceAll("\"", ""));
 
 				if (category.toString().replaceAll("\"", "").equals("LGT")) {
 					weatherEntity.setLGT(Integer.valueOf(value.toString().replaceAll("\"", "")));

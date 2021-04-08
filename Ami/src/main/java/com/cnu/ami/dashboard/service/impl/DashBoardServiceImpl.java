@@ -35,6 +35,10 @@ import com.cnu.ami.dashboard.service.DashBoardService;
 import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
 import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
 import com.cnu.ami.device.equipment.dao.ModemInfoDAO;
+import com.cnu.ami.device.server.dao.ServerDAO;
+import com.cnu.ami.device.server.dao.entity.ServerRegionIneterfaceVO;
+import com.cnu.ami.scheduler.dao.WeatherDAO;
+import com.cnu.ami.scheduler.dao.entity.WeatherEntity;
 import com.sun.management.OperatingSystemMXBean;
 
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +55,12 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 	@Autowired
 	private ModemInfoDAO modemInfoDAO;
+	
+	@Autowired
+	private ServerDAO serverDAO;
+	
+	@Autowired
+	private WeatherDAO weatherDAO;
 
 	@Autowired
 	MongoTemplate mongoTemplate;
@@ -93,11 +103,11 @@ public class DashBoardServiceImpl implements DashBoardService {
 		AggregationResults<UseDayHourTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
 				UseDayHourTemp.class);
 
-		log.info("{}", result.getRawResults());
+//		log.info("{}", result.getRawResults());
 
 		List<UseDayHourTemp> data = result.getMappedResults();
 
-		log.info("size : {}", data.size());
+//		log.info("size : {}", data.size());
 
 		UseDayHourAllVO useDayHourAllVO = new UseDayHourAllVO();
 
@@ -108,11 +118,11 @@ public class DashBoardServiceImpl implements DashBoardService {
 		for (int i = 0; i < data.size(); i++) {
 
 			if (i == 24 || i == 49) { // 중간 사이값 삭제 // 전일에서 금일 사이 중복 값
-				log.info("i continue : {}", i);
+//				log.info("i continue : {}", i);
 				continue;
 			}
 
-			log.info("i : {}, {}, {}", i, data.get(i).getHour(), data.get(i).getSum());
+//			log.info("i : {}, {}, {}", i, data.get(i).getHour(), data.get(i).getSum());
 
 			useDayHourAllListVO = new UseDayHourAllListVO();
 
@@ -184,7 +194,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 		AggregationResults<DayRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
 				DayRateTemp.class);
 
-		log.info("{}", result.getRawResults());
+//		log.info("{}", result.getRawResults());
 
 		List<DayRateTemp> data = result.getMappedResults();
 
@@ -199,9 +209,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 				rateVO.setYesterdayTimelyRate((Float.valueOf(rate.getOn()) / rate.getTotal()) * 100f);
 			}
 		}
-
-		log.info("{},{},{},{}", rateVO.getTodayMeterReadingRate(), rateVO.getTodayTimelyRate(),
-				rateVO.getYesterdayMeterReadingRate(), rateVO.getYesterdayTimelyRate());
 
 		return new ResponseVO<RateVO>(request, rateVO);
 	}
@@ -235,15 +242,31 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Override
 	public WeatherVO getWeatherRealtimeAll() throws Exception {
 
+		// 서버 위치로 사용 : 판교
+		ServerRegionIneterfaceVO region = serverDAO.findBySSEQ(1); // WAS/WEB 서버 SSEQ : 1
+		
+		log.info("{}",region.getRSEQ());
+		
+		// TODO 지역 정보 가져오기 - 지역명
+		
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		String today = dateFormat.format(cal.getTime());
+		
+		WeatherEntity data = weatherDAO.findFirstByRSEQAndFCSTDATEOrderByFCSTTIMEDesc(region.getRSEQ(),today);
+		
 		WeatherVO weatherVO = new WeatherVO();
 
-		weatherVO.setTemperature(10);
-		weatherVO.setMaxTemperature(13);
-		weatherVO.setMinTemperature(3);
-		weatherVO.setLocation("성남시");
-		weatherVO.setCodeValue(0); // 0:맑음, 1:약간흐림, 2:흐림, 3:비, 4:눈, 5:천둥/번개 => 재확인후 결정
-		weatherVO.setDate(new Date());
-		weatherVO.setDescribe("날씨 : 맑음");
+		weatherVO.setTemperature(data.getT1H());
+		weatherVO.setLocation("판교"); // 지역명 가지고오기
+		weatherVO.setCodeValue(data.getSKY()); // 0:맑음, 1:약간흐림, 2:흐림, 3:비, 4:눈, 5:천둥/번개 => 재확인후 결정
+		
+		cal.set(Integer.valueOf(data.getFCSTDATE().substring(0, 4)), Integer.valueOf(data.getFCSTDATE().substring(4, 6))-1, Integer.valueOf(data.getFCSTDATE().substring(6, 8)),
+				Integer.valueOf(data.getFCSTTIME().substring(0, 2)), Integer.valueOf(data.getFCSTTIME().substring(2, 4)),0);
+		
+		weatherVO.setDate(cal.getTime());
 
 		return weatherVO;
 	}
@@ -256,7 +279,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 		weatherVO.setLocation("성남시");
 		weatherVO.setCodeValue(0); // 0:좋음, 1:보통, 2:나쁨 => 재확인후 결정
 		weatherVO.setDate(new Date());
-		weatherVO.setDescribe("데이터 날씨 : 아주 좋아요");
 
 		return weatherVO;
 
