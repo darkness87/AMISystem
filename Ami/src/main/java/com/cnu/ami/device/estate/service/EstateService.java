@@ -12,5 +12,9 @@ public interface EstateService {
 	public EstateVO getEstateData(String gId) throws Exception;
 
 	public int setEstateData(EstateVO estateVO) throws Exception;
+	
+	public int setEstateUpdate(EstateVO estateVO) throws Exception;
+	
+	public int setEstateDelete(int estateSeq) throws Exception;
 
 }

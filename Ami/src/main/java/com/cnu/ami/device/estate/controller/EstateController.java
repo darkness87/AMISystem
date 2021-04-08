@@ -80,5 +80,41 @@ public class EstateController {
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
+	
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:단지관리 : 단지 수정")
+	public Mono<ResponseVO<ResultVO>> updateEstateData(HttpServletRequest request, @RequestBody EstateVO estateVO)
+			throws Exception {
+
+		int data = estateService.setEstateUpdate(estateVO);
+
+		ResultVO resultVO = new ResultVO();
+		if (data == 0) {
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+	
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:단지관리 : 단지 삭제")
+	public Mono<ResponseVO<ResultVO>> deleteEstateData(HttpServletRequest request, @RequestParam int estateSeq)
+			throws Exception {
+
+		int data = estateService.setEstateDelete(estateSeq);
+		
+		ResultVO resultVO = new ResultVO();
+		if (data == 0) {
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
 
 }

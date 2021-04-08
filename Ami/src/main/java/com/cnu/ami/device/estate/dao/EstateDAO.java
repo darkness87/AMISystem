@@ -12,4 +12,6 @@ public interface EstateDAO extends JpaRepository<EstateEntity, String> { // 키 
 
 	public EstateEntity findBygSeq(int gSeq);
 	
+	public void deleteBygSeq(int gSeq);
+	
 }

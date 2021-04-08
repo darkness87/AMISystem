@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -191,6 +193,58 @@ public class EstateServiceImpl implements EstateService {
 
 		try {
 			estateDAO.saveAndFlush(estateEntity);
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+
+	}
+
+	@Transactional
+	@Override
+	public int setEstateUpdate(EstateVO estateVO) throws Exception {
+		EstateEntity estateEntity = new EstateEntity();
+
+		estateEntity.setGSeq(estateVO.getEstateSeq());
+		estateEntity.setRSeq(estateVO.getRegionSeq());
+		estateEntity.setGId(estateVO.getEstateId());
+		estateEntity.setGName(estateVO.getEstateName());
+		estateEntity.setCntHouse(estateVO.getHouseCount());
+		estateEntity.setAddress(estateVO.getAddress());
+		estateEntity.setTelGroup(estateVO.getTelEstate());
+		estateEntity.setManager1(estateVO.getManager1());
+		estateEntity.setTelManager1(estateVO.getTelManager1());
+		estateEntity.setManager2(estateVO.getManager2());
+		estateEntity.setTelManager2(estateVO.getTelManager2());
+		estateEntity.setCntDcu(estateVO.getDcuCount());
+		estateEntity.setCntModem(estateVO.getModemCount());
+		estateEntity.setCntMeter(estateVO.getMeterCount());
+		estateEntity.setChkPower(estateVO.getCheckPower());
+		estateEntity.setChkGas(estateVO.getCheckGas());
+		estateEntity.setChkWater(estateVO.getCheckWater());
+		estateEntity.setChkHot(estateVO.getCheckHot());
+		estateEntity.setChkHeating(estateVO.getCheckHeating());
+		estateEntity.setDayPower(estateVO.getDayPower());
+		estateEntity.setDayGas(estateVO.getDayGas());
+		estateEntity.setDayWater(estateVO.getDayWater());
+		estateEntity.setDayHot(estateVO.getDayHot());
+		estateEntity.setDayHeating(estateVO.getDayHeating());
+		estateEntity.setUDate(new Date().getTime() / 1000);
+
+		try {
+			estateDAO.saveAndFlush(estateEntity);
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+	}
+
+	@Transactional
+	@Override
+	public int setEstateDelete(int estateSeq) throws Exception {
+
+		try {
+			estateDAO.deleteBygSeq(estateSeq);
 			return 0;
 		} catch (Exception e) {
 			return 1;
