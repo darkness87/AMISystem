@@ -19,6 +19,6 @@ public class BuildingDcuMappingEntity {
 	private String dId;
 
 	@Column(name = "BSEQ")
-	private int bSeq;
+	private int BSEQ;
 
 }

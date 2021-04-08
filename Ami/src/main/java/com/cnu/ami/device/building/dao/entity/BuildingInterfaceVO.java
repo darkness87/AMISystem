@@ -16,7 +16,7 @@ public interface BuildingInterfaceVO {
 
 	String getDid();
 
-	int getS_Sys_State();
+	String getS_Sys_State();
 
 	String getRname();
 

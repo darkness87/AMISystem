@@ -57,7 +57,7 @@ public class AskServiceImpl implements AskService {
 		if (estateEntity == null) {
 			askVO.setBuildingName("");
 		} else {
-			askVO.setBuildingName(buildingEntity.getBName());
+			askVO.setBuildingName(buildingEntity.getBNAME());
 		}
 
 		askVO.setAskCode(askEntity.getAskCode());

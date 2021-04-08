@@ -19,6 +19,7 @@ import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.device.building.models.BuildingVO;
+import com.cnu.ami.device.building.models.DcuStatusVO;
 import com.cnu.ami.device.building.service.BuildingService;
 
 import reactor.core.publisher.Mono;
@@ -76,6 +77,69 @@ public class BuildingController {
 
 		ResultVO resultVO = new ResultVO();
 		int data = buildingService.setBulidingData(buildingVO);
+
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+	
+	@RequestMapping(value = "/namecheck", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:동관리 : 동명 체크")
+	public Mono<ResponseVO<ResultVO>> getBuildingCheck(HttpServletRequest request, @RequestParam int estateSeq,
+			@RequestParam String buildingName) throws Exception {
+
+		int data = buildingService.getBuildNameCheck(estateSeq,buildingName);
+
+		ResultVO resultVO = new ResultVO();
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+		
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+	
+	@RequestMapping(value = "/dcucheck", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:동관리 : DCU ID 체크")
+	public Mono<ResponseVO<DcuStatusVO>> getDcuCheck(HttpServletRequest request, @RequestParam String dcuId) throws Exception {
+
+		DcuStatusVO data = buildingService.getDcuIdCheck(dcuId);
+
+		return Mono.just(new ResponseVO<DcuStatusVO>(request, data));
+	}
+	
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:동관리 : 동 수정")
+	public Mono<ResponseVO<ResultVO>> updateBuildingDcuData(HttpServletRequest request, @RequestBody BuildingVO buildingVO)
+			throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+		int data = buildingService.setBulidingDcuData(buildingVO);
+
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+	
+	@RequestMapping(value = "/delete", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:동관리 : 동 삭제")
+	public Mono<ResponseVO<ResultVO>> deleteBuildingDcuMapp(HttpServletRequest request, @RequestParam String dcuId, @RequestParam int buildingSeq) throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+		int data = buildingService.setBuildingDelete(dcuId,buildingSeq);
 
 		if (data == 0) { // 0: Success , 1: Fail
 			resultVO.setResult(true);
