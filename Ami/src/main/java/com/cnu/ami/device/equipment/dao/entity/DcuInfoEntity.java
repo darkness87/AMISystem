@@ -32,7 +32,7 @@ public class DcuInfoEntity {
 	@Column(name = "MAC_C")
 	private String MAC_C;
 	@Column(name = "ITIME")
-	private int ITIME;
+	private long ITIME;
 	@Column(name = "FWV")
 	private String FWV;
 	@Column(name = "WAN_CODE")
@@ -171,5 +171,11 @@ public class DcuInfoEntity {
 	private long UDATE;
 	@Column(name = "DSTATUS")
 	private String DSTATUS;
+	@Column(name = "LAT")
+	private float LAT;
+	@Column(name = "LON")
+	private float LON;
+	@Column(name = "ROUTER_IP")
+	private String ROUTER_IP;
 
 }

@@ -15,7 +15,7 @@ public class DcuInfoVO {
 	private String macA; // 마스터 모뎀 A 맥어드레스
 	private String macB; // 마스터 모뎀 B 맥어드레스
 	private String macC; // 마스터 모뎀 C 맥어드레스
-	private int iTime; // DCU 현재 시각
+	private long iTime; // DCU 현재 시각
 	private String firmwareVersion; // DCU FIRMWARE VERSION
 	private int wanCode; // 간성망 분류 코드 (1:HFC, 2:OPTICAL, 3:LTE)
 	private int commCode; // 인입망 통신기술 분류코드 (1:HS-PLC, 2:HPGP, 3:WI-SUN, 4:ZIGBEE)
@@ -40,7 +40,6 @@ public class DcuInfoVO {
 	private int gTypeTimePeriod; // G-type 전력량계 시간확인 주기 (Default 0x0F, 15분)
 	private int eaTypeTimePeriod; // Ea-type 전력량계 시간확인 주기 (Default 0x0F, 15분)
 	private int cpuReset; // CPU 자동 reset 기능 활성화/비활성화
-	
 	
 	private String PNID; // 콘솔 무선 모듈의 PNID
 	private String ACODE_RO; // 인증권한 코드 (READ ONLY)
@@ -76,7 +75,6 @@ public class DcuInfoVO {
 	private int S_DCU_COVER_STATUS; // DCU Cover 개폐상태 // 0 : OPEN , 1 : CLOSED
 	private int S_SYS_SECURITY_STATUS; // SNMP Agent 암복호화 기능 상태 // 0 : 정상 , 1 : DCU 보안키 Not Found , 2 : 암호모듈 초기화 실패, 3 : 암호모듈 연동 실패 , 4 : 암호화 실패 , 5 : 복호화 실패 , 6 : 기타(정의되지 않는 오류)
 	
-	
 	private int S_SYS_RESET; // DCU의 프로세스를 리셋하거나 DCU 자체를 Rebooting // 0 : Normal, 1 : All Reset (DCU의 검침 Agent와 SNMP Agent의 프로세스를 kill한 후 다시 시작함), 2 : 검침 Agent만 Reset, 3 : SNMP Agnet만 Reset, 4 : Reboot (DCU의 OS를 리부팅함)
 	private String S_SYS_IP_ADDR_INFO; // DCU 아이피 정보 // ex> 192.168.100.100
 	private String S_SYS_TRAP_RECV_INFO; // DCU SNMP Trap 수신서버 정보 // ex>192.168.100.100:162 (Manager Ip : Port)
@@ -89,5 +87,8 @@ public class DcuInfoVO {
 	private long WDATE; // 등록시각
 	private long UDATE; // 수정시각
 	private int DSTATUS; // 
+	
+	private float latitude; // 위도
+	private float longitude; // 경도
 
 }

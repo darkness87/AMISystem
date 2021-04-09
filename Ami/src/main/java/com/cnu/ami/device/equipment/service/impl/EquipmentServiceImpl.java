@@ -125,6 +125,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 			dcuInfoVO.setGTypeTimePeriod(dcu.getGM_TIME_P());
 			dcuInfoVO.setEaTypeTimePeriod(dcu.getEAM_TIME_P());
 			dcuInfoVO.setCpuReset(dcu.getCPU_RESET());
+			dcuInfoVO.setLatitude(dcu.getLAT());
+			dcuInfoVO.setLongitude(dcu.getLON());
 
 		}
 
@@ -138,6 +140,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		dcuInfoEntity.setDID(dcuRegVO.getDcuId());
 		dcuInfoEntity.setDCU_IP(dcuRegVO.getDcuIp());
+		dcuInfoEntity.setLAT(dcuRegVO.getLatitude());
+		dcuInfoEntity.setLON(dcuRegVO.getLongitude());
+		dcuInfoEntity.setITIME(dcuRegVO.getInstallDate().getTime() / 1000);
 		dcuInfoEntity.setWDATE(new Date().getTime() / 1000);
 		dcuInfoEntity.setUDATE(new Date().getTime() / 1000);
 

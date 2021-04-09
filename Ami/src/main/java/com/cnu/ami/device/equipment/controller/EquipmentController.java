@@ -168,20 +168,21 @@ public class EquipmentController {
 		return Mono.just(new ResponseVO<Object>(request, data));
 	}
 
-	@RequestMapping(value = "/test/dcu/setting", method = RequestMethod.GET)
+	@RequestMapping(value = "/test/dcu/setting/{request}", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 설정")
-	public Mono<ResponseVO<ResultVO>> setDcuCommSet(HttpServletRequest request) throws Exception {
+	public Mono<ResponseVO<ResultVO>> setDcuCommSet(HttpServletRequest request, @RequestParam String dcuId, @RequestParam String dcuIp) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+		
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		// TODO
 		// Service 단에서 구현 하도록 변경
 		// 서버의 시간을 클라이언트에게 제공하고 사용자는 시간확인 후 설정 요청 이상시 수정필요
-		CnuComm comm = new CnuComm("CNU_TEST_1", "192.168.123.208"); // DCU ID, DCU IP
+		
 		boolean bool = comm.setDcuTime(dateFormat.format(date));
 
 		resultVO.setResult(bool);
