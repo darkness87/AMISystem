@@ -96,7 +96,7 @@ public class SearchServiceImpl implements SearchService {
 		for (int i = 0; data.size() > i; i++) {
 			buildingVO = new BuildingVO();
 
-			buildingVO.setBuildingSeq(data.get(i).getBSeq());
+			buildingVO.setBuildingSeq(data.get(i).getBSEQ());
 			buildingVO.setBuildingName(data.get(i).getBNAME());
 
 			list.add(buildingVO);

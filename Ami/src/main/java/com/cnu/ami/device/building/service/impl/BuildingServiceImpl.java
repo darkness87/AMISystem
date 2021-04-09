@@ -73,7 +73,7 @@ public class BuildingServiceImpl implements BuildingService {
 
 		BuildingVO buildingData = new BuildingVO();
 		buildingData.setBuildingName(building.getBNAME());
-		buildingData.setBuildingSeq(building.getBSeq());
+		buildingData.setBuildingSeq(building.getBSEQ());
 
 		for (int r = 0; region.size() > r; r++) {
 			if (region.get(r).getRSeq() == estate.getRSeq()) {
@@ -152,9 +152,9 @@ public class BuildingServiceImpl implements BuildingService {
 	public int setBulidingData(BuildingVO buildingVO) throws Exception {
 
 		BuildingEntity buildingEntity = new BuildingEntity();
-		buildingEntity.setGSeq(buildingVO.getEstateSeq());
+		buildingEntity.setGSEQ(buildingVO.getEstateSeq());
 		buildingEntity.setBNAME(buildingVO.getBuildingName().toUpperCase());
-		buildingEntity.setWDate(new Date().getTime() / 1000);
+		buildingEntity.setWDATE(new Date().getTime() / 1000);
 
 		try {
 			buildingDAO.save(buildingEntity);
@@ -170,10 +170,10 @@ public class BuildingServiceImpl implements BuildingService {
 	public int setBulidingDcuData(BuildingVO buildingVO) throws Exception {
 
 		BuildingEntity buildingEntity = new BuildingEntity();
-		buildingEntity.setBSeq(buildingVO.getBuildingSeq());
-		buildingEntity.setGSeq(buildingVO.getEstateSeq());
+		buildingEntity.setBSEQ(buildingVO.getBuildingSeq());
+		buildingEntity.setGSEQ(buildingVO.getEstateSeq());
 		buildingEntity.setBNAME(buildingVO.getBuildingName().toUpperCase());
-		buildingEntity.setWDate(new Date().getTime() / 1000);
+		buildingEntity.setWDATE(new Date().getTime() / 1000);
 
 		try {
 			buildingDAO.save(buildingEntity);
@@ -199,7 +199,7 @@ public class BuildingServiceImpl implements BuildingService {
 
 		buildingName = buildingName.toUpperCase();
 
-		BuildingEntity data = buildingDAO.findFirstBygSeqAndBNAME(gseq, buildingName);
+		BuildingEntity data = buildingDAO.findFirstByGSEQAndBNAME(gseq, buildingName);
 
 		if (data == null) {
 			return 1;
@@ -210,6 +210,36 @@ public class BuildingServiceImpl implements BuildingService {
 		} else {
 			return 1;
 		}
+
+	}
+
+	@Override
+	public int getBuildNameCheck(int bseq, int gseq, String buildingName) throws Exception {
+
+		// 1. buildingSeq로 함께 조회할시 현재 시점의 동명 , 2. 기존과 동일한 동명 조회, 3. 동명을 바꾸자고 했을때 1,2번에
+		// 해당안되고 수정가능한 응답 받는거
+
+		buildingName = buildingName.toUpperCase();
+
+		BuildingEntity dataSeq = buildingDAO.findFirstByBSEQAndGSEQAndBNAME(bseq, gseq, buildingName);
+
+		BuildingEntity data = buildingDAO.findFirstByGSEQAndBNAME(gseq, buildingName);
+
+		// TODO
+		int i = 1;
+		if (dataSeq != null) {
+			if (dataSeq.getBNAME().equals(buildingName)) {
+				i = 1;
+			}
+		}
+
+		if (data != null) {
+			if (data.getBNAME().equals(buildingName)) {
+				i = 0;
+			}
+		}
+
+		return i;
 
 	}
 

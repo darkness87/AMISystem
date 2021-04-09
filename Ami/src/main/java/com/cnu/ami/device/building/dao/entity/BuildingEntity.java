@@ -18,16 +18,16 @@ public class BuildingEntity {
 
 	@Id
 	@Column(name = "BSEQ")
-	private int bSeq;
+	private int BSEQ;
 
 	@Id
 	@Column(name = "GSEQ")
-	private int gSeq;
+	private int GSEQ;
 
 	@Column(name = "BNAME")
 	private String BNAME;
 
 	@Column(name = "WDATE")
-	private long wDate;
+	private long WDATE;
 
 }

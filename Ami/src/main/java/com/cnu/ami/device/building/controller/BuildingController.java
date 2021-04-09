@@ -90,11 +90,16 @@ public class BuildingController {
 	@RequestMapping(value = "/namecheck", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동명 체크")
-	public Mono<ResponseVO<ResultVO>> getBuildingCheck(HttpServletRequest request, @RequestParam int estateSeq,
+	public Mono<ResponseVO<ResultVO>> getBuildingCheck(HttpServletRequest request,@RequestParam(required = false, defaultValue = "0") int buildingSeq, @RequestParam int estateSeq,
 			@RequestParam String buildingName) throws Exception {
 
-		int data = buildingService.getBuildNameCheck(estateSeq,buildingName);
-
+		int data = 2;
+		if(buildingSeq==0) {
+			data = buildingService.getBuildNameCheck(estateSeq,buildingName);
+		}else {
+			data = buildingService.getBuildNameCheck(buildingSeq,estateSeq,buildingName);
+		}
+		
 		ResultVO resultVO = new ResultVO();
 		if (data == 0) { // 0: Success , 1: Fail
 			resultVO.setResult(true);

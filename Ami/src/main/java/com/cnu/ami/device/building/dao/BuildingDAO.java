@@ -17,17 +17,17 @@ public interface BuildingDAO extends JpaRepository<BuildingEntity, Long> { // í‚
 	@Query(value = "SELECT AA.BSEQ AS BSEQ,AA.GSEQ AS GSEQ,AA.BNAME AS BNAME,AA.GID AS GID,AA.GNAME AS GNAME,AA.RSEQ AS RSEQ,BB.DID AS DID,IFNULL(BB.S_SYS_STATE,2) AS S_SYS_STATE,CC.RNAME\r\n"
 			+ "FROM (SELECT A.BSEQ,A.GSEQ,A.BNAME,B.GID,B.GNAME,B.RSEQ\r\n" + "FROM BUILDING AS A\r\n"
 			+ "JOIN GROUPSET AS B\r\n" + "ON A.GSEQ=B.GSEQ) AA\r\n" + "LEFT JOIN \r\n"
-			+ "(SELECT C.DID,C.S_SYS_STATE,D.BSEQ\r\n" + "FROM DCU_INFO AS C\r\n"
-			+ "JOIN BUILDING_DCU_MAP AS D\r\n" + "ON C.DID=D.DID) BB\r\n" + "ON AA.BSEQ=BB.BSEQ\r\n"
-			+ "JOIN (SELECT RSEQ,RNAME FROM REGION) AS CC\r\n" + "ON CC.RSEQ=AA.RSEQ", nativeQuery = true)
+			+ "(SELECT C.DID,C.S_SYS_STATE,D.BSEQ\r\n" + "FROM DCU_INFO AS C\r\n" + "JOIN BUILDING_DCU_MAP AS D\r\n"
+			+ "ON C.DID=D.DID) BB\r\n" + "ON AA.BSEQ=BB.BSEQ\r\n" + "JOIN (SELECT RSEQ,RNAME FROM REGION) AS CC\r\n"
+			+ "ON CC.RSEQ=AA.RSEQ", nativeQuery = true)
 	public List<BuildingInterfaceVO> getBuildingList();
 
 	@Query(value = "SELECT AA.BSEQ,AA.GSEQ,AA.BNAME,AA.GID,AA.GNAME,AA.RSEQ,BB.DID,IFNULL(BB.S_SYS_STATE,2) AS S_SYS_STATE,CC.RNAME\r\n"
 			+ "FROM (SELECT A.BSEQ,A.GSEQ,A.BNAME,B.GID,B.GNAME,B.RSEQ\r\n" + "FROM BUILDING AS A\r\n"
 			+ "JOIN GROUPSET AS B\r\n" + "ON A.GSEQ=B.GSEQ\r\n" + "WHERE B.GSEQ=:gseq) AA\r\n" + "LEFT JOIN \r\n"
-			+ "(SELECT C.DID,C.S_SYS_STATE,D.BSEQ\r\n" + "FROM DCU_INFO AS C\r\n"
-			+ "JOIN BUILDING_DCU_MAP AS D\r\n" + "ON C.DID=D.DID) BB\r\n" + "ON AA.BSEQ=BB.BSEQ\r\n"
-			+ "JOIN (SELECT RSEQ,RNAME FROM REGION) AS CC\r\n" + "ON CC.RSEQ=AA.RSEQ", nativeQuery = true)
+			+ "(SELECT C.DID,C.S_SYS_STATE,D.BSEQ\r\n" + "FROM DCU_INFO AS C\r\n" + "JOIN BUILDING_DCU_MAP AS D\r\n"
+			+ "ON C.DID=D.DID) BB\r\n" + "ON AA.BSEQ=BB.BSEQ\r\n" + "JOIN (SELECT RSEQ,RNAME FROM REGION) AS CC\r\n"
+			+ "ON CC.RSEQ=AA.RSEQ", nativeQuery = true)
 	public List<BuildingInterfaceVO> getBuildingList(@Param("gseq") int gseq);
 
 	@Query(value = "SELECT AA.BSEQ,AA.GSEQ,AA.BNAME,AA.GID,AA.GNAME,AA.RSEQ,BB.DID,IFNULL(BB.S_SYS_STATE,2) AS S_SYS_STATE,CC.RNAME\r\n"
@@ -44,7 +44,9 @@ public interface BuildingDAO extends JpaRepository<BuildingEntity, Long> { // í‚
 	@Query(value = "SELECT COUNT(*) AS COUNT FROM BUILDING WHERE GSEQ=:gseq", nativeQuery = true)
 	public BuildingHouseCountInterfaceVO getBuildingRegCount(@Param("gseq") int gSeq);
 
-	public BuildingEntity findFirstBygSeqAndBNAME(int gSeq,String bName);
-	
+	public BuildingEntity findFirstByGSEQAndBNAME(int gSeq, String bName);
+
+	public BuildingEntity findFirstByBSEQAndGSEQAndBNAME(int bSeq, int gSeq, String bName);
+
 	public void deleteBybSeq(int bSeq);
 }

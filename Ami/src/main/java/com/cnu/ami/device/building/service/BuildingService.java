@@ -16,9 +16,11 @@ public interface BuildingService {
 	public int setBulidingDcuData(BuildingVO buildingVO) throws Exception;
 
 	public int getBuildNameCheck(int gseq, String buildingName) throws Exception;
-	
+
+	public int getBuildNameCheck(int bseq, int gseq, String buildingName) throws Exception;
+
 	public DcuStatusVO getDcuIdCheck(String dcuId) throws Exception;
-	
-	public int setBuildingDelete(String dcuId,int bseq) throws Exception;
+
+	public int setBuildingDelete(String dcuId, int bseq) throws Exception;
 
 }
