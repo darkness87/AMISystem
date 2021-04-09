@@ -223,8 +223,6 @@ public class BuildingServiceImpl implements BuildingService {
 
 		BuildingEntity dataSeq = buildingDAO.findFirstByBSEQAndGSEQAndBNAME(bseq, gseq, buildingName);
 
-		BuildingEntity data = buildingDAO.findFirstByGSEQAndBNAME(gseq, buildingName);
-
 		// TODO
 		int i = 1;
 		if (dataSeq != null) {
@@ -233,7 +231,8 @@ public class BuildingServiceImpl implements BuildingService {
 			}
 		}
 
-		if(dataSeq == null) {
+		if (dataSeq == null) {
+			BuildingEntity data = buildingDAO.findFirstByGSEQAndBNAME(gseq, buildingName);
 			if (data != null) {
 				if (data.getBNAME().equals(buildingName)) {
 					i = 0;
