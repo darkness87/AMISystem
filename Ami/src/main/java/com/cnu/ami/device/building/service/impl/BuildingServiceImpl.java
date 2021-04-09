@@ -172,7 +172,7 @@ public class BuildingServiceImpl implements BuildingService {
 		BuildingEntity buildingEntity = new BuildingEntity();
 		buildingEntity.setBSeq(buildingVO.getBuildingSeq());
 		buildingEntity.setGSeq(buildingVO.getEstateSeq());
-		buildingEntity.setBNAME(buildingVO.getBuildingName());
+		buildingEntity.setBNAME(buildingVO.getBuildingName().toUpperCase());
 		buildingEntity.setWDate(new Date().getTime() / 1000);
 
 		try {
