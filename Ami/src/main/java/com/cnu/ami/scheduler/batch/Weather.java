@@ -34,7 +34,7 @@ public class Weather {
 	@Autowired
 	SchedulerService schedulerService;
 
-	@Scheduled(cron = "0 * * * * *") // 1시간 주기
+	@Scheduled(cron = "0 0 * * * *") // 1시간 주기 // 0분 0초에 동작
 	public void task() throws Exception {
 
 		Date date = new Date();
