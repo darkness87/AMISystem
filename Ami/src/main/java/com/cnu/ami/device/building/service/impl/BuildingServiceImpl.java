@@ -233,9 +233,11 @@ public class BuildingServiceImpl implements BuildingService {
 			}
 		}
 
-		if (data != null) {
-			if (data.getBNAME().equals(buildingName)) {
-				i = 0;
+		if(dataSeq == null) {
+			if (data != null) {
+				if (data.getBNAME().equals(buildingName)) {
+					i = 0;
+				}
 			}
 		}
 
