@@ -51,7 +51,7 @@ public class BuildingServiceImpl implements BuildingService {
 	@Override
 	public BuildingVO getBulidingData(BuildingVO buildingVO) throws Exception {
 
-		BuildingEntity building = buildingDAO.findBybSeq(buildingVO.getBuildingSeq());
+		BuildingEntity building = buildingDAO.findByBSEQ(buildingVO.getBuildingSeq());
 
 		if (building == null) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "건물 동에 대한 정보가 없습니다.");
@@ -284,7 +284,7 @@ public class BuildingServiceImpl implements BuildingService {
 				buildingDcuMappDAO.deleteBydIdAndBSEQ(dcuId, bseq);
 			}
 
-			buildingDAO.deleteBybSeq(bseq);
+			buildingDAO.deleteByBSEQ(bseq);
 
 			return 0;
 		} catch (Exception e) {

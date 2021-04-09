@@ -39,7 +39,7 @@ public interface BuildingDAO extends JpaRepository<BuildingEntity, Long> { // í‚
 			+ "ON CC.RSEQ=AA.RSEQ", nativeQuery = true)
 	public List<BuildingInterfaceVO> getBuildingRegionList(@Param("rseq") int rseq);
 
-	public BuildingEntity findBybSeq(int bSeq);
+	public BuildingEntity findByBSEQ(int bSeq);
 
 	@Query(value = "SELECT COUNT(*) AS COUNT FROM BUILDING WHERE GSEQ=:gseq", nativeQuery = true)
 	public BuildingHouseCountInterfaceVO getBuildingRegCount(@Param("gseq") int gSeq);
@@ -48,5 +48,5 @@ public interface BuildingDAO extends JpaRepository<BuildingEntity, Long> { // í‚
 
 	public BuildingEntity findFirstByBSEQAndGSEQAndBNAME(int bSeq, int gSeq, String bName);
 
-	public void deleteBybSeq(int bSeq);
+	public void deleteByBSEQ(int bSeq);
 }

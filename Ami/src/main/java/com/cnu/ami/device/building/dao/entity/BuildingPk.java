@@ -9,7 +9,7 @@ public class BuildingPk implements Serializable {
 
 	private static final long serialVersionUID = 5988309570862534571L;
 
-	private int bSeq;
-	private int gSeq;
+	private int BSEQ;
+	private int GSEQ;
 
 }

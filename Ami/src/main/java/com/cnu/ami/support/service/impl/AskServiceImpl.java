@@ -52,7 +52,7 @@ public class AskServiceImpl implements AskService {
 			askVO.setEstateName(estateEntity.getGName());
 		}
 
-		BuildingEntity buildingEntity = buildingDAO.findBybSeq(askEntity.getBSeq());
+		BuildingEntity buildingEntity = buildingDAO.findByBSEQ(askEntity.getBSeq());
 
 		if (estateEntity == null) {
 			askVO.setBuildingName("");

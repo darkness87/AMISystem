@@ -10,6 +10,6 @@ import com.cnu.ami.device.building.dao.entity.BuildingEntity;
 @Repository
 public interface SearchBuildingDAO extends JpaRepository<BuildingEntity, Long> {
 
-	public List<BuildingEntity> findBygSeq(int gseq);
+	public List<BuildingEntity> findByGSEQ(int gseq);
 
 }

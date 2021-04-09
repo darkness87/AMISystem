@@ -87,7 +87,7 @@ public class SearchServiceImpl implements SearchService {
 		if (gseq == 0) { // 전체
 			data = searchBuildingDAO.findAll();
 		} else {
-			data = searchBuildingDAO.findBygSeq(gseq);
+			data = searchBuildingDAO.findByGSEQ(gseq);
 		}
 
 		List<BuildingVO> list = new ArrayList<BuildingVO>();
