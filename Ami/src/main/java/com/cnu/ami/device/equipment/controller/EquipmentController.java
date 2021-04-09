@@ -160,7 +160,9 @@ public class EquipmentController {
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		// TODO // 서버의 시간을 클라이언트에게 제공하고 사용자는 시간확인 후 설정 요청 이상시 수정필요
+		// TODO
+		// Service 단에서 구현 하도록 변경
+		// 서버의 시간을 클라이언트에게 제공하고 사용자는 시간확인 후 설정 요청 이상시 수정필요
 		CnuComm comm = new CnuComm("CNU_TEST_1", "192.168.123.208"); // DCU ID, DCU IP
 		boolean bool = comm.setDcuTime(dateFormat.format(date));
 

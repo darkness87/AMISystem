@@ -154,7 +154,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	public int setDcuDelete(String did) throws Exception {
 
 		try {
-			dcuInfoDAO.deleteByDID(did);
+			dcuInfoDAO.setDcuDelete(did);
 			return 0;
 		} catch (Exception e) {
 			return 1;

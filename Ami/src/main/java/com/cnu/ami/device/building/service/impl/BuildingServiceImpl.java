@@ -197,6 +197,8 @@ public class BuildingServiceImpl implements BuildingService {
 	@Override
 	public int getBuildNameCheck(int gseq, String buildingName) throws Exception {
 
+		buildingName = buildingName.toUpperCase();
+
 		BuildingEntity data = buildingDAO.findBygSeqAndBNAME(gseq, buildingName);
 
 		if (data == null) {
@@ -245,10 +247,10 @@ public class BuildingServiceImpl implements BuildingService {
 		// 2. 동 정보 삭제
 
 		try {
-			
-			if(dcuId.equals("")) {
+
+			if (dcuId.equals("")) {
 				log.info("DCU ID 정보 없음");
-			}else {
+			} else {
 				buildingDcuMappDAO.deleteBydIdAndBSEQ(dcuId, bseq);
 			}
 
