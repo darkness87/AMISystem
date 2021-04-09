@@ -199,7 +199,7 @@ public class BuildingServiceImpl implements BuildingService {
 
 		buildingName = buildingName.toUpperCase();
 
-		BuildingEntity data = buildingDAO.findBygSeqAndBNAME(gseq, buildingName);
+		BuildingEntity data = buildingDAO.findFirstBygSeqAndBNAME(gseq, buildingName);
 
 		if (data == null) {
 			return 1;

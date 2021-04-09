@@ -127,6 +127,24 @@ public class EquipmentController {
 
 		return Mono.just(new ResponseVO<MeterInfoVO>(request, data));
 	}
+	
+	@RequestMapping(value = "/meter/delete", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : Meter 삭제")
+	public Mono<ResponseVO<ResultVO>> deleteMeterData(HttpServletRequest request, @RequestParam String meterId)
+			throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+		int data = equipmentService.setMeterDelete(meterId);
+
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
 
 	@RequestMapping(value = "/other/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)

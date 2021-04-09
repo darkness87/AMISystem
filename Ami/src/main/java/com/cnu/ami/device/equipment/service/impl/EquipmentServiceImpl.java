@@ -238,6 +238,18 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
+	public int setMeterDelete(String meterid) throws Exception {
+
+		try {
+			meterInfoDAO.setMeterDelete(meterid);
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+
+	}
+
+	@Override
 	public List<MeterOtherInfoListVO> getOtherMeterListData(int gseq, int meterType) throws Exception {
 
 		// gseq : 0 (전체), meterType : 0 (전체)

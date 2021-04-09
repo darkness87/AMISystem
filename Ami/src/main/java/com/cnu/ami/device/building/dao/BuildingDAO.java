@@ -44,7 +44,7 @@ public interface BuildingDAO extends JpaRepository<BuildingEntity, Long> { // í‚
 	@Query(value = "SELECT COUNT(*) AS COUNT FROM BUILDING WHERE GSEQ=:gseq", nativeQuery = true)
 	public BuildingHouseCountInterfaceVO getBuildingRegCount(@Param("gseq") int gSeq);
 
-	public BuildingEntity findBygSeqAndBNAME(int gSeq,String bName);
+	public BuildingEntity findFirstBygSeqAndBNAME(int gSeq,String bName);
 	
 	public void deleteBybSeq(int bSeq);
 }

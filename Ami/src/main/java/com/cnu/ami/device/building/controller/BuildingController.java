@@ -69,7 +69,7 @@ public class BuildingController {
 		return Mono.just(new ResponseVO<BuildingVO>(request, data));
 	}
 
-	@RequestMapping(value = "/registraion", method = RequestMethod.POST)
+	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동 등록")
 	public Mono<ResponseVO<ResultVO>> setBuildingData(HttpServletRequest request, @RequestBody BuildingVO buildingVO)

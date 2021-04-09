@@ -120,7 +120,7 @@
 			<artifactId>api</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/CnuDcuComm.jar</systemPath>
+			<systemPath>${basedir}/lib/CnuComm.jar</systemPath>
 		</dependency>
 
 	</dependencies>

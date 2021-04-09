@@ -59,5 +59,8 @@ public interface MeterInfoDAO extends JpaRepository<MeterInfoEntity, String> { /
 			+ "ON A.RSEQ=B.RSEQ\r\n" + "WHERE A.GSEQ=:gseq) T2\r\n" + "ON T1.GSEQ=T2.GSEQ\r\n" + "JOIN METER_INFO AS T3\r\n"
 			+ "ON T1.DID=T3.DID\r\n" + "JOIN METER_TYPE AS T4\r\n" + "ON T3.MTYPE=T4.MTYPE", nativeQuery = true)
 	List<MeterTypeInterfaceVO> getMeterType(@Param("gseq") int gseq, @Param("dcuId") String dcuId);
+	
+	@Query(value = "UPDATE METER_INFO SET IS_DELETE='Y' WHERE METER_ID = :meterid", nativeQuery = true)
+	public void setMeterDelete(@Param("meterid") String meterid);
 
 }
