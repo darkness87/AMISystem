@@ -269,6 +269,34 @@ public class BuildingServiceImpl implements BuildingService {
 		return dcuStatusVO;
 	}
 
+	@Override
+	public DcuStatusVO getDcuIdCheck(int bseq, String dcuId) throws Exception {
+		DcuInfoEntity data = dcuInfoDAO.findByDID(dcuId);
+		BuildingDcuMappingEntity mappData = buildingDcuMappDAO.findBydId(dcuId);
+
+		DcuStatusVO dcuStatusVO = new DcuStatusVO();
+
+		if (data == null) {
+			dcuStatusVO.setDcuId(dcuId);
+			dcuStatusVO.setStatusCode(2); // DCU없음
+		} else {
+
+			if (mappData == null) {
+				dcuStatusVO.setDcuId(data.getDID());
+				dcuStatusVO.setStatusCode(Integer.valueOf(data.getS_SYS_STATE()));
+			} else if (mappData.getBSEQ() == bseq) {
+				dcuStatusVO.setDcuId(dcuId);
+				dcuStatusVO.setStatusCode(1); // 정상 처리
+			} else {
+				dcuStatusVO.setDcuId(dcuId);
+				dcuStatusVO.setStatusCode(3); // 매핑정보가 있음
+			}
+
+		}
+
+		return dcuStatusVO;
+	}
+
 	@Transactional
 	@Override
 	public int setBuildingDelete(String dcuId, int bseq) throws Exception {

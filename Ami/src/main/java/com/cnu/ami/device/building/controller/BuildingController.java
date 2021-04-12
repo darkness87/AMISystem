@@ -45,10 +45,11 @@ public class BuildingController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동 리스트정보")
-	public Mono<ResponseListVO<BuildingVO>> getBuildingListData(HttpServletRequest request, @RequestParam(required = false, defaultValue = "0") int regionSeq, @RequestParam(required = false, defaultValue = "0") int estateSeq)
-			throws Exception {
-		
-		List<BuildingVO> data = buildingService.getBuildingListData(regionSeq,estateSeq);
+	public Mono<ResponseListVO<BuildingVO>> getBuildingListData(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int regionSeq,
+			@RequestParam(required = false, defaultValue = "0") int estateSeq) throws Exception {
+
+		List<BuildingVO> data = buildingService.getBuildingListData(regionSeq, estateSeq);
 
 		return Mono.just(new ResponseListVO<BuildingVO>(request, data));
 	}
@@ -86,45 +87,53 @@ public class BuildingController {
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
-	
+
 	@RequestMapping(value = "/namecheck", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동명 체크")
-	public Mono<ResponseVO<ResultVO>> getBuildingCheck(HttpServletRequest request,@RequestParam(required = false, defaultValue = "0") int buildingSeq, @RequestParam int estateSeq,
+	public Mono<ResponseVO<ResultVO>> getBuildingCheck(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int buildingSeq, @RequestParam int estateSeq,
 			@RequestParam String buildingName) throws Exception {
 
 		int data = 2;
-		if(buildingSeq==0) {
-			data = buildingService.getBuildNameCheck(estateSeq,buildingName);
-		}else {
-			data = buildingService.getBuildNameCheck(buildingSeq,estateSeq,buildingName);
+		if (buildingSeq == 0) {
+			data = buildingService.getBuildNameCheck(estateSeq, buildingName);
+		} else {
+			data = buildingService.getBuildNameCheck(buildingSeq, estateSeq, buildingName);
 		}
-		
+
 		ResultVO resultVO = new ResultVO();
 		if (data == 0) { // 0: Success , 1: Fail
 			resultVO.setResult(true);
 		} else {
 			resultVO.setResult(false);
 		}
-		
+
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
-	
+
 	@RequestMapping(value = "/dcucheck", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : DCU ID 체크")
-	public Mono<ResponseVO<DcuStatusVO>> getDcuCheck(HttpServletRequest request, @RequestParam String dcuId) throws Exception {
+	public Mono<ResponseVO<DcuStatusVO>> getDcuCheck(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int buildingSeq, @RequestParam String dcuId)
+			throws Exception {
 
-		DcuStatusVO data = buildingService.getDcuIdCheck(dcuId);
+		DcuStatusVO data = new DcuStatusVO();
+		if (buildingSeq == 0) {
+			data = buildingService.getDcuIdCheck(dcuId);
+		} else {
+			data = buildingService.getDcuIdCheck(buildingSeq, dcuId);
+		}
 
 		return Mono.just(new ResponseVO<DcuStatusVO>(request, data));
 	}
-	
+
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동 수정")
-	public Mono<ResponseVO<ResultVO>> updateBuildingDcuData(HttpServletRequest request, @RequestBody BuildingVO buildingVO)
-			throws Exception {
+	public Mono<ResponseVO<ResultVO>> updateBuildingDcuData(HttpServletRequest request,
+			@RequestBody BuildingVO buildingVO) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 		int data = buildingService.setBulidingDcuData(buildingVO);
@@ -137,14 +146,15 @@ public class BuildingController {
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
-	
+
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동 삭제")
-	public Mono<ResponseVO<ResultVO>> deleteBuildingDcuMapp(HttpServletRequest request, @RequestParam String dcuId, @RequestParam int buildingSeq) throws Exception {
+	public Mono<ResponseVO<ResultVO>> deleteBuildingDcuMapp(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam int buildingSeq) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		int data = buildingService.setBuildingDelete(dcuId,buildingSeq);
+		int data = buildingService.setBuildingDelete(dcuId, buildingSeq);
 
 		if (data == 0) { // 0: Success , 1: Fail
 			resultVO.setResult(true);
