@@ -26,6 +26,6 @@ public interface DcuInfoInterfaceVO {
 	
 	String getFWV();
 	
-	int getS_SYS_STATE();
+	String getS_SYS_STATE();
 
 }

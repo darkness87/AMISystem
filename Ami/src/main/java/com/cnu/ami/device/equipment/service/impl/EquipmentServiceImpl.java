@@ -70,7 +70,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			dcuInfoListVO.setDcuIp(data.get(i).getDCU_IP());
 			dcuInfoListVO.setFepIp(data.get(i).getFEP_IP());
 			dcuInfoListVO.setFirmwareVersion(data.get(i).getFWV());
-			dcuInfoListVO.setSystemState(data.get(i).getS_SYS_STATE());
+			dcuInfoListVO.setSystemState(Integer.valueOf(data.get(i).getS_SYS_STATE()));
 
 			list.add(dcuInfoListVO);
 		}
