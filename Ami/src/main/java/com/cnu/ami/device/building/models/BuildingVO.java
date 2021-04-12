@@ -1,5 +1,7 @@
 package com.cnu.ami.device.building.models;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +16,7 @@ public class BuildingVO {
 	private String buildingName; // 동명
 	private String estategId; // 단지ID
 	private String estateName; // 단지명
-	private String dcuId; // DCU ID
-	private int systemState; // 시스템 상태
+	
+	private List<DcuMappVO> dcuMapp; // DCU 정보
 
 }

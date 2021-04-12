@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.common.ResultDataVO;
 import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.device.building.models.BuildingVO;
+import com.cnu.ami.device.building.models.DcuSeqStatusVO;
 import com.cnu.ami.device.building.models.DcuStatusVO;
 import com.cnu.ami.device.building.service.BuildingService;
 
@@ -58,12 +60,11 @@ public class BuildingController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동 상세정보")
 	public Mono<ResponseVO<BuildingVO>> getBuildingData(HttpServletRequest request, @RequestParam int estateSeq,
-			@RequestParam int buildingSeq, @RequestParam String dcuId) throws Exception {
+			@RequestParam int buildingSeq) throws Exception {
 
 		BuildingVO buildingVO = new BuildingVO();
 		buildingVO.setEstateSeq(estateSeq);
 		buildingVO.setBuildingSeq(buildingSeq);
-		buildingVO.setDcuId(dcuId);
 
 		BuildingVO data = buildingService.getBulidingData(buildingVO);
 
@@ -163,6 +164,35 @@ public class BuildingController {
 		}
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/dcu/mapp/delete", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:동관리 : DCU 매핑 삭제")
+	public Mono<ResponseVO<ResultVO>> deleteDcuMapp(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam int buildingSeq) throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+		int data = buildingService.setDcuMappDelete(dcuId, buildingSeq);
+
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/dcu/mapp/insert", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:동관리 : DCU 매핑 추가")
+	public Mono<ResponseVO<ResultDataVO<DcuSeqStatusVO>>> setDcuMapp(HttpServletRequest request,
+			@RequestParam String dcuId, @RequestParam int buildingSeq) throws Exception {
+
+		ResultDataVO<DcuSeqStatusVO> data = buildingService.setDcuMappInsert(dcuId, buildingSeq);
+
+		return Mono.just(new ResponseVO<ResultDataVO<DcuSeqStatusVO>>(request, data));
 	}
 
 }

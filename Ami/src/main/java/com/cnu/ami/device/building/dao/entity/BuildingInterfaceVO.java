@@ -14,10 +14,6 @@ public interface BuildingInterfaceVO {
 
 	String getGname();
 
-	String getDid();
-
-	String getS_Sys_State();
-
 	String getRname();
 
 }

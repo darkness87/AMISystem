@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.ExceptionConst;
+import com.cnu.ami.common.ResultDataVO;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.building.dao.BuildingDAO;
 import com.cnu.ami.device.building.dao.BuildingDcuMappDAO;
@@ -18,6 +19,8 @@ import com.cnu.ami.device.building.dao.entity.BuildingDcuMappingEntity;
 import com.cnu.ami.device.building.dao.entity.BuildingEntity;
 import com.cnu.ami.device.building.dao.entity.BuildingInterfaceVO;
 import com.cnu.ami.device.building.models.BuildingVO;
+import com.cnu.ami.device.building.models.DcuMappVO;
+import com.cnu.ami.device.building.models.DcuSeqStatusVO;
 import com.cnu.ami.device.building.models.DcuStatusVO;
 import com.cnu.ami.device.building.service.BuildingService;
 import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
@@ -63,7 +66,9 @@ public class BuildingServiceImpl implements BuildingService {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "단지에 대한 정보가 없습니다.");
 		}
 
-		DcuInfoEntity dcu = dcuInfoDAO.findByDID(buildingVO.getDcuId());
+//		DcuInfoEntity dcu = dcuInfoDAO.findByDID(buildingVO.getDcuMapp().getDcuId());
+
+		List<BuildingDcuMappingEntity> mappList = buildingDcuMappDAO.findByBSEQ(buildingVO.getBuildingSeq());
 
 //		if (dcu == null) {
 //			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "DCU에 대한 정보가 없습니다.");
@@ -86,12 +91,18 @@ public class BuildingServiceImpl implements BuildingService {
 		buildingData.setEstateName(estate.getGName());
 		buildingData.setEstateSeq(estate.getGSeq());
 
-		if (dcu == null) {
-			buildingData.setDcuId(null);
-			buildingData.setSystemState(2);
+		if (mappList == null) {
+			buildingData.setDcuMapp(null);
 		} else {
-			buildingData.setDcuId(dcu.getDID());
-			buildingData.setSystemState(dcu.getS_SYS_STATE());
+			List<DcuMappVO> dcuMapplist = new ArrayList<DcuMappVO>();
+			DcuMappVO dcuMappVO = new DcuMappVO();
+			for (BuildingDcuMappingEntity mappData : mappList) {
+				dcuMappVO = new DcuMappVO();
+				dcuMappVO.setDcuId(mappData.getDId());
+
+				dcuMapplist.add(dcuMappVO);
+			}
+			buildingData.setDcuMapp(dcuMapplist);
 		}
 
 		return buildingData;
@@ -114,8 +125,6 @@ public class BuildingServiceImpl implements BuildingService {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "정보가 없습니다.");
 		}
 
-//		List<RegionEntity> region = searchRegionDAO.findAll();
-
 		List<BuildingVO> list = new ArrayList<BuildingVO>();
 		BuildingVO buildingVO = new BuildingVO();
 
@@ -128,18 +137,23 @@ public class BuildingServiceImpl implements BuildingService {
 			buildingVO.setRegionSeq(data.get(i).getRseq());
 			buildingVO.setRegionName(data.get(i).getRname());
 
-//			for (int r = 0; region.size() > r; r++) {
-//				if (region.get(r).getRSeq() == data.get(i).getRseq()) {
-//					buildingVO.setRegionSeq(region.get(r).getRSeq());
-//					buildingVO.setRegionName(region.get(r).getRName());
-//				}
-//			}
-
 			buildingVO.setBuildingName(data.get(i).getBname());
 			buildingVO.setEstategId(data.get(i).getGid());
 			buildingVO.setEstateName(data.get(i).getGname());
-			buildingVO.setDcuId(data.get(i).getDid());
-			buildingVO.setSystemState(Integer.valueOf(data.get(i).getS_Sys_State()));
+
+			// TODO
+			// BSEQ 로 매핑된 DCU 조회
+			List<BuildingDcuMappingEntity> mappList = buildingDcuMappDAO.findByBSEQ(data.get(i).getBseq());
+
+			List<DcuMappVO> dcuMapplist = new ArrayList<DcuMappVO>();
+			DcuMappVO dcuMappVO = new DcuMappVO();
+			for (BuildingDcuMappingEntity mappData : mappList) {
+				dcuMappVO = new DcuMappVO();
+				dcuMappVO.setDcuId(mappData.getDId());
+
+				dcuMapplist.add(dcuMappVO);
+			}
+			buildingVO.setDcuMapp(dcuMapplist);
 
 			list.add(buildingVO);
 		}
@@ -169,6 +183,8 @@ public class BuildingServiceImpl implements BuildingService {
 	@Override
 	public int setBulidingDcuData(BuildingVO buildingVO) throws Exception {
 
+		// TODO 중복 저장 관련 이슈
+
 		BuildingEntity buildingEntity = new BuildingEntity();
 		buildingEntity.setBSEQ(buildingVO.getBuildingSeq());
 		buildingEntity.setGSEQ(buildingVO.getEstateSeq());
@@ -178,14 +194,14 @@ public class BuildingServiceImpl implements BuildingService {
 		try {
 			buildingDAO.save(buildingEntity);
 
-			if (buildingVO.getDcuId() == null || buildingVO.getDcuId().equals("")) {
-				log.info("DCU 정보 없음");
-			} else {
-				BuildingDcuMappingEntity buildingDcuMappingEntity = new BuildingDcuMappingEntity();
-				buildingDcuMappingEntity.setBSEQ(buildingVO.getBuildingSeq());
-				buildingDcuMappingEntity.setDId(buildingVO.getDcuId());
-				buildingDcuMappDAO.save(buildingDcuMappingEntity);
-			}
+//			if (buildingVO.getDcuId() == null || buildingVO.getDcuId().equals("")) {
+//				log.info("DCU 정보 없음");
+//			} else {
+//				BuildingDcuMappingEntity buildingDcuMappingEntity = new BuildingDcuMappingEntity();
+//				buildingDcuMappingEntity.setBSEQ(buildingVO.getBuildingSeq());
+//				buildingDcuMappingEntity.setDId(buildingVO.getDcuId());
+//				buildingDcuMappDAO.save(buildingDcuMappingEntity);
+//			}
 
 			return 0;
 		} catch (Exception e) {
@@ -216,14 +232,10 @@ public class BuildingServiceImpl implements BuildingService {
 	@Override
 	public int getBuildNameCheck(int bseq, int gseq, String buildingName) throws Exception {
 
-		// 1. buildingSeq로 함께 조회할시 현재 시점의 동명 , 2. 기존과 동일한 동명 조회, 3. 동명을 바꾸자고 했을때 1,2번에
-		// 해당안되고 수정가능한 응답 받는거
-
 		buildingName = buildingName.toUpperCase();
 
 		BuildingEntity dataSeq = buildingDAO.findFirstByBSEQAndGSEQAndBNAME(bseq, gseq, buildingName);
 
-		// TODO
 		int i = 1;
 		if (dataSeq != null) {
 			if (dataSeq.getBNAME().equals(buildingName)) {
@@ -300,10 +312,6 @@ public class BuildingServiceImpl implements BuildingService {
 	@Transactional
 	@Override
 	public int setBuildingDelete(String dcuId, int bseq) throws Exception {
-		// TODO Auto-generated method stub
-
-		// 1. Mapp 정보 삭제
-		// 2. 동 정보 삭제
 
 		try {
 
@@ -314,6 +322,63 @@ public class BuildingServiceImpl implements BuildingService {
 			}
 
 			buildingDAO.deleteByBSEQ(bseq);
+
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+
+	}
+
+	@Transactional
+	@Override
+	public ResultDataVO<DcuSeqStatusVO> setDcuMappInsert(String dcuId, int bseq) throws Exception {
+
+		ResultDataVO<DcuSeqStatusVO> result = new ResultDataVO<DcuSeqStatusVO>();
+		DcuSeqStatusVO dcuSeqStatusVO = new DcuSeqStatusVO();
+
+		try {
+			DcuStatusVO check = getDcuIdCheck(dcuId);
+
+			if (check.getStatusCode() == 1 || check.getStatusCode() == 0) { // 0: 이상, 1:정상
+				BuildingDcuMappingEntity buildingDcuMappingEntity = new BuildingDcuMappingEntity();
+				buildingDcuMappingEntity.setBSEQ(bseq);
+				buildingDcuMappingEntity.setDId(dcuId);
+				BuildingDcuMappingEntity data = buildingDcuMappDAO.save(buildingDcuMappingEntity);
+
+				dcuSeqStatusVO.setStatusCode(check.getStatusCode());
+				dcuSeqStatusVO.setDcuId(data.getDId());
+				dcuSeqStatusVO.setBSeq(data.getBSEQ());
+
+				result.setResult(true);
+				result.setReturnData(dcuSeqStatusVO);
+
+				return result;
+			} else { // 2: DCU없음, 3:매핑정보있음
+				result.setResult(false);
+
+				dcuSeqStatusVO.setStatusCode(check.getStatusCode());
+				dcuSeqStatusVO.setDcuId(check.getDcuId());
+				dcuSeqStatusVO.setBSeq(0);
+
+				result.setReturnData(dcuSeqStatusVO);
+
+				return result;
+			}
+
+		} catch (Exception e) {
+			result.setResult(false);
+			return result;
+		}
+
+	}
+
+	@Transactional
+	@Override
+	public int setDcuMappDelete(String dcuId, int bseq) throws Exception {
+
+		try {
+			buildingDcuMappDAO.deleteBydIdAndBSEQ(dcuId, bseq);
 
 			return 0;
 		} catch (Exception e) {
