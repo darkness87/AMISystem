@@ -1,6 +1,5 @@
 package com.cnu.ami.failure.reading.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,12 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
-import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.failure.reading.service.FailureReadingService;
+import com.cnu.ami.metering.info.dao.entity.RealTimeInterfaceVO;
 
 import reactor.core.publisher.Mono;
 
 /**
  * 장애 미검침
+ * 
  * @author sookwon
  * @apiNote reading api
  */
@@ -31,26 +32,20 @@ import reactor.core.publisher.Mono;
 public class ReadingController {
 
 	@Autowired
+	FailureReadingService failureReadingService;
+
+	@Autowired
 	PropertyData propertyData;
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "장애:미검침 : 리스트정보")
-	public Mono<ResponseListVO<Object>> getTestListData(HttpServletRequest request) throws Exception {
+	public Mono<ResponseListVO<RealTimeInterfaceVO>> getTestListData(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int estateSeq) throws Exception {
 
-		List<Object> data = new ArrayList<Object>();
+		List<RealTimeInterfaceVO> data = failureReadingService.getFailureReadingData(estateSeq);
 
-		return Mono.just(new ResponseListVO<Object>(request, data));
-	}
-
-	@RequestMapping(value = "/info", method = RequestMethod.GET)
-	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "장애:미검침 : 상세정보")
-	public Mono<ResponseVO<Object>> getTestData(HttpServletRequest request, @RequestParam String id) throws Exception {
-
-		Object data = new Object();
-
-		return Mono.just(new ResponseVO<Object>(request, data));
+		return Mono.just(new ResponseListVO<RealTimeInterfaceVO>(request, data));
 	}
 
 }
