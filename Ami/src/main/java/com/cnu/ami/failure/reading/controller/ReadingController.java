@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
+import com.cnu.ami.failure.reading.models.FailureReadingVO;
 import com.cnu.ami.failure.reading.service.FailureReadingService;
-import com.cnu.ami.metering.info.dao.entity.RealTimeInterfaceVO;
 
 import reactor.core.publisher.Mono;
 
@@ -40,12 +40,12 @@ public class ReadingController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "장애:미검침 : 리스트정보")
-	public Mono<ResponseListVO<RealTimeInterfaceVO>> getTestListData(HttpServletRequest request,
+	public Mono<ResponseListVO<FailureReadingVO>> getTestListData(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int estateSeq) throws Exception {
 
-		List<RealTimeInterfaceVO> data = failureReadingService.getFailureReadingData(estateSeq);
+		List<FailureReadingVO> data = failureReadingService.getFailureReadingData(estateSeq);
 
-		return Mono.just(new ResponseListVO<RealTimeInterfaceVO>(request, data));
+		return Mono.just(new ResponseListVO<FailureReadingVO>(request, data));
 	}
 
 }

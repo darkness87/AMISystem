@@ -2,10 +2,10 @@ package com.cnu.ami.failure.reading.service;
 
 import java.util.List;
 
-import com.cnu.ami.metering.info.dao.entity.RealTimeInterfaceVO;
+import com.cnu.ami.failure.reading.models.FailureReadingVO;
 
 public interface FailureReadingService {
 
-	public List<RealTimeInterfaceVO> getFailureReadingData(int gseq) throws Exception;
-	
+	public List<FailureReadingVO> getFailureReadingData(int gseq) throws Exception;
+
 }
