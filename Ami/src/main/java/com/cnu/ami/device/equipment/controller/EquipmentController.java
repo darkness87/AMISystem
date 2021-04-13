@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +32,7 @@ import com.cnu.ami.device.equipment.models.MeterOtherInfoVO;
 import com.cnu.ami.device.equipment.service.EquipmentService;
 import com.cnu.network.client.fep.CnuComm;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 /**
@@ -40,6 +42,7 @@ import reactor.core.publisher.Mono;
  * @apiNote equipment api
  */
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/api/device/equipment")
 public class EquipmentController {
@@ -200,12 +203,14 @@ public class EquipmentController {
 		return Mono.just(new ResponseVO<MeterOtherInfoVO>(request, data));
 	}
 
-	@RequestMapping(value = "/test/dcu/setting/{request}", method = RequestMethod.GET)
+	@RequestMapping(value = "/test/dcu/setting/{param}", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 설정")
 	public Mono<ResponseVO<ResultVO>> setDcuCommSet(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp) throws Exception {
+			@RequestParam String dcuIp,@PathVariable String param, @RequestBody Object object) throws Exception {
 
+		log.info("{} , {} , {} , {} , {}", request, dcuId, dcuIp, param, object);
+		
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
@@ -216,7 +221,29 @@ public class EquipmentController {
 		// Service 단에서 구현 하도록 변경
 		// 서버의 시간을 클라이언트에게 제공하고 사용자는 시간확인 후 설정 요청 이상시 수정필요
 
+
+		
+//		boolean bool = comm.setDcuInfo(fepIp, fepPort, tMask, smP, smlpP, emlpP, gmlpP, eamlpP, gmAveVaP, gmInstVaP, eamAveVaP, eamInstVaP, pLength, timeout, trapItv, emTimeP, gmTimeP, eamTimeP, cpuReset);
+//		
 		boolean bool = comm.setDcuTime(dateFormat.format(date));
+//		
+//		boolean bool = comm.setDcuTimeLimit(iMtype, iTimeLimit);
+//		
+//		boolean bool = comm.setDcuCheckInterval(iMtype, iInterval);
+//		
+//		boolean bool = comm.setDcuSecureFactor(pnid, osPw, acodeRo, acodeRw, snmpRo, snmpRw);
+//		
+//		boolean bool = comm.execDcuReboot();
+//		
+//		boolean bool = comm.rescanModem(mac);
+//		
+//		boolean bool = comm.setMeterTime(meters, sTime);
+//		
+//		boolean bool = comm.setMeterMrd(meters, sTime);
+//		
+//		boolean bool = comm.setMeterLpPeriod(meters, period);
+		
+		
 
 		resultVO.setResult(bool);
 
