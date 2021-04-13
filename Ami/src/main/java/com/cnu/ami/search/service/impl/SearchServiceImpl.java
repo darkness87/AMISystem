@@ -12,6 +12,7 @@ import com.cnu.ami.search.dao.SearchBuildingDAO;
 import com.cnu.ami.search.dao.SearchDcuDAO;
 import com.cnu.ami.search.dao.SearchEstateDAO;
 import com.cnu.ami.search.dao.SearchRegionDAO;
+import com.cnu.ami.search.dao.entity.BuildingDcuInterfaceVO;
 import com.cnu.ami.search.dao.entity.DcuMappEntity;
 import com.cnu.ami.search.dao.entity.RegionEntity;
 import com.cnu.ami.search.models.BuildingVO;
@@ -82,12 +83,16 @@ public class SearchServiceImpl implements SearchService {
 	@Override
 	public List<BuildingVO> getBuildingList(int gseq) throws Exception {
 
-		List<BuildingEntity> data = new ArrayList<BuildingEntity>();
+//		List<BuildingEntity> data = new ArrayList<BuildingEntity>();
+		
+		List<BuildingDcuInterfaceVO> data = new ArrayList<BuildingDcuInterfaceVO>();
 
 		if (gseq == 0) { // 전체
-			data = searchBuildingDAO.findAll();
+//			data = searchBuildingDAO.findAll();
+			data = searchBuildingDAO.getBuildingDcuList();
 		} else {
-			data = searchBuildingDAO.findByGSEQ(gseq);
+//			data = searchBuildingDAO.findByGSEQ(gseq);
+			data = searchBuildingDAO.getBuildingDcuList(gseq);
 		}
 
 		List<BuildingVO> list = new ArrayList<BuildingVO>();
@@ -98,6 +103,7 @@ public class SearchServiceImpl implements SearchService {
 
 			buildingVO.setBuildingSeq(data.get(i).getBSEQ());
 			buildingVO.setBuildingName(data.get(i).getBNAME());
+			buildingVO.setDcuId(data.get(i).getDID());
 
 			list.add(buildingVO);
 		}

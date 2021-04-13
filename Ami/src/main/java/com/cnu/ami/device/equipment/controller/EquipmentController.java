@@ -66,7 +66,7 @@ public class EquipmentController {
 	@RequestMapping(value = "/dcu/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 목록")
-	public Mono<ResponseListVO<DcuInfoListVO>> getDcuListData(HttpServletRequest request, @RequestParam int estateSeq)
+	public Mono<ResponseListVO<DcuInfoListVO>> getDcuListData(HttpServletRequest request, @RequestParam(required = false, defaultValue = "0") int estateSeq)
 			throws Exception {
 
 		List<DcuInfoListVO> data = equipmentService.getDcuListData(estateSeq);

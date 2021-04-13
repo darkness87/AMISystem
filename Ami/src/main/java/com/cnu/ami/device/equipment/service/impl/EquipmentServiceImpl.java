@@ -157,7 +157,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		dcuInfoEntity.setDCU_IP(dcuRegVO.getDcuIp());
 		dcuInfoEntity.setLAT(dcuRegVO.getLatitude());
 		dcuInfoEntity.setLON(dcuRegVO.getLongitude());
-		dcuInfoEntity.setITIME(dcuRegVO.getInstallDate().getTime() / 1000);
+//		dcuInfoEntity.setITIME(dcuRegVO.getInstallDate().getTime() / 1000);
 		dcuInfoEntity.setWDATE(new Date().getTime() / 1000);
 		dcuInfoEntity.setUDATE(new Date().getTime() / 1000);
 

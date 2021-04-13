@@ -9,5 +9,6 @@ public class BuildingVO {
 
 	private int buildingSeq;
 	private String buildingName;
+	private String dcuId;
 
 }
