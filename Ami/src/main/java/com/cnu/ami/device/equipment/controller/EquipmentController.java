@@ -27,6 +27,7 @@ import com.cnu.ami.device.equipment.models.DcuRegVO;
 import com.cnu.ami.device.equipment.models.MeterInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterInfoVO;
 import com.cnu.ami.device.equipment.models.MeterOtherInfoListVO;
+import com.cnu.ami.device.equipment.models.MeterOtherInfoVO;
 import com.cnu.ami.device.equipment.service.EquipmentService;
 import com.cnu.network.client.fep.CnuComm;
 
@@ -172,7 +173,7 @@ public class EquipmentController {
 	@Description(value = "설비:장비관리 : 총 가스,수도,온수,난방 수")
 	public Mono<ResponseVO<ResultCountVO>> getOtherCount(HttpServletRequest request) throws Exception {
 
-		ResultCountVO data = equipmentService.getOtherMeterCount(); // TODO 변경해야함
+		ResultCountVO data = equipmentService.getOtherMeterCount();
 
 		return Mono.just(new ResponseVO<ResultCountVO>(request, data));
 	}
@@ -181,9 +182,9 @@ public class EquipmentController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : 가스,수도,온수,난방 미터 목록")
 	public Mono<ResponseListVO<MeterOtherInfoListVO>> getOtherListData(HttpServletRequest request,
-			@RequestParam int estateSeq, @RequestParam int meterType) throws Exception {
+			@RequestParam int estateSeq) throws Exception {
 
-		List<MeterOtherInfoListVO> data = equipmentService.getOtherMeterListData(estateSeq, meterType);
+		List<MeterOtherInfoListVO> data = equipmentService.getOtherMeterListData(estateSeq);
 
 		return Mono.just(new ResponseListVO<MeterOtherInfoListVO>(request, data));
 	}
@@ -191,12 +192,12 @@ public class EquipmentController {
 	@RequestMapping(value = "/other/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : 가스,수도,온수,난방 미터 상세정보")
-	public Mono<ResponseVO<Object>> getOtherData(HttpServletRequest request, @RequestParam String meterId,
-			@RequestParam int meterType) throws Exception {
+	public Mono<ResponseVO<MeterOtherInfoVO>> getOtherData(HttpServletRequest request, @RequestParam int estateSeq,
+			@RequestParam String gatewayId, @RequestParam String meterId) throws Exception {
 
-		MeterOtherInfoListVO data = equipmentService.getOtherMeterData(meterId, meterType);
+		MeterOtherInfoVO data = equipmentService.getOtherMeterData(estateSeq, gatewayId, meterId);
 
-		return Mono.just(new ResponseVO<Object>(request, data));
+		return Mono.just(new ResponseVO<MeterOtherInfoVO>(request, data));
 	}
 
 	@RequestMapping(value = "/test/dcu/setting/{request}", method = RequestMethod.GET)

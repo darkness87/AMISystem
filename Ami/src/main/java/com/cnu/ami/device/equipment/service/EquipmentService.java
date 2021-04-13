@@ -9,6 +9,7 @@ import com.cnu.ami.device.equipment.models.DcuRegVO;
 import com.cnu.ami.device.equipment.models.MeterInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterInfoVO;
 import com.cnu.ami.device.equipment.models.MeterOtherInfoListVO;
+import com.cnu.ami.device.equipment.models.MeterOtherInfoVO;
 
 public interface EquipmentService {
 
@@ -27,13 +28,13 @@ public interface EquipmentService {
 	public List<MeterInfoListVO> getMeterListData(int gseq) throws Exception;
 
 	public MeterInfoVO getMeterData(String meterid) throws Exception;
-	
+
 	public int setMeterDelete(String meterid) throws Exception;
-	
+
 	public ResultCountVO getOtherMeterCount() throws Exception;
 
-	public List<MeterOtherInfoListVO> getOtherMeterListData(int gseq, int meterType) throws Exception;
+	public List<MeterOtherInfoListVO> getOtherMeterListData(int gseq) throws Exception;
 
-	public MeterOtherInfoListVO getOtherMeterData(String meterId, int meterType) throws Exception;
+	public MeterOtherInfoVO getOtherMeterData(int gseq, String gatewayId, String meterId) throws Exception;
 
 }

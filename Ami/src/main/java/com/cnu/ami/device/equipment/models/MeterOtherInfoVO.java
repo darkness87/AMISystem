@@ -1,11 +1,13 @@
 package com.cnu.ami.device.equipment.models;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MeterOtherInfoListVO {
+public class MeterOtherInfoVO {
 
 	private int regionSeq; // 지역 SEQ
 	private int estateSeq; // 단지 SEQ
@@ -18,4 +20,9 @@ public class MeterOtherInfoListVO {
 	private String meterId; // 계량기 ID
 	private int meterType; // 계량기 타입 // 1:전기,2:가스,3:수도,4:온수,5:난방
 
+	private String mac;
+	private String deviceName;
+	private int readingDay;
+	private int lpPeriod;
+	private Date meterTime;
 }

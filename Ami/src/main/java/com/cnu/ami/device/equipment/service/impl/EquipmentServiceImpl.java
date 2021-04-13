@@ -12,10 +12,13 @@ import com.cnu.ami.common.ExceptionConst;
 import com.cnu.ami.common.ResultCountVO;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
+import com.cnu.ami.device.equipment.dao.DeviceInfoDAO;
 import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
 import com.cnu.ami.device.equipment.dao.ModemInfoDAO;
 import com.cnu.ami.device.equipment.dao.entity.DcuInfoEntity;
 import com.cnu.ami.device.equipment.dao.entity.DcuInfoInterfaceVO;
+import com.cnu.ami.device.equipment.dao.entity.DeviceEstateInterfaceVO;
+import com.cnu.ami.device.equipment.dao.entity.DeviceInfoEntity;
 import com.cnu.ami.device.equipment.dao.entity.MeterInfoEntity;
 import com.cnu.ami.device.equipment.dao.entity.MeterInfoInterfaceVO;
 import com.cnu.ami.device.equipment.models.DcuInfoListVO;
@@ -24,6 +27,7 @@ import com.cnu.ami.device.equipment.models.DcuRegVO;
 import com.cnu.ami.device.equipment.models.MeterInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterInfoVO;
 import com.cnu.ami.device.equipment.models.MeterOtherInfoListVO;
+import com.cnu.ami.device.equipment.models.MeterOtherInfoVO;
 import com.cnu.ami.device.equipment.service.EquipmentService;
 
 @Service
@@ -37,6 +41,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Autowired
 	ModemInfoDAO modemInfoDAO;
+
+	@Autowired
+	DeviceInfoDAO deviceInfoDAO;
 
 	@Override
 	public ResultCountVO getDcuCount() throws Exception {
@@ -268,35 +275,39 @@ public class EquipmentServiceImpl implements EquipmentService {
 		}
 
 	}
-	
+
 	@Override
 	public ResultCountVO getOtherMeterCount() throws Exception {
-		// TODO 변경해야함
 		ResultCountVO resultCountVO = new ResultCountVO();
-		resultCountVO.setCount(meterInfoDAO.count()); // TODO
+		resultCountVO.setCount(deviceInfoDAO.count());
 		return resultCountVO;
 	}
 
 	@Override
-	public List<MeterOtherInfoListVO> getOtherMeterListData(int gseq, int meterType) throws Exception {
+	public List<MeterOtherInfoListVO> getOtherMeterListData(int gseq) throws Exception {
 
-		// gseq : 0 (전체), meterType : 0 (전체)
+		List<DeviceInfoEntity> data = deviceInfoDAO.findByGSEQ(gseq);
 
-		if (meterType >= 6) {
-			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "계량기 타입이 존재하지 않습니다.");
-		}
+		DeviceEstateInterfaceVO name = deviceInfoDAO.getDeviceEstateInfo(gseq);
 
 		List<MeterOtherInfoListVO> list = new ArrayList<MeterOtherInfoListVO>();
-
 		MeterOtherInfoListVO meterOtherInfoListVO = new MeterOtherInfoListVO();
 
-		for (int i = 0; 10 > i; i++) {
+		for (DeviceInfoEntity device : data) {
 			meterOtherInfoListVO = new MeterOtherInfoListVO();
 
-			meterOtherInfoListVO.setGatewayId("gateway");
-			meterOtherInfoListVO.setMeterId("meter" + i);
-			meterOtherInfoListVO.setMeterType(meterType);
-			meterOtherInfoListVO.setRegDate(new Date());
+			meterOtherInfoListVO.setRegionSeq(name.getRSEQ());
+			meterOtherInfoListVO.setRegionName(name.getRNAME());
+
+			meterOtherInfoListVO.setEstateSeq(name.getGSEQ());
+			meterOtherInfoListVO.setEstateId(name.getGID());
+			meterOtherInfoListVO.setEstateName(name.getGNAME());
+
+			meterOtherInfoListVO.setBuildingName(device.getDONG());
+			meterOtherInfoListVO.setHouseName(device.getHO());
+			meterOtherInfoListVO.setGatewayId(device.getGATEWAYID());
+			meterOtherInfoListVO.setMeterId(device.getMETERID());
+			meterOtherInfoListVO.setMeterType(device.getTYPE()); // 계량기 타입 // 1:전기,2:가스,3:수도,4:온수,5:난방
 
 			list.add(meterOtherInfoListVO);
 		}
@@ -305,20 +316,31 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public MeterOtherInfoListVO getOtherMeterData(String meterId, int meterType) throws Exception {
+	public MeterOtherInfoVO getOtherMeterData(int gseq, String gatewayId, String meterId) throws Exception {
 
-		if (meterType >= 6) {
-			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "계량기 타입이 존재하지 않습니다.");
-		}
+		DeviceInfoEntity data = deviceInfoDAO.findByGSEQAndGATEWAYIDAndMETERID(gseq, gatewayId, meterId);
 
-		MeterOtherInfoListVO meterOtherInfoListVO = new MeterOtherInfoListVO();
+		DeviceEstateInterfaceVO name = deviceInfoDAO.getDeviceEstateInfo(gseq);
 
-		meterOtherInfoListVO.setGatewayId("gateway");
-		meterOtherInfoListVO.setMeterId(meterId);
-		meterOtherInfoListVO.setMeterType(meterType);
-		meterOtherInfoListVO.setRegDate(new Date());
+		MeterOtherInfoVO meterOtherInfoVO = new MeterOtherInfoVO();
 
-		return meterOtherInfoListVO;
+		meterOtherInfoVO.setRegionSeq(name.getRSEQ());
+		meterOtherInfoVO.setRegionName(name.getRNAME());
+		meterOtherInfoVO.setEstateSeq(name.getGSEQ());
+		meterOtherInfoVO.setEstateId(name.getGID());
+		meterOtherInfoVO.setEstateName(name.getGNAME());
+		meterOtherInfoVO.setBuildingName(data.getDONG());
+		meterOtherInfoVO.setHouseName(data.getHO());
+		meterOtherInfoVO.setGatewayId(data.getGATEWAYID());
+		meterOtherInfoVO.setMeterId(data.getMETERID());
+		meterOtherInfoVO.setMeterType(data.getTYPE());
+		meterOtherInfoVO.setMac(data.getMAC());
+		meterOtherInfoVO.setDeviceName(data.getDEVICE_NAME());
+		meterOtherInfoVO.setReadingDay(data.getMRD());
+		meterOtherInfoVO.setLpPeriod(data.getLP_PERIOD());
+		meterOtherInfoVO.setMeterTime(new Date());
+
+		return meterOtherInfoVO;
 	}
 
 }
