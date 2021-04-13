@@ -117,7 +117,7 @@
 		<!-- lib -->
 		<dependency>
 			<groupId>com.cnu.dcu.comm</groupId>
-			<artifactId>api</artifactId>
+			<artifactId>cnu-dcu-api</artifactId>
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/CnuComm.jar</systemPath>
@@ -132,7 +132,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<!-- user lib config -->
 					<includeSystemScope>true</includeSystemScope>
+					<!-- lombok -->
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
