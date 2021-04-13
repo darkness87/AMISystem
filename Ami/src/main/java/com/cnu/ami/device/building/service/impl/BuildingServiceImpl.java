@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.ExceptionConst;
+import com.cnu.ami.common.ResultCountVO;
 import com.cnu.ami.common.ResultDataVO;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.building.dao.BuildingDAO;
@@ -50,6 +51,13 @@ public class BuildingServiceImpl implements BuildingService {
 
 	@Autowired
 	BuildingDcuMappDAO buildingDcuMappDAO;
+
+	@Override
+	public ResultCountVO getBuildingCount() throws Exception {
+		ResultCountVO resultCountVO = new ResultCountVO();
+		resultCountVO.setCount(buildingDAO.count());
+		return resultCountVO;
+	}
 
 	@Override
 	public BuildingVO getBulidingData(BuildingVO buildingVO) throws Exception {

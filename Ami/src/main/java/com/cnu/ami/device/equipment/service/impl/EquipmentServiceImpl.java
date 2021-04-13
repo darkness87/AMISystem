@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.ExceptionConst;
+import com.cnu.ami.common.ResultCountVO;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
 import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
@@ -36,6 +37,13 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Autowired
 	ModemInfoDAO modemInfoDAO;
+
+	@Override
+	public ResultCountVO getDcuCount() throws Exception {
+		ResultCountVO resultCountVO = new ResultCountVO();
+		resultCountVO.setCount(dcuInfoDAO.count());
+		return resultCountVO;
+	}
 
 	@Override
 	public List<DcuInfoListVO> getDcuListData(int gseq) throws Exception {
@@ -168,6 +176,13 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
+	public ResultCountVO getMeterCount() throws Exception {
+		ResultCountVO resultCountVO = new ResultCountVO();
+		resultCountVO.setCount(meterInfoDAO.count());
+		return resultCountVO;
+	}
+
+	@Override
 	public List<MeterInfoListVO> getMeterListData(int gseq) throws Exception {
 
 		List<MeterInfoInterfaceVO> meter = null;
@@ -252,6 +267,14 @@ public class EquipmentServiceImpl implements EquipmentService {
 			return 1;
 		}
 
+	}
+	
+	@Override
+	public ResultCountVO getOtherMeterCount() throws Exception {
+		// TODO 변경해야함
+		ResultCountVO resultCountVO = new ResultCountVO();
+		resultCountVO.setCount(meterInfoDAO.count()); // TODO
+		return resultCountVO;
 	}
 
 	@Override

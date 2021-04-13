@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.common.ResultCountVO;
 import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.device.equipment.models.DcuInfoListVO;
 import com.cnu.ami.device.equipment.models.DcuInfoVO;
@@ -47,6 +48,16 @@ public class EquipmentController {
 
 	@Autowired
 	PropertyData propertyData;
+
+	@RequestMapping(value = "/dcu/count", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : 총 DCU 수")
+	public Mono<ResponseVO<ResultCountVO>> getDcuCount(HttpServletRequest request) throws Exception {
+
+		ResultCountVO data = equipmentService.getDcuCount();
+
+		return Mono.just(new ResponseVO<ResultCountVO>(request, data));
+	}
 
 	@RequestMapping(value = "/dcu/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
@@ -106,6 +117,16 @@ public class EquipmentController {
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
+	@RequestMapping(value = "/meter/count", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : 총 METER 수")
+	public Mono<ResponseVO<ResultCountVO>> getMeterCount(HttpServletRequest request) throws Exception {
+
+		ResultCountVO data = equipmentService.getMeterCount();
+
+		return Mono.just(new ResponseVO<ResultCountVO>(request, data));
+	}
+
 	@RequestMapping(value = "/meter/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : METER 목록")
@@ -127,7 +148,7 @@ public class EquipmentController {
 
 		return Mono.just(new ResponseVO<MeterInfoVO>(request, data));
 	}
-	
+
 	@RequestMapping(value = "/meter/delete", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : Meter 삭제")
@@ -144,6 +165,16 @@ public class EquipmentController {
 		}
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/other/count", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : 총 가스,수도,온수,난방 수")
+	public Mono<ResponseVO<ResultCountVO>> getOtherCount(HttpServletRequest request) throws Exception {
+
+		ResultCountVO data = equipmentService.getOtherMeterCount(); // TODO 변경해야함
+
+		return Mono.just(new ResponseVO<ResultCountVO>(request, data));
 	}
 
 	@RequestMapping(value = "/other/list", method = RequestMethod.GET)
@@ -171,18 +202,19 @@ public class EquipmentController {
 	@RequestMapping(value = "/test/dcu/setting/{request}", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 설정")
-	public Mono<ResponseVO<ResultVO>> setDcuCommSet(HttpServletRequest request, @RequestParam String dcuId, @RequestParam String dcuIp) throws Exception {
+	public Mono<ResponseVO<ResultVO>> setDcuCommSet(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
-		
+
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		// TODO
 		// Service 단에서 구현 하도록 변경
 		// 서버의 시간을 클라이언트에게 제공하고 사용자는 시간확인 후 설정 요청 이상시 수정필요
-		
+
 		boolean bool = comm.setDcuTime(dateFormat.format(date));
 
 		resultVO.setResult(bool);

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.ExceptionConst;
+import com.cnu.ami.common.ResultCountVO;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.building.dao.BuildingDAO;
 import com.cnu.ami.device.building.dao.HouseDAO;
@@ -37,6 +38,13 @@ public class EstateServiceImpl implements EstateService {
 
 	@Autowired
 	private SearchRegionDAO searchRegionDAO;
+
+	@Override
+	public ResultCountVO getEstateCount() throws Exception {
+		ResultCountVO resultCountVO = new ResultCountVO();
+		resultCountVO.setCount(estateDAO.count());
+		return resultCountVO;
+	}
 
 	public List<EstateListVO> getEstateListData() throws Exception {
 

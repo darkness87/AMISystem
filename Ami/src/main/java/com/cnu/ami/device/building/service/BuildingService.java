@@ -2,12 +2,15 @@ package com.cnu.ami.device.building.service;
 
 import java.util.List;
 
+import com.cnu.ami.common.ResultCountVO;
 import com.cnu.ami.common.ResultDataVO;
 import com.cnu.ami.device.building.models.BuildingVO;
 import com.cnu.ami.device.building.models.DcuSeqStatusVO;
 import com.cnu.ami.device.building.models.DcuStatusVO;
 
 public interface BuildingService {
+
+	public ResultCountVO getBuildingCount() throws Exception;
 
 	public BuildingVO getBulidingData(BuildingVO buildingVO) throws Exception;
 

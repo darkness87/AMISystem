@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.common.ResultCountVO;
 import com.cnu.ami.common.ResultDataVO;
 import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.device.building.models.BuildingVO;
@@ -43,6 +44,16 @@ public class BuildingController {
 
 	@Autowired
 	PropertyData propertyData;
+
+	@RequestMapping(value = "/count", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:동관리 : 총 동 수")
+	public Mono<ResponseVO<ResultCountVO>> getBuildingCount(HttpServletRequest request) throws Exception {
+
+		ResultCountVO data = buildingService.getBuildingCount();
+
+		return Mono.just(new ResponseVO<ResultCountVO>(request, data));
+	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)

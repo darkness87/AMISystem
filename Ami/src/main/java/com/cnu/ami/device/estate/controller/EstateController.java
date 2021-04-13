@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.common.ResultCountVO;
 import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.device.estate.models.EstateListVO;
 import com.cnu.ami.device.estate.models.EstateVO;
@@ -41,6 +42,16 @@ public class EstateController {
 
 	@Autowired
 	PropertyData propertyData;
+
+	@RequestMapping(value = "/count", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:단지관리 : 총 단지 수")
+	public Mono<ResponseVO<ResultCountVO>> getBuildingCount(HttpServletRequest request) throws Exception {
+
+		ResultCountVO data = estateService.getEstateCount();
+
+		return Mono.just(new ResponseVO<ResultCountVO>(request, data));
+	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
@@ -80,7 +91,7 @@ public class EstateController {
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
-	
+
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:단지관리 : 단지 수정")
@@ -98,7 +109,7 @@ public class EstateController {
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
-	
+
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:단지관리 : 단지 삭제")
@@ -106,7 +117,7 @@ public class EstateController {
 			throws Exception {
 
 		int data = estateService.setEstateDelete(estateSeq);
-		
+
 		ResultVO resultVO = new ResultVO();
 		if (data == 0) {
 			resultVO.setResult(true);
