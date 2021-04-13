@@ -22,6 +22,7 @@ import com.cnu.ami.common.CollectionNameFormat;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.dashboard.dao.document.DayRateTemp;
 import com.cnu.ami.dashboard.dao.document.UseDayHourTemp;
+import com.cnu.ami.dashboard.dao.entity.RegionNameIneterfaceVO;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
@@ -39,6 +40,7 @@ import com.cnu.ami.device.server.dao.ServerDAO;
 import com.cnu.ami.device.server.dao.entity.ServerRegionIneterfaceVO;
 import com.cnu.ami.scheduler.dao.WeatherDAO;
 import com.cnu.ami.scheduler.dao.entity.WeatherEntity;
+import com.cnu.ami.search.dao.SearchRegionDAO;
 import com.sun.management.OperatingSystemMXBean;
 
 import lombok.extern.slf4j.Slf4j;
@@ -55,12 +57,15 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 	@Autowired
 	private ModemInfoDAO modemInfoDAO;
-	
+
 	@Autowired
 	private ServerDAO serverDAO;
-	
+
 	@Autowired
 	private WeatherDAO weatherDAO;
+
+	@Autowired
+	private SearchRegionDAO searchRegionDAO;
 
 	@Autowired
 	MongoTemplate mongoTemplate;
@@ -242,30 +247,32 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Override
 	public WeatherVO getWeatherRealtimeAll() throws Exception {
 
-		// 서버 위치로 사용 : 판교
 		ServerRegionIneterfaceVO region = serverDAO.findBySSEQ(1); // WAS/WEB 서버 SSEQ : 1
-		
-		log.info("{}",region.getRSEQ());
-		
-		// TODO 지역 정보 가져오기 - 지역명
-		
+
+		log.info("{}", region.getRSEQ());
+
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		String today = dateFormat.format(cal.getTime());
-		
-		WeatherEntity data = weatherDAO.findFirstByRSEQAndFCSTDATEOrderByFCSTTIMEDesc(region.getRSEQ(),today);
-		
+
+		WeatherEntity data = weatherDAO.findFirstByRSEQAndFCSTDATEOrderByFCSTTIMEDesc(region.getRSEQ(), today);
+
+		RegionNameIneterfaceVO regionName = searchRegionDAO.findByrSeq(region.getRSEQ());
+
 		WeatherVO weatherVO = new WeatherVO();
 
 		weatherVO.setTemperature(data.getT1H());
-		weatherVO.setLocation("판교"); // 지역명 가지고오기
+		weatherVO.setLocation(regionName.getrName());
 		weatherVO.setCodeValue(data.getSKY()); // 0:맑음, 1:약간흐림, 2:흐림, 3:비, 4:눈, 5:천둥/번개 => 재확인후 결정
-		
-		cal.set(Integer.valueOf(data.getFCSTDATE().substring(0, 4)), Integer.valueOf(data.getFCSTDATE().substring(4, 6))-1, Integer.valueOf(data.getFCSTDATE().substring(6, 8)),
-				Integer.valueOf(data.getFCSTTIME().substring(0, 2)), Integer.valueOf(data.getFCSTTIME().substring(2, 4)),0);
-		
+
+		cal.set(Integer.valueOf(data.getFCSTDATE().substring(0, 4)),
+				Integer.valueOf(data.getFCSTDATE().substring(4, 6)) - 1,
+				Integer.valueOf(data.getFCSTDATE().substring(6, 8)),
+				Integer.valueOf(data.getFCSTTIME().substring(0, 2)),
+				Integer.valueOf(data.getFCSTTIME().substring(2, 4)), 0);
+
 		weatherVO.setDate(cal.getTime());
 
 		return weatherVO;
@@ -347,8 +354,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 	@Override
 	public List<DeviceRegVO> getElectricRegistrationDevice() throws Exception {
-
-		// TODO 임의 테스트 코드 - 실DB데이터 카운트하여 재수정한다.
 
 		List<DeviceRegVO> list = new ArrayList<DeviceRegVO>();
 
