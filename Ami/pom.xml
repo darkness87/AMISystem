@@ -113,7 +113,7 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 		</dependency>
-		
+
 		<!-- lib -->
 		<dependency>
 			<groupId>com.cnu.dcu.comm</groupId>
@@ -131,16 +131,8 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<!-- user lib include -->
 				<configuration>
 					<includeSystemScope>true</includeSystemScope>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
