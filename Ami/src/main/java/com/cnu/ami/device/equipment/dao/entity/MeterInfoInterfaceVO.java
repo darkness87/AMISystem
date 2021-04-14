@@ -26,6 +26,6 @@ public interface MeterInfoInterfaceVO {
 	
 	int getMrd();
 	
-	int getUDate();
+	long getUDate();
 
 }
