@@ -22,5 +22,12 @@ public class CollectionNameFormat {
 
 		return collectionName;
 	}
+	
+	public String formatMapp() {
+
+		String collectionName = "MAPP" + "_" + "HISTORY";
+
+		return collectionName;
+	}
 
 }

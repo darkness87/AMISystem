@@ -11,11 +11,11 @@ public class LpVO {
 
 	public Date itime;
 	public Date mtime;
-	public int fap;
+	public int fap; // 누적유효량
 	public int larap;
 	public int lerap;
 	public int ap;
-	public int rfap;
+	public int rfap; // 역방향 누적유효량
 	public int rlarap;
 	public int rlerap;
 	public int rap;

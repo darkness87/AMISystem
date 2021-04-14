@@ -31,6 +31,7 @@ import com.cnu.ami.device.equipment.models.MeterOtherInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterOtherInfoVO;
 import com.cnu.ami.device.equipment.service.EquipmentService;
 import com.cnu.network.client.fep.CnuComm;
+import com.dreamsecurity.amicipher.AMICipher;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -66,8 +67,8 @@ public class EquipmentController {
 	@RequestMapping(value = "/dcu/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 목록")
-	public Mono<ResponseListVO<DcuInfoListVO>> getDcuListData(HttpServletRequest request, @RequestParam(required = false, defaultValue = "0") int estateSeq)
-			throws Exception {
+	public Mono<ResponseListVO<DcuInfoListVO>> getDcuListData(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int estateSeq) throws Exception {
 
 		List<DcuInfoListVO> data = equipmentService.getDcuListData(estateSeq);
 
@@ -203,14 +204,14 @@ public class EquipmentController {
 		return Mono.just(new ResponseVO<MeterOtherInfoVO>(request, data));
 	}
 
-	@RequestMapping(value = "/test/dcu/setting/{param}", method = RequestMethod.POST)
+//	@RequestMapping(value = "/test/dcu/setting/{param}", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 설정")
 	public Mono<ResponseVO<ResultVO>> setDcuCommSet(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp,@PathVariable String param, @RequestBody Object object) throws Exception {
+			@RequestParam String dcuIp, @PathVariable String param, @RequestBody Object object) throws Exception {
 
 		log.info("{} , {} , {} , {} , {}", request, dcuId, dcuIp, param, object);
-		
+
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
@@ -221,11 +222,9 @@ public class EquipmentController {
 		// Service 단에서 구현 하도록 변경
 		// 서버의 시간을 클라이언트에게 제공하고 사용자는 시간확인 후 설정 요청 이상시 수정필요
 
-
-		
 //		boolean bool = comm.setDcuInfo(fepIp, fepPort, tMask, smP, smlpP, emlpP, gmlpP, eamlpP, gmAveVaP, gmInstVaP, eamAveVaP, eamInstVaP, pLength, timeout, trapItv, emTimeP, gmTimeP, eamTimeP, cpuReset);
 //		
-		boolean bool = comm.setDcuTime(dateFormat.format(date));
+//		boolean bool = comm.setDcuTime(dateFormat.format(date));
 //		
 //		boolean bool = comm.setDcuTimeLimit(iMtype, iTimeLimit);
 //		
@@ -233,7 +232,14 @@ public class EquipmentController {
 //		
 //		boolean bool = comm.setDcuSecureFactor(pnid, osPw, acodeRo, acodeRw, snmpRo, snmpRw);
 //		
-//		boolean bool = comm.execDcuReboot();
+		try {
+			AMICipher jni = new AMICipher();
+			log.info("AMICipher VERSION = {}", jni.amiGetVersion());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		boolean bool = comm.execDcuReboot();
 //		
 //		boolean bool = comm.rescanModem(mac);
 //		
@@ -242,8 +248,41 @@ public class EquipmentController {
 //		boolean bool = comm.setMeterMrd(meters, sTime);
 //		
 //		boolean bool = comm.setMeterLpPeriod(meters, period);
+
+		log.info("result : {}", bool);
+
+		resultVO.setResult(bool);
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/test/dcu/setting/reboot", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU 재부팅")
+	public Mono<ResponseVO<ResultVO>> setDcuReboot(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
+
+		log.info("{} , {} , {}", request, dcuId, dcuIp);
+
+		ResultVO resultVO = new ResultVO();
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+
+		try {
+			AMICipher jni = new AMICipher();
+			log.info("AMICipher VERSION = {}", jni.amiGetVersion());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
+//		Date date = new Date();
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		boolean bool = comm.setDcuTime(dateFormat.format(date));
+//
+//		log.info("result1 : {}", bool);
 		
+		boolean bool = comm.execDcuReboot();
+
+		log.info("result2 : {}", bool);
 
 		resultVO.setResult(bool);
 

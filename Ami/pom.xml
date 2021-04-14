@@ -114,6 +114,13 @@
 			<artifactId>gson</artifactId>
 		</dependency>
 
+		<!-- snmp4j -->
+		<dependency>
+		    <groupId>org.snmp4j</groupId>
+		    <artifactId>snmp4j</artifactId>
+		    <version>2.8.2</version>
+		</dependency>
+
 		<!-- lib -->
 		<dependency>
 			<groupId>com.cnu.dcu.comm</groupId>
@@ -121,6 +128,14 @@
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/CnuComm.jar</systemPath>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.cnu.ami.cipher</groupId>
+			<artifactId>cnu-dcu-cipher</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/AMICipher.jar</systemPath>
 		</dependency>
 
 	</dependencies>
