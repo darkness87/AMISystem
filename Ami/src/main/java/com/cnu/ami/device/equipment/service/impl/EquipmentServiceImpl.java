@@ -19,6 +19,7 @@ import com.cnu.ami.device.equipment.dao.entity.DcuInfoEntity;
 import com.cnu.ami.device.equipment.dao.entity.DcuInfoInterfaceVO;
 import com.cnu.ami.device.equipment.dao.entity.DeviceEstateInterfaceVO;
 import com.cnu.ami.device.equipment.dao.entity.DeviceInfoEntity;
+import com.cnu.ami.device.equipment.dao.entity.EstateMeterInfoInterfaceVO;
 import com.cnu.ami.device.equipment.dao.entity.MeterInfoEntity;
 import com.cnu.ami.device.equipment.dao.entity.MeterInfoInterfaceVO;
 import com.cnu.ami.device.equipment.models.DcuInfoListVO;
@@ -222,7 +223,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			meterInfoListVO.setMeterId(meter.get(i).getMeter_Id());
 			meterInfoListVO.setMac(meter.get(i).getMac());
 			meterInfoListVO.setReadingDay(meter.get(i).getMrd());
-			meterInfoListVO.setUpdateDate(new Date(meter.get(i).getUDate()*1000));
+			meterInfoListVO.setUpdateDate(new Date(meter.get(i).getUDate() * 1000));
 
 			list.add(meterInfoListVO);
 		}
@@ -231,7 +232,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public MeterInfoVO getMeterData(String meterid) throws Exception {
+	public MeterInfoVO getMeterData(int gseq, String meterid) throws Exception {
 
 		if (meterid.length() != 11) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "계량기 번호는 11자리입니다.");
@@ -243,7 +244,17 @@ public class EquipmentServiceImpl implements EquipmentService {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "Meter ID 정보를 확인해주세요.");
 		}
 
+		EstateMeterInfoInterfaceVO data = meterInfoDAO.getEstateMeterInfo(gseq, meterid);
+
 		MeterInfoVO meterInfoVO = new MeterInfoVO();
+
+		meterInfoVO.setRegionSeq(data.getRSeq());
+		meterInfoVO.setEstateSeq(data.getGSeq());
+		meterInfoVO.setRegionName(data.getRName());
+		meterInfoVO.setEstateId(data.getGId());
+		meterInfoVO.setEstateName(data.getGName());
+		meterInfoVO.setBuildingName(data.getBName());
+		meterInfoVO.setHouseName(data.getHo());
 
 		meterInfoVO.setMeterId(meter.getMETERID());
 		meterInfoVO.setMac(meter.getMAC());

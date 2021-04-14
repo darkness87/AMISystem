@@ -9,6 +9,14 @@ import lombok.Setter;
 @Setter
 public class MeterInfoVO {
 
+	private int regionSeq; // 지역 SEQ
+	private int estateSeq; // 단지 SEQ
+	private String regionName; // 지역명
+	private String estateId; // 단지 ID
+	private String estateName; // 단지명
+	private String buildingName; // 동명
+	private String houseName; // 호명
+
 	private String meterId; // METER ID
 	private String mac; // MODEM MAC
 	private String dcuId; // DCU ID

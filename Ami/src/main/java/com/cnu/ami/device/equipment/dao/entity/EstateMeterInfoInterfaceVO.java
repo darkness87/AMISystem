@@ -1,6 +1,6 @@
 package com.cnu.ami.device.equipment.dao.entity;
 
-public interface MeterInfoInterfaceVO {
+public interface EstateMeterInfoInterfaceVO {
 
 	int getRSeq(); // 지역 SEQ
 
@@ -17,15 +17,5 @@ public interface MeterInfoInterfaceVO {
 	String getBName(); // 동명
 
 	String getHo(); // 호명
-
-	String getDId(); // DCU ID
-
-	String getMeter_Id(); // METER ID
-
-	String getMac(); // MODEM MAC
-
-	int getMrd(); // 검침일
-
-	long getUDate(); // 변경일시
 
 }

@@ -146,10 +146,10 @@ public class EquipmentController {
 	@RequestMapping(value = "/meter/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : METER 상세정보")
-	public Mono<ResponseVO<MeterInfoVO>> getMeterData(HttpServletRequest request, @RequestParam String meterId)
-			throws Exception {
+	public Mono<ResponseVO<MeterInfoVO>> getMeterData(HttpServletRequest request, @RequestParam int estateSeq,
+			@RequestParam String meterId) throws Exception {
 
-		MeterInfoVO data = equipmentService.getMeterData(meterId);
+		MeterInfoVO data = equipmentService.getMeterData(estateSeq, meterId);
 
 		return Mono.just(new ResponseVO<MeterInfoVO>(request, data));
 	}
@@ -204,50 +204,19 @@ public class EquipmentController {
 		return Mono.just(new ResponseVO<MeterOtherInfoVO>(request, data));
 	}
 
-//	@RequestMapping(value = "/test/dcu/setting/{param}", method = RequestMethod.POST)
+	@RequestMapping(value = "/dcu/setting/info", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "설비:장비관리 : DCU 설정")
-	public Mono<ResponseVO<ResultVO>> setDcuCommSet(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp, @PathVariable String param, @RequestBody Object object) throws Exception {
+	@Description(value = "설비:장비관리 : DCU 정보설정")
+	public Mono<ResponseVO<ResultVO>> setDcuInfo(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
 
-		log.info("{} , {} , {} , {} , {}", request, dcuId, dcuIp, param, object);
+		log.info("{} , {} , {}", request, dcuId, dcuIp);
 
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-		Date date = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		// TODO
-		// Service 단에서 구현 하도록 변경
-		// 서버의 시간을 클라이언트에게 제공하고 사용자는 시간확인 후 설정 요청 이상시 수정필요
-
+		boolean bool = false;
 //		boolean bool = comm.setDcuInfo(fepIp, fepPort, tMask, smP, smlpP, emlpP, gmlpP, eamlpP, gmAveVaP, gmInstVaP, eamAveVaP, eamInstVaP, pLength, timeout, trapItv, emTimeP, gmTimeP, eamTimeP, cpuReset);
-//		
-//		boolean bool = comm.setDcuTime(dateFormat.format(date));
-//		
-//		boolean bool = comm.setDcuTimeLimit(iMtype, iTimeLimit);
-//		
-//		boolean bool = comm.setDcuCheckInterval(iMtype, iInterval);
-//		
-//		boolean bool = comm.setDcuSecureFactor(pnid, osPw, acodeRo, acodeRw, snmpRo, snmpRw);
-//		
-		try {
-			AMICipher jni = new AMICipher();
-			log.info("AMICipher VERSION = {}", jni.amiGetVersion());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		boolean bool = comm.execDcuReboot();
-//		
-//		boolean bool = comm.rescanModem(mac);
-//		
-//		boolean bool = comm.setMeterTime(meters, sTime);
-//		
-//		boolean bool = comm.setMeterMrd(meters, sTime);
-//		
-//		boolean bool = comm.setMeterLpPeriod(meters, period);
 
 		log.info("result : {}", bool);
 
@@ -256,7 +225,92 @@ public class EquipmentController {
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
-	@RequestMapping(value = "/test/dcu/setting/reboot", method = RequestMethod.GET)
+	@RequestMapping(value = "/dcu/setting/time", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU 시간설정")
+	public Mono<ResponseVO<ResultVO>> setDcuTime(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
+
+		log.info("{} , {} , {}", request, dcuId, dcuIp);
+
+		ResultVO resultVO = new ResultVO();
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		boolean bool = comm.setDcuTime(dateFormat.format(date));
+
+		log.info("result : {}", bool);
+
+		resultVO.setResult(bool);
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/dcu/setting/timelimit", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU 시간제한")
+	public Mono<ResponseVO<ResultVO>> setDcuTimeLimit(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
+
+		log.info("{} , {} , {}", request, dcuId, dcuIp);
+
+		ResultVO resultVO = new ResultVO();
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+
+		boolean bool = false;
+//		boolean bool = comm.setDcuTimeLimit(iMtype, iTimeLimit);
+
+		log.info("result : {}", bool);
+
+		resultVO.setResult(bool);
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/dcu/setting/interval", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU 체크주기")
+	public Mono<ResponseVO<ResultVO>> setDcuCheckInterval(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
+
+		log.info("{} , {} , {}", request, dcuId, dcuIp);
+
+		ResultVO resultVO = new ResultVO();
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+
+		boolean bool = false;
+//		boolean bool = comm.setDcuCheckInterval(iMtype, iInterval);
+
+		log.info("result : {}", bool);
+
+		resultVO.setResult(bool);
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/dcu/setting/factory", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU 초기화")
+	public Mono<ResponseVO<ResultVO>> setDcuSecureFactor(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
+
+		log.info("{} , {} , {}", request, dcuId, dcuIp);
+
+		ResultVO resultVO = new ResultVO();
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+
+		boolean bool = false;
+//		boolean bool = comm.setDcuSecureFactor(pnid, osPw, acodeRo, acodeRw, snmpRo, snmpRw);
+
+		log.info("result : {}", bool);
+
+		resultVO.setResult(bool);
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/dcu/setting/reboot", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 재부팅")
 	public Mono<ResponseVO<ResultVO>> setDcuReboot(HttpServletRequest request, @RequestParam String dcuId,
@@ -273,16 +327,94 @@ public class EquipmentController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-//		Date date = new Date();
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		boolean bool = comm.setDcuTime(dateFormat.format(date));
-//
-//		log.info("result1 : {}", bool);
-		
+
 		boolean bool = comm.execDcuReboot();
 
-		log.info("result2 : {}", bool);
+		log.info("result : {}", bool);
+
+		resultVO.setResult(bool);
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/dcu/setting/recan", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : 모뎀 재스캔")
+	public Mono<ResponseVO<ResultVO>> setRescanModem(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
+
+		log.info("{} , {} , {}", request, dcuId, dcuIp);
+
+		ResultVO resultVO = new ResultVO();
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+
+		boolean bool = false;
+//		boolean bool = comm.rescanModem(mac);
+
+		log.info("result : {}", bool);
+
+		resultVO.setResult(bool);
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/meter/setting/time", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : 계량기 시간설정")
+	public Mono<ResponseVO<ResultVO>> setMeterTime(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
+
+		log.info("{} , {} , {}", request, dcuId, dcuIp);
+
+		ResultVO resultVO = new ResultVO();
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+
+		boolean bool = false;
+//		boolean bool = comm.setMeterTime(meters, sTime);
+
+		log.info("result : {}", bool);
+
+		resultVO.setResult(bool);
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/meter/setting/readingday", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : 계량기 검침일 설정")
+	public Mono<ResponseVO<ResultVO>> setMeterMrd(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
+
+		log.info("{} , {} , {}", request, dcuId, dcuIp);
+
+		ResultVO resultVO = new ResultVO();
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+
+		boolean bool = false;
+//		boolean bool = comm.setMeterMrd(meters, sTime);
+
+		log.info("result : {}", bool);
+
+		resultVO.setResult(bool);
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/meter/setting/period", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : 계량기 주기 설정")
+	public Mono<ResponseVO<ResultVO>> setMeterLpPeriod(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
+
+		log.info("{} , {} , {}", request, dcuId, dcuIp);
+
+		ResultVO resultVO = new ResultVO();
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+
+		boolean bool = false;
+//		boolean bool = comm.setMeterLpPeriod(meters, period);
+
+		log.info("result : {}", bool);
 
 		resultVO.setResult(bool);
 

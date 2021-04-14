@@ -27,7 +27,7 @@ public interface EquipmentService {
 
 	public List<MeterInfoListVO> getMeterListData(int gseq) throws Exception;
 
-	public MeterInfoVO getMeterData(String meterid) throws Exception;
+	public MeterInfoVO getMeterData(int gseq, String meterid) throws Exception;
 
 	public int setMeterDelete(String meterid) throws Exception;
 
