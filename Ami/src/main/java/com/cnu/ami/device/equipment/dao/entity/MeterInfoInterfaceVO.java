@@ -23,5 +23,9 @@ public interface MeterInfoInterfaceVO {
 	String getMeter_Id(); // METER ID
 
 	String getMac(); // MODEM MAC
+	
+	int getMrd();
+	
+	int getUDate();
 
 }

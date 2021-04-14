@@ -18,7 +18,7 @@ public class MeterOtherInfoVO {
 	private String houseName; // 호명
 	private String gatewayId; // 게이트웨이 ID
 	private String meterId; // 계량기 ID
-	private int meterType; // 계량기 타입 // 1:전기,2:가스,3:수도,4:온수,5:난방
+	private int readingType; // 검침 타입 // 1:전기,2:가스,3:수도,4:온수,5:난방
 
 	private String mac;
 	private String deviceName;

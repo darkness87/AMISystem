@@ -1,5 +1,7 @@
 package com.cnu.ami.device.equipment.models;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,5 +20,7 @@ public class MeterInfoListVO {
 	private String dcuId; // DCU ID
 	private String meterId; // METER ID
 	private String mac; // MODEM MAC
+	private int readingDay; // 검침일;
+	private Date updateDate; // 변경일시
 
 }

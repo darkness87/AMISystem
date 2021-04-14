@@ -17,7 +17,7 @@ public class EstateListVO {
 	private int houseCount; // 세대수
 	private String address; // 주소
 	private int deviceCount; // 설치 장비 수
-	private int meteringTypeCount; // 검침 타입 수
+	private int readingTypeCount; // 검침 타입 수
 	private Date writeDate; // 등록일
 	private Date updateDate; // 수정일
 

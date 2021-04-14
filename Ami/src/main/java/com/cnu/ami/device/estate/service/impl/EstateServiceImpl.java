@@ -94,7 +94,7 @@ public class EstateServiceImpl implements EstateService {
 			if (data.get(i).getChkHeating().equals("Y")) {
 				count = count + 1;
 			}
-			estateListVO.setMeteringTypeCount(count);
+			estateListVO.setReadingTypeCount(count);
 			estateListVO.setWriteDate(new Date(data.get(i).getWDate() * 1000));
 			estateListVO.setUpdateDate(new Date(data.get(i).getUDate() * 1000));
 

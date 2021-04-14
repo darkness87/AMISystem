@@ -221,6 +221,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 			meterInfoListVO.setDcuId(meter.get(i).getDId());
 			meterInfoListVO.setMeterId(meter.get(i).getMeter_Id());
 			meterInfoListVO.setMac(meter.get(i).getMac());
+			meterInfoListVO.setReadingDay(meter.get(i).getMrd());
+			meterInfoListVO.setUpdateDate(new Date(meter.get(i).getUDate()*1000));
 
 			list.add(meterInfoListVO);
 		}
@@ -333,7 +335,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		meterOtherInfoVO.setHouseName(data.getHO());
 		meterOtherInfoVO.setGatewayId(data.getGATEWAYID());
 		meterOtherInfoVO.setMeterId(data.getMETERID());
-		meterOtherInfoVO.setMeterType(data.getTYPE());
+		meterOtherInfoVO.setReadingType(data.getTYPE());
 		meterOtherInfoVO.setMac(data.getMAC());
 		meterOtherInfoVO.setDeviceName(data.getDEVICE_NAME());
 		meterOtherInfoVO.setReadingDay(data.getMRD());
