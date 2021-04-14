@@ -321,6 +321,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			meterOtherInfoListVO.setGatewayId(device.getGATEWAYID());
 			meterOtherInfoListVO.setMeterId(device.getMETERID());
 			meterOtherInfoListVO.setMeterType(device.getTYPE()); // 계량기 타입 // 1:전기,2:가스,3:수도,4:온수,5:난방
+			meterOtherInfoListVO.setUpdateDate(new Date(device.getWDATE() * 1000));
 
 			list.add(meterOtherInfoListVO);
 		}

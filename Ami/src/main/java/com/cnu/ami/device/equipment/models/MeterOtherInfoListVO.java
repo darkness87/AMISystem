@@ -1,5 +1,7 @@
 package com.cnu.ami.device.equipment.models;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,5 +19,6 @@ public class MeterOtherInfoListVO {
 	private String gatewayId; // 게이트웨이 ID
 	private String meterId; // 계량기 ID
 	private int meterType; // 계량기 타입 // 1:전기,2:가스,3:수도,4:온수,5:난방
+	private Date updateDate; // 변경일시
 
 }
