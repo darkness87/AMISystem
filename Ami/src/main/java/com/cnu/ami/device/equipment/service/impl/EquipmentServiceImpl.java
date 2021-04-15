@@ -17,6 +17,7 @@ import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
 import com.cnu.ami.device.equipment.dao.ModemInfoDAO;
 import com.cnu.ami.device.equipment.dao.entity.DcuInfoEntity;
 import com.cnu.ami.device.equipment.dao.entity.DcuInfoInterfaceVO;
+import com.cnu.ami.device.equipment.dao.entity.DeviceBuildingInterfaceVO;
 import com.cnu.ami.device.equipment.dao.entity.DeviceEstateInterfaceVO;
 import com.cnu.ami.device.equipment.dao.entity.DeviceInfoEntity;
 import com.cnu.ami.device.equipment.dao.entity.EstateMeterInfoInterfaceVO;
@@ -62,7 +63,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 		List<DcuInfoInterfaceVO> data = null;
 
 		if (gseq == 0) {
-			data = dcuInfoDAO.getDcuList();
+//			data = dcuInfoDAO.getDcuList();
+			data = dcuInfoDAO.getDcuNoMappList(); // 미 매핑 정보
 		} else {
 			data = dcuInfoDAO.getDcuList(gseq);
 		}
@@ -104,9 +106,15 @@ public class EquipmentServiceImpl implements EquipmentService {
 		} else {
 			DcuInfoEntity dcu = dcuInfoDAO.findByDID(did);
 
+			DeviceBuildingInterfaceVO mapp = dcuInfoDAO.getDcuMappInfo(did);
+
 			if (dcu == null) {
 				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "데이터가 없습니다.");
 			}
+
+			dcuInfoVO.setRegionName(mapp.getRNAME());
+			dcuInfoVO.setEstateName(mapp.getGNAME());
+			dcuInfoVO.setBuildingName(mapp.getBNAME());
 
 			dcuInfoVO.setDcuId(dcu.getDID());
 			dcuInfoVO.setFepIp(dcu.getFEP_IP());
@@ -116,7 +124,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			dcuInfoVO.setMacA(dcu.getMAC_A());
 			dcuInfoVO.setMacB(dcu.getMAC_B());
 			dcuInfoVO.setMacC(dcu.getMAC_C());
-			dcuInfoVO.setITime(dcu.getITIME());
+			dcuInfoVO.setDcuCurrentTime(new Date(dcu.getITIME() * 1000));
 			dcuInfoVO.setFirmwareVersion(dcu.getFWV());
 			dcuInfoVO.setWanCode(dcu.getWAN_CODE());
 			dcuInfoVO.setCommCode(dcu.getCOMM_CODE());
@@ -141,8 +149,56 @@ public class EquipmentServiceImpl implements EquipmentService {
 			dcuInfoVO.setGTypeTimePeriod(dcu.getGM_TIME_P());
 			dcuInfoVO.setEaTypeTimePeriod(dcu.getEAM_TIME_P());
 			dcuInfoVO.setCpuReset(dcu.getCPU_RESET());
+
+			dcuInfoVO.setPnid(dcu.getPNID());
+			dcuInfoVO.setAcodeReadOnly(dcu.getACODE_RO());
+			dcuInfoVO.setAcodeReadWrite(dcu.getACODE_RW());
+			dcuInfoVO.setSnmpReadOnly(dcu.getSNMP_PW_RO());
+			dcuInfoVO.setSnmpReadWrite(dcu.getSNMP_PW_RW());
+			dcuInfoVO.setSysDcuDesc(dcu.getS_SYS_DESCR());
+			dcuInfoVO.setSysDcuName(dcu.getS_SYS_NAME());
+			dcuInfoVO.setSysDcuId(dcu.getS_DCU_ID());
+			dcuInfoVO.setSysUpTime(dcu.getS_SYS_UP_TIME());
+			dcuInfoVO.setSysSerial(dcu.getS_SYS_SERIAL());
+			dcuInfoVO.setSysModel(dcu.getS_SYS_MODEL());
+			dcuInfoVO.setSysObjectId(dcu.getS_SYS_OBJECT_ID());
+			dcuInfoVO.setSysMac(dcu.getS_SYS_MAC());
+			dcuInfoVO.setSysOsVersion(dcu.getS_SYS_OS_VERS());
+			dcuInfoVO.setSysHardWareVersion(dcu.getS_SYS_HW_VERS());
+			dcuInfoVO.setSysFirmWareVersion(dcu.getS_SYS_FW_VERS());
+			dcuInfoVO.setSysMibVersion(dcu.getS_SYS_MIB_VERS());
+			dcuInfoVO.setSysDownTime(dcu.getS_SYS_DOWN_TIME());
+			dcuInfoVO.setSysConsoleMac(dcu.getS_SYS_CON_MAC());
+			dcuInfoVO.setSysMibEncrypt(dcu.getS_SYS_MIB_ENCRYPT());
+			dcuInfoVO.setSysMrAgentUpTime(dcu.getS_SYS_MR_AGENT_UP_TIME());
+			dcuInfoVO.setSysSnmpAgentUpTime(dcu.getS_SYS_SNMP_AGENT_UP_TIME());
+			dcuInfoVO.setSysWanCode(dcu.getS_WAN_CODE());
+			dcuInfoVO.setSysCommCode(dcu.getS_COMM_CODE());
+			dcuInfoVO.setSysDcuType(dcu.getS_DCU_TYPE());
+			dcuInfoVO.setSysState(dcu.getS_SYS_STATE());
+			dcuInfoVO.setSysUpBps(dcu.getS_SYS_UP_BPS());
+			dcuInfoVO.setSysDownBps(dcu.getS_SYS_DN_BPS());
+			dcuInfoVO.setSysCpuUsage(dcu.getS_SYS_CPU_USAGE());
+			dcuInfoVO.setSysMemoryUsage(dcu.getS_SYS_MEM_USAGE());
+			dcuInfoVO.setSysTempValue(dcu.getS_SYS_TEMP_VALUE());
+			dcuInfoVO.setSysDcuCoverStatus(dcu.getS_DCU_COVER_STATUS());
+			dcuInfoVO.setSysSecurityStatus(dcu.getS_SYS_SECURITY_STATUS());
+			dcuInfoVO.setSysReset(dcu.getS_SYS_RESET());
+			dcuInfoVO.setSysIpAddrInfo(dcu.getS_SYS_IP_ADDR_INFO());
+			dcuInfoVO.setSysTrapRecvInfo(dcu.getS_SYS_TRAP_RECV_INFO());
+			dcuInfoVO.setSysCpuThresh(dcu.getS_CPU_THRESH());
+			dcuInfoVO.setSysMemoryThresh(dcu.getS_MEM_THRESH());
+			dcuInfoVO.setSysTempThresh(dcu.getS_TEMP_THRESH());
+			dcuInfoVO.setSysUpBpsThresh(dcu.getS_UP_BPS_THRESH());
+			dcuInfoVO.setSysDownBpsThresh(dcu.getS_DOWN_BPS_THRESH());
+			dcuInfoVO.setIsDelete(dcu.getIS_DELETE());
+			dcuInfoVO.setWriteDate(new Date(dcu.getWDATE() * 1000));
+			dcuInfoVO.setUpdateDate(new Date(dcu.getUDATE() * 1000));
+			dcuInfoVO.setDcuStatus(dcu.getDSTATUS());
+
 			dcuInfoVO.setLatitude(dcu.getLAT());
 			dcuInfoVO.setLongitude(dcu.getLON());
+			dcuInfoVO.setRouterIp(dcu.getROUTER_IP());
 
 		}
 
@@ -196,7 +252,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 		List<MeterInfoInterfaceVO> meter = null;
 
 		if (gseq == 0) {
-			meter = meterInfoDAO.getMeterList();
+//			meter = meterInfoDAO.getMeterList();
+			meter = meterInfoDAO.getMeterNoMappList(); // 미매핑 정보 목록
 		} else {
 			meter = meterInfoDAO.getMeterList(gseq);
 		}
