@@ -246,6 +246,42 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
+	public int setDcuIp(String dcuId, String dcuIp) throws Exception {
+
+		try {
+			dcuInfoDAO.setDcuIp(dcuId, dcuIp);
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+
+	}
+
+	@Override
+	public int setRouterIp(String dcuId, String routerIp) throws Exception {
+
+		try {
+			dcuInfoDAO.setRouterIp(dcuId, routerIp);
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+
+	}
+
+	@Override
+	public int setLatLon(String dcuId, float lat, float lon) throws Exception {
+
+		try {
+			dcuInfoDAO.setLatLon(dcuId, lat, lon);
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+
+	}
+
+	@Override
 	public ResultCountVO getMeterCount() throws Exception {
 		ResultCountVO resultCountVO = new ResultCountVO();
 		resultCountVO.setCount(meterInfoDAO.count());

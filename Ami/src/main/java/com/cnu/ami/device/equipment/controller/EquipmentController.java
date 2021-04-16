@@ -1,6 +1,7 @@
 package com.cnu.ami.device.equipment.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -112,6 +113,60 @@ public class EquipmentController {
 
 		ResultVO resultVO = new ResultVO();
 		int data = equipmentService.setDcuDelete(dcuId);
+
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/dcu/update/dcuip", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU IP 수정")
+	public Mono<ResponseVO<ResultVO>> updateDcuIp(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+		int data = equipmentService.setDcuIp(dcuId, dcuIp);
+
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/dcu/update/routerip", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU IP 수정")
+	public Mono<ResponseVO<ResultVO>> updateRouterIp(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String routerIp) throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+		int data = equipmentService.setRouterIp(dcuId, routerIp);
+
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/dcu/update/location", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU IP 수정")
+	public Mono<ResponseVO<ResultVO>> updateRouterIp(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam float latitude, @RequestParam float longitude) throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+		int data = equipmentService.setLatLon(dcuId, latitude, longitude);
 
 		if (data == 0) { // 0: Success , 1: Fail
 			resultVO.setResult(true);
@@ -249,7 +304,7 @@ public class EquipmentController {
 
 	@RequestMapping(value = "/dcu/setting/timelimit", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "설비:장비관리 : DCU 시간제한")
+	@Description(value = "설비:장비관리 : DCU 시간오차한계")
 	public Mono<ResponseVO<ResultVO>> setDcuTimeLimit(HttpServletRequest request, @RequestParam String dcuId,
 			@RequestParam String dcuIp) throws Exception {
 
@@ -270,7 +325,7 @@ public class EquipmentController {
 
 	@RequestMapping(value = "/dcu/setting/interval", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "설비:장비관리 : DCU 체크주기")
+	@Description(value = "설비:장비관리 : DCU 시간확인주기")
 	public Mono<ResponseVO<ResultVO>> setDcuCheckInterval(HttpServletRequest request, @RequestParam String dcuId,
 			@RequestParam String dcuIp) throws Exception {
 
@@ -291,7 +346,7 @@ public class EquipmentController {
 
 	@RequestMapping(value = "/dcu/setting/factory", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "설비:장비관리 : DCU 초기화")
+	@Description(value = "설비:장비관리 : DCU 보안항목설정")
 	public Mono<ResponseVO<ResultVO>> setDcuSecureFactor(HttpServletRequest request, @RequestParam String dcuId,
 			@RequestParam String dcuIp) throws Exception {
 
@@ -339,7 +394,7 @@ public class EquipmentController {
 
 	@RequestMapping(value = "/dcu/setting/recan", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "설비:장비관리 : 모뎀 재스캔")
+	@Description(value = "설비:장비관리 : DCU 모뎀 재스캔")
 	public Mono<ResponseVO<ResultVO>> setRescanModem(HttpServletRequest request, @RequestParam String dcuId,
 			@RequestParam String dcuIp) throws Exception {
 
@@ -348,6 +403,7 @@ public class EquipmentController {
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
+		// DCU ID에 해당하는 모뎀 MAC 가져오기
 		boolean bool = false;
 //		boolean bool = comm.rescanModem(mac);
 
@@ -362,15 +418,21 @@ public class EquipmentController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : 계량기 시간설정")
 	public Mono<ResponseVO<ResultVO>> setMeterTime(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp) throws Exception {
+			@RequestParam String dcuIp,@RequestParam String meterId) throws Exception {
 
 		log.info("{} , {} , {}", request, dcuId, dcuIp);
 
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-		boolean bool = false;
-//		boolean bool = comm.setMeterTime(meters, sTime);
+//		boolean bool = false;
+		
+		String[] meters = {meterId};
+		
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		boolean bool = comm.setMeterTime(meters, dateFormat.format(date));
 
 		log.info("result : {}", bool);
 
@@ -383,15 +445,25 @@ public class EquipmentController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : 계량기 검침일 설정")
 	public Mono<ResponseVO<ResultVO>> setMeterMrd(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp) throws Exception {
+			@RequestParam String dcuIp, @RequestParam String meterId, @RequestParam int day) throws Exception {
 
 		log.info("{} , {} , {}", request, dcuId, dcuIp);
 
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-		boolean bool = false;
-//		boolean bool = comm.setMeterMrd(meters, sTime);
+//		boolean bool = false;
+		String[] meters = {meterId};
+		
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.DATE, day);
+		
+		date = new Date(cal.getTimeInMillis());
+		
+		boolean bool = comm.setMeterTime(meters, dateFormat.format(date));
 
 		log.info("result : {}", bool);
 
@@ -404,15 +476,17 @@ public class EquipmentController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : 계량기 주기 설정")
 	public Mono<ResponseVO<ResultVO>> setMeterLpPeriod(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp) throws Exception {
+			@RequestParam String dcuIp, @RequestParam String meterId, @RequestParam int period) throws Exception {
 
 		log.info("{} , {} , {}", request, dcuId, dcuIp);
 
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-		boolean bool = false;
-//		boolean bool = comm.setMeterLpPeriod(meters, period);
+		String[] meters = {meterId};
+		
+//		boolean bool = false;
+		boolean bool = comm.setMeterLpPeriod(meters, period);
 
 		log.info("result : {}", bool);
 

@@ -23,6 +23,12 @@ public interface EquipmentService {
 
 	public int setDcuDelete(String did) throws Exception;
 
+	public int setDcuIp(String did, String dcuIp) throws Exception;
+
+	public int setRouterIp(String did, String routerIp) throws Exception;
+
+	public int setLatLon(String did, float lat, float lon) throws Exception;
+
 	public ResultCountVO getMeterCount() throws Exception;
 
 	public List<MeterInfoListVO> getMeterListData(int gseq) throws Exception;

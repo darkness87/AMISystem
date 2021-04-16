@@ -56,4 +56,19 @@ public interface DcuInfoDAO extends JpaRepository<DcuInfoEntity, String> { // í‚
 			+ "ON T4.RSEQ=T5.RSEQ", nativeQuery = true)
 	public DeviceBuildingInterfaceVO getDcuMappInfo(@Param("dcuId") String dcuId);
 
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE DCU_INFO SET DCU_IP = :dcuIp WHERE DID = :did", nativeQuery = true)
+	public void setDcuIp(@Param("did") String did, @Param("dcuIp") String dcuIp);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE DCU_INFO SET ROUTER_IP = :routerIp WHERE DID = :did", nativeQuery = true)
+	public void setRouterIp(@Param("did") String did, @Param("routerIp") String routerIp);
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE DCU_INFO SET LAT = :lat, LON = :lon WHERE DID = :did", nativeQuery = true)
+	public void setLatLon(@Param("did") String did, @Param("lat") float lat, @Param("lon") float lon);
+
 }
