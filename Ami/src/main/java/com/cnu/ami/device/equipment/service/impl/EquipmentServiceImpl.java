@@ -112,9 +112,15 @@ public class EquipmentServiceImpl implements EquipmentService {
 				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "데이터가 없습니다.");
 			}
 
-			dcuInfoVO.setRegionName(mapp.getRNAME());
-			dcuInfoVO.setEstateName(mapp.getGNAME());
-			dcuInfoVO.setBuildingName(mapp.getBNAME());
+			if (mapp == null) {
+				dcuInfoVO.setRegionName(null);
+				dcuInfoVO.setEstateName(null);
+				dcuInfoVO.setBuildingName(null);
+			} else {
+				dcuInfoVO.setRegionName(mapp.getRNAME());
+				dcuInfoVO.setEstateName(mapp.getGNAME());
+				dcuInfoVO.setBuildingName(mapp.getBNAME());
+			}
 
 			dcuInfoVO.setDcuId(dcu.getDID());
 			dcuInfoVO.setFepIp(dcu.getFEP_IP());
