@@ -36,9 +36,9 @@ public class DcuInfoEntity {
 	@Column(name = "FWV")
 	private String FWV;
 	@Column(name = "WAN_CODE")
-	private int WAN_CODE;
+	private String WAN_CODE;
 	@Column(name = "COMM_CODE")
-	private int COMM_CODE;
+	private String COMM_CODE;
 	@Column(name = "T_MASK")
 	private String T_MASK;
 	@Column(name = "SM_P")
@@ -80,7 +80,7 @@ public class DcuInfoEntity {
 	@Column(name = "EAM_TIME_P")
 	private int EAM_TIME_P;
 	@Column(name = "CPU_RESET")
-	private int CPU_RESET;
+	private String CPU_RESET;
 	@Column(name = "PNID")
 	private String PNID;
 	@Column(name = "ACODE_RO")
@@ -120,19 +120,19 @@ public class DcuInfoEntity {
 	@Column(name = "S_SYS_CON_MAC")
 	private String S_SYS_CON_MAC;
 	@Column(name = "S_SYS_MIB_ENCRYPT")
-	private int S_SYS_MIB_ENCRYPT;
+	private String S_SYS_MIB_ENCRYPT;
 	@Column(name = "S_SYS_MR_AGENT_UP_TIME")
 	private String S_SYS_MR_AGENT_UP_TIME;
 	@Column(name = "S_SYS_SNMP_AGENT_UP_TIME")
 	private String S_SYS_SNMP_AGENT_UP_TIME;
 	@Column(name = "S_WAN_CODE")
-	private int S_WAN_CODE;
+	private String S_WAN_CODE;
 	@Column(name = "S_COMM_CODE")
-	private int S_COMM_CODE;
+	private String S_COMM_CODE;
 	@Column(name = "S_DCU_TYPE")
-	private int S_DCU_TYPE;
+	private String S_DCU_TYPE;
 	@Column(name = "S_SYS_STATE")
-	private int S_SYS_STATE;
+	private String S_SYS_STATE;
 	@Column(name = "S_SYS_UP_BPS")
 	private int S_SYS_UP_BPS;
 	@Column(name = "S_SYS_DN_BPS")
@@ -144,11 +144,11 @@ public class DcuInfoEntity {
 	@Column(name = "S_SYS_TEMP_VALUE")
 	private int S_SYS_TEMP_VALUE;
 	@Column(name = "S_DCU_COVER_STATUS")
-	private int S_DCU_COVER_STATUS;
+	private String S_DCU_COVER_STATUS;
 	@Column(name = "S_SYS_SECURITY_STATUS")
-	private int S_SYS_SECURITY_STATUS;
+	private String S_SYS_SECURITY_STATUS;
 	@Column(name = "S_SYS_RESET")
-	private int S_SYS_RESET;
+	private String S_SYS_RESET;
 	@Column(name = "S_SYS_IP_ADDR_INFO")
 	private String S_SYS_IP_ADDR_INFO;
 	@Column(name = "S_SYS_TRAP_RECV_INFO")

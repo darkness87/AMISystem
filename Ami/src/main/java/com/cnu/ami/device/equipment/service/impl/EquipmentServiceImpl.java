@@ -88,7 +88,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			dcuInfoListVO.setDcuIp(data.get(i).getDCU_IP());
 			dcuInfoListVO.setFepIp(data.get(i).getFEP_IP());
 			dcuInfoListVO.setFirmwareVersion(data.get(i).getFWV());
-			dcuInfoListVO.setSystemState(Integer.valueOf(data.get(i).getS_SYS_STATE()));
+			dcuInfoListVO.setSystemState(data.get(i).getS_SYS_STATE());
 
 			list.add(dcuInfoListVO);
 		}
@@ -218,11 +218,24 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		dcuInfoEntity.setDID(dcuRegVO.getDcuId());
 		dcuInfoEntity.setDCU_IP(dcuRegVO.getDcuIp());
+		dcuInfoEntity.setDCU_PORT(dcuRegVO.getDcuPort());
+		dcuInfoEntity.setROUTER_IP(dcuRegVO.getRouterIp());
 		dcuInfoEntity.setLAT(dcuRegVO.getLatitude());
 		dcuInfoEntity.setLON(dcuRegVO.getLongitude());
-//		dcuInfoEntity.setITIME(dcuRegVO.getInstallDate().getTime() / 1000);
 		dcuInfoEntity.setWDATE(new Date().getTime() / 1000);
 		dcuInfoEntity.setUDATE(new Date().getTime() / 1000);
+
+		dcuInfoEntity.setFEP_IP("");
+		dcuInfoEntity.setFEP_PORT(0);
+		dcuInfoEntity.setMAC_A("");
+		dcuInfoEntity.setMAC_B("");
+		dcuInfoEntity.setMAC_C("");
+		dcuInfoEntity.setITIME(new Date().getTime() / 1000);
+		dcuInfoEntity.setFWV("");
+		dcuInfoEntity.setT_MASK("");
+		dcuInfoEntity.setF_BUILD("");
+		dcuInfoEntity.setDSTATUS("RET_FAIL_CONNECTION"); // 초기 등록시 설정
+		dcuInfoEntity.setIS_DELETE("N"); // 초기 등록시 설정
 
 		try {
 			dcuInfoDAO.save(dcuInfoEntity);
