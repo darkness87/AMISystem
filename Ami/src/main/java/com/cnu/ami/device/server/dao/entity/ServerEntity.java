@@ -37,6 +37,6 @@ public class ServerEntity {
 	private long WDATE;
 
 	@Column(name = "RSEQ")
-	private long RSEQ;
+	private int RSEQ;
 
 }

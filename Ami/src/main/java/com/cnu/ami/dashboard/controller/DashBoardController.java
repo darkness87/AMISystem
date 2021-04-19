@@ -132,16 +132,18 @@ public class DashBoardController {
 			@RequestParam int duration) throws Exception {
 
 		if (duration == 0) { // 0일 경우 디폴트 15초
-			duration = 15;
-		}
+			return Flux.just(dashBoardService.getServerManagementInfo(request));
+		} else {
 
-		return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
-			try {
-				return dashBoardService.getServerManagementInfo(request);
-			} catch (Exception e) {
-				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
-			}
-		});
+			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
+				try {
+					return dashBoardService.getServerManagementInfo(request);
+				} catch (Exception e) {
+					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
+				}
+			});
+
+		}
 
 	}
 
