@@ -9,10 +9,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
+import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
+import com.cnu.ami.device.equipment.dao.ModemInfoDAO;
 import com.cnu.ami.device.server.dao.ServerDAO;
 import com.cnu.ami.device.server.dao.entity.ServerEntity;
 import com.cnu.ami.device.server.models.ServerListVO;
 import com.cnu.ami.device.server.models.ServerProcessVO;
+import com.cnu.ami.device.server.models.ServerRegistrationVO;
 import com.cnu.ami.device.server.models.ServerSystemVO;
 import com.cnu.ami.device.server.service.ServerService;
 import com.sun.management.OperatingSystemMXBean;
@@ -22,6 +26,15 @@ public class ServerServiceImpl implements ServerService {
 
 	@Autowired
 	private ServerDAO serverDAO;
+	
+	@Autowired
+	private DcuInfoDAO dcuInfoDAO;
+
+	@Autowired
+	private MeterInfoDAO meterInfoDAO;
+
+	@Autowired
+	private ModemInfoDAO modemInfoDAO;
 
 	@SuppressWarnings("restriction")
 	@Override
@@ -55,6 +68,20 @@ public class ServerServiceImpl implements ServerService {
 
 	}
 
+	@Override
+	public ServerRegistrationVO getServerRegistration() throws Exception {
+		
+		ServerRegistrationVO serverRegistrationVO = new ServerRegistrationVO();
+		
+		serverRegistrationVO.setDate(new Date());
+		serverRegistrationVO.setServerCount(serverDAO.count());
+		serverRegistrationVO.setDcuCount(dcuInfoDAO.count());
+		serverRegistrationVO.setModemCount(modemInfoDAO.count());
+		serverRegistrationVO.setMeterCount(meterInfoDAO.count());
+		
+		return serverRegistrationVO;
+	}
+	
 	@Override
 	public List<ServerListVO> getServerList() throws Exception {
 		List<ServerEntity> data = serverDAO.findAll();

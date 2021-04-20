@@ -4,12 +4,15 @@ import java.util.List;
 
 import com.cnu.ami.device.server.models.ServerListVO;
 import com.cnu.ami.device.server.models.ServerProcessVO;
+import com.cnu.ami.device.server.models.ServerRegistrationVO;
 import com.cnu.ami.device.server.models.ServerSystemVO;
 
 public interface ServerService {
 
 	public ServerSystemVO getServerSystemInfo() throws Exception;
 
+	public ServerRegistrationVO getServerRegistration() throws Exception;
+	
 	public List<ServerListVO> getServerList() throws Exception;
 
 	public List<ServerProcessVO> getServerProcess() throws Exception;

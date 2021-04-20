@@ -20,10 +20,10 @@ import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.SystemException;
-import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.service.DashBoardService;
 import com.cnu.ami.device.server.models.ServerListVO;
 import com.cnu.ami.device.server.models.ServerProcessVO;
+import com.cnu.ami.device.server.models.ServerRegistrationVO;
 import com.cnu.ami.device.server.models.ServerSystemVO;
 import com.cnu.ami.device.server.service.ServerService;
 
@@ -53,7 +53,7 @@ public class ServerController {
 	@RequestMapping(value = "/system", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:서버현황 : 시스템 자원정보")
-	public Flux<ResponseVO<ServerSystemVO>> getSystemData(HttpServletRequest request, @RequestParam int duration)
+	public Flux<ResponseVO<ServerSystemVO>> getSystemData(HttpServletRequest request, @RequestParam(required = false, defaultValue = "0") int duration)
 			throws Exception {
 
 		if (duration == 0) { // 0일 경우 1회 전달
@@ -74,11 +74,11 @@ public class ServerController {
 	@RequestMapping(value = "/registration/device", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:서버현황 : 등록설비정보")
-	public Mono<ResponseListVO<DeviceRegVO>> getElectricRegistrationDevice(HttpServletRequest request)
+	public Mono<ResponseVO<ServerRegistrationVO>> getElectricRegistrationDevice(HttpServletRequest request)
 			throws Exception {
-		List<DeviceRegVO> data = dashBoardService.getElectricRegistrationDevice();
+		ServerRegistrationVO data = serverService.getServerRegistration();
 
-		return Mono.just(new ResponseListVO<DeviceRegVO>(request, data));
+		return Mono.just(new ResponseVO<ServerRegistrationVO>(request, data));
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
