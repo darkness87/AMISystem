@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.dashboard.dao.document.DayLpFailureTemp;
 import com.cnu.ami.dashboard.dao.document.DayRateTemp;
 import com.cnu.ami.dashboard.dao.document.UseDayHourTemp;
 import com.cnu.ami.dashboard.dao.entity.RegionNameIneterfaceVO;
@@ -31,6 +32,7 @@ import com.cnu.ami.dashboard.models.RateVO;
 import com.cnu.ami.dashboard.models.ServerManagementVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllListVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllVO;
+import com.cnu.ami.dashboard.models.WeatherDataVO;
 import com.cnu.ami.dashboard.models.WeatherVO;
 import com.cnu.ami.dashboard.service.DashBoardService;
 import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
@@ -38,6 +40,8 @@ import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
 import com.cnu.ami.device.equipment.dao.ModemInfoDAO;
 import com.cnu.ami.device.server.dao.ServerDAO;
 import com.cnu.ami.device.server.dao.entity.ServerRegionIneterfaceVO;
+import com.cnu.ami.failure.reading.dao.FailureReadingDAO;
+import com.cnu.ami.failure.reading.dao.entity.LpSnapCountInterfaceVO;
 import com.cnu.ami.scheduler.dao.WeatherDAO;
 import com.cnu.ami.scheduler.dao.entity.WeatherEntity;
 import com.cnu.ami.search.dao.SearchRegionDAO;
@@ -66,6 +70,9 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 	@Autowired
 	private SearchRegionDAO searchRegionDAO;
+
+	@Autowired
+	private FailureReadingDAO failureReadingDAO;
 
 	@Autowired
 	MongoTemplate mongoTemplate;
@@ -221,23 +228,51 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Override
 	public FailureAllVO getElectricFailureDayHourAll() throws Exception {
 
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		String today = dateFormat.format(cal.getTime());
+
+		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+		String collectionName = collectionNameFormat.formatFault();
+
+		String[] jsonRawString = { String.format("{$match: { day: '%s' }}", today),
+				"{$group: { _id: { time: { $substr: [ \"$mstr\", 11, 2 ] } }, f1: { $sum : '$f1' }, f2: { $sum : '$f2' }, f3: { $sum : '$f3' }, f4: { $sum : '$f4' }, f5: { $sum : '$f5' } , f6: { $sum : '$f6' }, f7: { $sum : '$f7' }, f8: { $sum : '$f8' }, f9: { $sum : '$f9' }, f10: { $sum : '$f10' } , f11: { $sum : '$f11' }, f12: { $sum : '$f12' }, f13: { $sum : '$f13' }, f14: { $sum : '$f14' }, f15: { $sum : '$f15' } , f16: { $sum : '$f16' }, f17: { $sum : '$f17' }, f18: { $sum : '$f18' }, f19: { $sum : '$f19' }, f20: { $sum : '$f20' } , f21: { $sum : '$f21' }, f22: { $sum : '$f22' }, f23: { $sum : '$f23' }, f24: { $sum : '$f24' } }}",
+				"{$project: { time: {'$convert': { 'input': '$_id.time', 'to': 'int' } }, total : { '$add' : [ '$f1', '$f2', '$f3', '$f4', '$f5', '$f6', '$f7', '$f8', '$f9' , '$f10', '$f11', '$f12', '$f13', '$f14', '$f15', '$f16', '$f17', '$f18', '$f19', '$f20', '$f21', '$f22', '$f23', '$f24'] } }}",
+				"{$sort: { time: 1 }}" };
+
+		Aggregation aggregation = Aggregation.newAggregation(
+				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[3])));
+
+		AggregationResults<DayLpFailureTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+				DayLpFailureTemp.class);
+
+		List<DayLpFailureTemp> data = result.getMappedResults();
+
 		FailureAllVO failureAllVO = new FailureAllVO();
 
-		failureAllVO.setFailureTodayCount(10);
-		failureAllVO.setDate(new Date());
-		failureAllVO.setType("electric , 장애임시값");
-
-		// DB에서 실 데이터 가져와야함
 		List<FailureAllListVO> list = new ArrayList<FailureAllListVO>();
 		FailureAllListVO failureAllListVO = new FailureAllListVO();
 
-		for (int i = 1; i < 25; i++) {
+		int count = 0;
+		for (DayLpFailureTemp temp : data) {
 			failureAllListVO = new FailureAllListVO();
-			failureAllListVO.setTime(i);
-			failureAllListVO.setCount(10);
+			failureAllListVO.setTime(temp.getTime());
+			failureAllListVO.setCount(temp.getTotal());
+
+			count = count + temp.getTotal();
 
 			list.add(failureAllListVO);
 		}
+
+		failureAllVO.setFailureTodayCount(count);
+		failureAllVO.setDate(new Date());
+		failureAllVO.setType("electric");
 
 		failureAllVO.setArrayData(list);
 
@@ -265,7 +300,8 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		weatherVO.setTemperature(data.getT1H());
 		weatherVO.setLocation(regionName.getrName());
-		weatherVO.setCodeValue(data.getSKY()); // 0:맑음, 1:약간흐림, 2:흐림, 3:비, 4:눈, 5:천둥/번개 => 재확인후 결정
+		weatherVO.setCodeSky(data.getSKY()); // 1:맑음, 3:약간흐림, 4:흐림
+		weatherVO.setCodeRain(data.getPTY()); // 0:없음, 1:비, 2:비/눈(진눈개비), 3:눈, 4:소나기, 5:빗방울, 6:빗방울/눈날림, 7:눈날림
 
 		cal.set(Integer.valueOf(data.getFCSTDATE().substring(0, 4)),
 				Integer.valueOf(data.getFCSTDATE().substring(4, 6)) - 1,
@@ -279,15 +315,32 @@ public class DashBoardServiceImpl implements DashBoardService {
 	}
 
 	@Override
-	public WeatherVO getWeatherDataWeatherAll() throws Exception {
+	public WeatherDataVO getWeatherDataWeatherAll() throws Exception {
 
-		WeatherVO weatherVO = new WeatherVO();
+		ServerRegionIneterfaceVO region = serverDAO.findBySSEQ(1); // WAS/WEB 서버 SSEQ : 1
+		RegionNameIneterfaceVO regionName = searchRegionDAO.findByrSeq(region.getRSEQ());
 
-		weatherVO.setLocation("성남시");
-		weatherVO.setCodeValue(0); // 0:좋음, 1:보통, 2:나쁨 => 재확인후 결정
-		weatherVO.setDate(new Date());
+		Date date = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.HOUR_OF_DAY, -12); // 12시간전 미검침 장애정보 // TEST시 +1
+		date = new Date(cal.getTimeInMillis());
 
-		return weatherVO;
+		LpSnapCountInterfaceVO count = failureReadingDAO.getAllCount(date.getTime() / 1000);
+
+		WeatherDataVO weatherDataVO = new WeatherDataVO();
+
+		weatherDataVO.setLocation(regionName.getrName());
+		if (count.getCount() <= 10) {
+			weatherDataVO.setCodeValue(0); // 0:좋음, 1:보통, 2:나쁨 => 재확인후 결정
+		} else if (count.getCount() > 10 && count.getCount() <= 50) {
+			weatherDataVO.setCodeValue(1); // 0:좋음, 1:보통, 2:나쁨 => 재확인후 결정
+		} else if (count.getCount() > 50) {
+			weatherDataVO.setCodeValue(2); // 0:좋음, 1:보통, 2:나쁨 => 재확인후 결정
+		}
+		weatherDataVO.setDate(new Date());
+
+		return weatherDataVO;
 
 	}
 
@@ -383,7 +436,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 	}
 
 	@Override
-	public Object getLocationUseList() throws Exception {
+	public List<Object> getLocationUseList() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

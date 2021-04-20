@@ -29,5 +29,12 @@ public class CollectionNameFormat {
 
 		return collectionName;
 	}
+	
+	public String formatFault() {
+
+		String collectionName = "CASS" + "_" + "LP" + "_" + "FAULT";
+
+		return collectionName;
+	}
 
 }
