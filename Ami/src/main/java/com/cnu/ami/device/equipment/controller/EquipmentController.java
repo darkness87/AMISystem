@@ -418,7 +418,7 @@ public class EquipmentController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : 계량기 시간설정")
 	public Mono<ResponseVO<ResultVO>> setMeterTime(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp,@RequestParam String meterId) throws Exception {
+			@RequestParam String dcuIp, @RequestParam String meterId) throws Exception {
 
 		log.info("{} , {} , {}", request, dcuId, dcuIp);
 
@@ -426,12 +426,12 @@ public class EquipmentController {
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
 //		boolean bool = false;
-		
-		String[] meters = {meterId};
-		
+
+		String[] meters = { meterId };
+
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
+
 		boolean bool = comm.setMeterTime(meters, dateFormat.format(date));
 
 		log.info("result : {}", bool);
@@ -453,16 +453,16 @@ public class EquipmentController {
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
 //		boolean bool = false;
-		String[] meters = {meterId};
-		
+		String[] meters = { meterId };
+
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DATE, day);
-		
+
 		date = new Date(cal.getTimeInMillis());
-		
+
 		boolean bool = comm.setMeterTime(meters, dateFormat.format(date));
 
 		log.info("result : {}", bool);
@@ -483,8 +483,8 @@ public class EquipmentController {
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-		String[] meters = {meterId};
-		
+		String[] meters = { meterId };
+
 //		boolean bool = false;
 		boolean bool = comm.setMeterLpPeriod(meters, period);
 

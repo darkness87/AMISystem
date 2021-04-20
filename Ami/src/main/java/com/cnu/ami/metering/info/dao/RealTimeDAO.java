@@ -25,4 +25,6 @@ public interface RealTimeDAO extends JpaRepository<RealTimeEntity, Long> {
 			+ "ON T3.METER_ID=T5.METER_ID\r\n" + "ORDER BY T1.BNAME ASC, T1.DID ASC, T4.HO ASC", nativeQuery = true)
 	List<RealTimeInterfaceVO> getRealTimeData(@Param("gseq") int gseq);
 
+	RealTimeEntity findByMETERID(String meterid);
+
 }

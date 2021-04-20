@@ -31,6 +31,8 @@ import com.cnu.ami.device.equipment.models.MeterInfoVO;
 import com.cnu.ami.device.equipment.models.MeterOtherInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterOtherInfoVO;
 import com.cnu.ami.device.equipment.service.EquipmentService;
+import com.cnu.ami.metering.info.dao.RealTimeDAO;
+import com.cnu.ami.metering.info.dao.entity.RealTimeEntity;
 
 @Service
 public class EquipmentServiceImpl implements EquipmentService {
@@ -46,6 +48,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Autowired
 	DeviceInfoDAO deviceInfoDAO;
+
+	@Autowired
+	RealTimeDAO realTimeDAO;
 
 	@Override
 	public ResultCountVO getDcuCount() throws Exception {
@@ -358,6 +363,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		EstateMeterInfoInterfaceVO data = meterInfoDAO.getEstateMeterInfo(gseq, meterid);
 
+		RealTimeEntity lp = realTimeDAO.findByMETERID(meterid);
+
 		MeterInfoVO meterInfoVO = new MeterInfoVO();
 
 		meterInfoVO.setRegionSeq(data.getRSeq());
@@ -367,6 +374,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 		meterInfoVO.setEstateName(data.getGName());
 		meterInfoVO.setBuildingName(data.getBName());
 		meterInfoVO.setHouseName(data.getHo());
+
+		meterInfoVO.setLpTime(new Date(lp.getMTIME() * 1000));
+		meterInfoVO.setLp(Float.valueOf(lp.getFAP()) / 1000);
 
 		meterInfoVO.setMeterId(meter.getMETERID());
 		meterInfoVO.setMac(meter.getMAC());

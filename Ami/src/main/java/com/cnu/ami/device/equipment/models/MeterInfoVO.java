@@ -35,4 +35,7 @@ public class MeterInfoVO {
 	private Date writeDate; // 등록일시
 	private Date updateDate; // 수정일시
 
+	private Date lpTime; // LP 시간
+	private float lp; // LP 정방향 유효전력량
+
 }
