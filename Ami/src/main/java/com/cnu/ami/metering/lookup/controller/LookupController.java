@@ -9,10 +9,12 @@ import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.ResponseListVO;
+import com.cnu.ami.metering.lookup.dao.document.RawLpCycleTemp;
 import com.cnu.ami.metering.lookup.service.LookupService;
 
 import reactor.core.publisher.Mono;
@@ -31,16 +33,46 @@ public class LookupController {
 	@Autowired
 	LookupService lookupService;
 
-	@RequestMapping(value = "/test/lp", method = RequestMethod.GET)
+	@RequestMapping(value = "/test/lp/cycle", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "검침 : ")
-	public Mono<ResponseListVO<Object>> getMeteringData(HttpServletRequest request) throws Exception {
+	@Description(value = "검침조회 : 검침 주기별 데이터")
+	public Mono<ResponseListVO<RawLpCycleTemp>> getMeteringCycleData(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int estateSeq,
+			@RequestParam(required = false, defaultValue = "0") int buildingSeq,
+			@RequestParam(required = false, defaultValue = "0") String dcuId,
+			@RequestParam(required = false, defaultValue = "0") String day) throws Exception {
 
-		List<Object> data = lookupService.getLpRepo();
-		
-		List<Object> data2 = lookupService.getLpTemp();
+		List<RawLpCycleTemp> data = lookupService.getLpCycle(estateSeq, buildingSeq, dcuId, day);
 
-		return Mono.just(new ResponseListVO<Object>(request, data));
+		return Mono.just(new ResponseListVO<RawLpCycleTemp>(request, data));
+	}
+
+	@RequestMapping(value = "/test/lp/hour", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "검침조회 : 1시간 데이터")
+	public Mono<ResponseListVO<RawLpCycleTemp>> getMeteringHourData(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int estateSeq,
+			@RequestParam(required = false, defaultValue = "0") int buildingSeq,
+			@RequestParam(required = false, defaultValue = "0") String dcuId,
+			@RequestParam(required = false, defaultValue = "0") String day) throws Exception {
+
+		List<RawLpCycleTemp> data = lookupService.getLpCycle(estateSeq, buildingSeq, dcuId, day);
+
+		return Mono.just(new ResponseListVO<RawLpCycleTemp>(request, data));
+	}
+
+	@RequestMapping(value = "/test/lp/duration", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "검침조회 : 검침 주기별 데이터")
+	public Mono<ResponseListVO<RawLpCycleTemp>> getMeteringDurationData(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int estateSeq,
+			@RequestParam(required = false, defaultValue = "0") int buildingSeq,
+			@RequestParam(required = false, defaultValue = "0") String dcuId,
+			@RequestParam(required = false, defaultValue = "0") String day) throws Exception {
+
+		List<RawLpCycleTemp> data = lookupService.getLpCycle(estateSeq, buildingSeq, dcuId, day);
+
+		return Mono.just(new ResponseListVO<RawLpCycleTemp>(request, data));
 	}
 
 }
