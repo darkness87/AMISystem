@@ -294,7 +294,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Override
 	public List<DashBoardMapVO> getLocationFailureMapInfo() throws Exception {
 
-		// TODO key,value 형식으로 넘겨야 될듯 - 대괄호 안에 대괄호 - 하이차트맵 샘플 참고
+		// TODO key,value 형식 해결 , 장애 데이터 넘기기
 
 		List<DashBoardMapVO> dashmap = new ArrayList<DashBoardMapVO>();
 		DashBoardMapVO dashBoardMapVO = new DashBoardMapVO();
@@ -302,16 +302,16 @@ public class DashBoardServiceImpl implements DashBoardService {
 		for (int i = 0; i < 3; i++) {
 			dashBoardMapVO = new DashBoardMapVO();
 			if (i == 0) {
-				dashBoardMapVO.setCode("kr-kg");
+				dashBoardMapVO.setHckey("kr-kg");
 				dashBoardMapVO.setValue(5);
 			} else if (i == 1) {
-				dashBoardMapVO.setCode("kr-in");
+				dashBoardMapVO.setHckey("kr-in");
 				dashBoardMapVO.setValue(7);
 			} else if (i == 2) {
-				dashBoardMapVO.setCode("kr-so");
+				dashBoardMapVO.setHckey("kr-so");
 				dashBoardMapVO.setValue(10);
 			} else {
-				dashBoardMapVO.setCode("kr-cb");
+				dashBoardMapVO.setHckey("kr-cb");
 				dashBoardMapVO.setValue(3);
 			}
 

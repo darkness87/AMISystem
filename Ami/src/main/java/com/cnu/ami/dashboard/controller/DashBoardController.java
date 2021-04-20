@@ -53,7 +53,28 @@ public class DashBoardController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 전국전력사용량")
 	public Flux<ResponseVO<UseDayHourAllVO>> getElectricUseDayHourAll(HttpServletRequest request,
-			@RequestParam int duration) throws Exception {
+			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
+
+		if (duration == 0) { // 0일 경우 1회 전달
+			return Flux.just(dashBoardService.getElectricUseDayHourAll(request));
+		} else {
+
+			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
+				try {
+					return dashBoardService.getElectricUseDayHourAll(request);
+				} catch (Exception e) {
+					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
+				}
+			}).log();
+		}
+
+	}
+	
+	@RequestMapping(value = "/test/useAll/dayhour", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "현황판 : test 전국전력사용량")
+	public Flux<ResponseVO<UseDayHourAllVO>> getTestElectricUseDayHourAll(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 
 		if (duration == 0) { // 0일 경우 1회 전달
 			return Flux.just(dashBoardService.getElectricUseDayHourAll(request));
@@ -74,7 +95,7 @@ public class DashBoardController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 검침률")
 	public Flux<ResponseVO<RateVO>> getElectricMeterReadingRateDayAll(HttpServletRequest request,
-			@RequestParam int duration) throws Exception {
+			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 		if (duration == 0) { // 0일 경우 1회 전달
 			return Flux.just(dashBoardService.getElectricMeterReadingRateDayAll(request));
 		} else {
@@ -129,7 +150,7 @@ public class DashBoardController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 서버운영정보")
 	public Flux<ResponseVO<ServerManagementVO>> getServerManagementInfo(HttpServletRequest request,
-			@RequestParam int duration) throws Exception {
+			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 
 		if (duration == 0) { // 0일 경우 디폴트 15초
 			return Flux.just(dashBoardService.getServerManagementInfo(request));

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class DashBoardMapVO {
 
-	private String code;
+	private String hckey;
 	private int value;
 
 }
