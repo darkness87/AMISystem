@@ -145,7 +145,7 @@ public class EquipmentController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU Port 수정")
 	public Mono<ResponseVO<ResultVO>> updateDcuPort(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuPort) throws Exception {
+			@RequestParam int dcuPort) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
 		int data = equipmentService.setDcuPort(dcuId, dcuPort);

@@ -64,7 +64,7 @@ public interface DcuInfoDAO extends JpaRepository<DcuInfoEntity, String> { // í‚
 	@Transactional
 	@Modifying
 	@Query(value = "UPDATE DCU_INFO SET DCU_PORT = :dcuPort WHERE DID = :did", nativeQuery = true)
-	public void setDcuPort(@Param("did") String did, @Param("dcuPort") String dcuPort);
+	public void setDcuPort(@Param("did") String did, @Param("dcuPort") int dcuPort);
 
 	@Transactional
 	@Modifying

@@ -276,7 +276,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
-	public int setDcuPort(String dcuId, String dcuPort) throws Exception {
+	public int setDcuPort(String dcuId, int dcuPort) throws Exception {
 
 		try {
 			dcuInfoDAO.setDcuPort(dcuId, dcuPort);
