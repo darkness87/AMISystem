@@ -8,6 +8,7 @@ import com.cnu.ami.dashboard.models.FailureAllVO;
 import com.cnu.ami.dashboard.models.RateVO;
 import com.cnu.ami.dashboard.models.ServerManagementVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllVO;
+import com.cnu.ami.dashboard.models.UseLocationVO;
 import com.cnu.ami.dashboard.models.WeatherDataVO;
 import com.cnu.ami.dashboard.models.WeatherVO;
 
@@ -30,6 +31,6 @@ public interface DashBoardService {
 
 	public List<DeviceRegVO> getElectricRegistrationDevice() throws Exception;
 
-	public List<Object> getLocationUseList() throws Exception;
+	public List<UseLocationVO> getLocationUseList() throws Exception;
 
 }

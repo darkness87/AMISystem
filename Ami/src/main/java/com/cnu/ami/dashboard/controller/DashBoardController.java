@@ -27,6 +27,7 @@ import com.cnu.ami.dashboard.models.FailureAllVO;
 import com.cnu.ami.dashboard.models.RateVO;
 import com.cnu.ami.dashboard.models.ServerManagementVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllVO;
+import com.cnu.ami.dashboard.models.UseLocationVO;
 import com.cnu.ami.dashboard.models.WeatherDataVO;
 import com.cnu.ami.dashboard.models.WeatherVO;
 import com.cnu.ami.dashboard.service.DashBoardService;
@@ -240,15 +241,15 @@ public class DashBoardController {
 	@RequestMapping(value = "/location/use/list", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 지역별사용량")
-	public Flux<ResponseListVO<Object>> getLocationUseList(HttpServletRequest request,
+	public Flux<ResponseListVO<UseLocationVO>> getLocationUseList(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 
 		if (duration == 0) { // 0일 경우 1회 전달
-			return Flux.just(new ResponseListVO<Object>(request, dashBoardService.getLocationUseList()));
+			return Flux.just(new ResponseListVO<UseLocationVO>(request, dashBoardService.getLocationUseList()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
-					return new ResponseListVO<Object>(request, dashBoardService.getLocationUseList());
+					return new ResponseListVO<UseLocationVO>(request, dashBoardService.getLocationUseList());
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}

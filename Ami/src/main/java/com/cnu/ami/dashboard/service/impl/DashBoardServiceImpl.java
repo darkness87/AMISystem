@@ -29,6 +29,7 @@ import com.cnu.ami.dashboard.models.RateVO;
 import com.cnu.ami.dashboard.models.ServerManagementVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllListVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllVO;
+import com.cnu.ami.dashboard.models.UseLocationVO;
 import com.cnu.ami.dashboard.models.WeatherDataVO;
 import com.cnu.ami.dashboard.models.WeatherVO;
 import com.cnu.ami.dashboard.service.DashBoardService;
@@ -348,12 +349,12 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		List<DashBoardMapVO> dashmap = new ArrayList<DashBoardMapVO>();
 		DashBoardMapVO dashBoardMapVO = new DashBoardMapVO();
-		
+
 		for (int i = 0; i < 17; i++) {
 			dashBoardMapVO = new DashBoardMapVO();
-			
+
 			Random random = new Random();
-			
+
 			if (i == 0) {
 				dashBoardMapVO.setHckey("kr-so"); // 서울특별시
 				dashBoardMapVO.setValue(random.nextInt(20));
@@ -475,9 +476,23 @@ public class DashBoardServiceImpl implements DashBoardService {
 	}
 
 	@Override
-	public List<Object> getLocationUseList() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<UseLocationVO> getLocationUseList() throws Exception {
+
+		List<UseLocationVO> list = new ArrayList<UseLocationVO>();
+
+		UseLocationVO useLocationVO = new UseLocationVO();
+
+		List<UseDayHourAllListVO> useData = new ArrayList<UseDayHourAllListVO>();
+
+		UseDayHourAllListVO useDayHourAllListVO = new UseDayHourAllListVO();
+
+		useData.add(useDayHourAllListVO);
+
+		useLocationVO.setData(useData);
+
+		list.add(useLocationVO);
+
+		return list;
 	}
 
 }

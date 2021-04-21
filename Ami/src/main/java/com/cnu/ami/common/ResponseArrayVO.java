@@ -11,6 +11,7 @@ import com.cnu.ami.dashboard.models.FailureAllVO;
 import com.cnu.ami.dashboard.models.RateVO;
 import com.cnu.ami.dashboard.models.ServerManagementVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllVO;
+import com.cnu.ami.dashboard.models.UseLocationVO;
 import com.cnu.ami.dashboard.models.WeatherDataVO;
 import com.cnu.ami.dashboard.models.WeatherVO;
 
@@ -37,7 +38,7 @@ public class ResponseArrayVO {
 //	private List<DashBoardMapVO> map;
 //	private ServerManagementVO server;
 	private List<DeviceRegVO> device;
-	private List<Object> regionData;
+	private List<UseLocationVO> regionData;
 
 	@Getter
 	@Setter
