@@ -1,6 +1,5 @@
 package com.cnu.ami.device.nms.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.device.nms.models.NmsDcuListVO;
+import com.cnu.ami.device.nms.service.NmsService;
 
 import reactor.core.publisher.Mono;
 
@@ -32,22 +33,25 @@ import reactor.core.publisher.Mono;
 public class NmsController {
 
 	@Autowired
+	NmsService nmsService;
+	
+	@Autowired
 	PropertyData propertyData;
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/dcu/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "설비:NMS : 리스트정보")
-	public Mono<ResponseListVO<Object>> getTestListData(HttpServletRequest request) throws Exception {
+	@Description(value = "설비:NMS : DCU 리스트정보")
+	public Mono<ResponseListVO<NmsDcuListVO>> getDCUList(HttpServletRequest request, @RequestParam int estateSeq) throws Exception {
 
-		List<Object> data = new ArrayList<Object>();
+		List<NmsDcuListVO> data = nmsService.getDcuList(estateSeq);
 
-		return Mono.just(new ResponseListVO<Object>(request, data));
+		return Mono.just(new ResponseListVO<NmsDcuListVO>(request, data));
 	}
 
-	@RequestMapping(value = "/info", method = RequestMethod.GET)
+	@RequestMapping(value = "/meter/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "설비:NMS : 상세정보")
-	public Mono<ResponseVO<Object>> getTestData(HttpServletRequest request, @RequestParam String id) throws Exception {
+	@Description(value = "설비:NMS : METER 리스트정보")
+	public Mono<ResponseVO<Object>> getModemMeterList(HttpServletRequest request, @RequestParam String dcuId) throws Exception {
 
 		Object data = new Object();
 
