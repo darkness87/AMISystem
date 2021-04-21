@@ -31,7 +31,6 @@ import com.cnu.ami.dashboard.models.WeatherVO;
 import com.cnu.ami.dashboard.service.DashBoardService;
 
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 /**
  * 메인현황판 (Flux 적용)
@@ -270,12 +269,6 @@ public class DashBoardController {
 		WeatherDataVO weatherDataVO = new WeatherDataVO();
 		weatherDataVO.setDate(new Date());
 		
-//		Flux.interval(Duration.ofSeconds(10));
-//		return Flux.just(weatherVO,weatherDataVO);
-//		Flux.interval(Duration.ofSeconds(duration)).flatMap(response -> Flux.just(weatherVO));
-		
-//		return null;
-		
 		if (duration == 0) { // 0일 경우 1회 전달
 			return Flux.just(weatherVO,weatherDataVO);
 		} else {
@@ -284,6 +277,26 @@ public class DashBoardController {
 			}catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 			}
+		}
+		
+	}
+	
+	@RequestMapping(value = "/test/flux/data", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "현황판 : 테스트 flux event count")
+	public Flux<Object> getTestFluxEventData(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
+		
+		if (duration == 0) { // 0일 경우 1회 전달
+			return Flux.just(dashBoardService.getElectricUseDayHourAll(),dashBoardService.getElectricMeterReadingRateDayAll(),dashBoardService.getElectricFailureDayHourAll(),dashBoardService.getWeatherRealtimeAll(),dashBoardService.getWeatherDataWeatherAll(),dashBoardService.getLocationFailureMapInfo());
+		} else {
+				return Flux.interval(Duration.ofSeconds(duration)).flatMap(response -> {
+					try {
+						return Flux.just(dashBoardService.getElectricUseDayHourAll(),dashBoardService.getElectricMeterReadingRateDayAll(),dashBoardService.getElectricFailureDayHourAll(),dashBoardService.getWeatherRealtimeAll(),dashBoardService.getWeatherDataWeatherAll(),dashBoardService.getLocationFailureMapInfo());
+					} catch (Exception e) {
+						throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
+					}
+				}).log();
 		}
 		
 	}
