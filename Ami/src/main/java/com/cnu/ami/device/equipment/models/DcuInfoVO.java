@@ -97,5 +97,7 @@ public class DcuInfoVO {
 	private float latitude; // 위도
 	private float longitude; // 경도
 	private String routerIp; // 라우터 IP
+	
+	private int meterCount; // 미터 수
 
 }

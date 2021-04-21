@@ -111,6 +111,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 		} else {
 			DcuInfoEntity dcu = dcuInfoDAO.findByDID(did);
 
+			int count = meterInfoDAO.getDcuMeterCount(did);
+
 			DeviceBuildingInterfaceVO mapp = dcuInfoDAO.getDcuMappInfo(did);
 
 			if (dcu == null) {
@@ -210,6 +212,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 			dcuInfoVO.setLatitude(dcu.getLAT());
 			dcuInfoVO.setLongitude(dcu.getLON());
 			dcuInfoVO.setRouterIp(dcu.getROUTER_IP());
+
+			dcuInfoVO.setMeterCount(count);
 
 		}
 

@@ -21,14 +21,16 @@ public interface MeterInfoDAO extends JpaRepository<MeterInfoEntity, String> { /
 	@Query(value = "SELECT T2.RSEQ,T1.GSEQ,T1.BSEQ,T2.RNAME,T2.GID,T2.GNAME,T1.BNAME,T4.HO,T1.DID,T3.METER_ID,T3.MAC,T3.MRD,T3.UDATE FROM(SELECT A.BSEQ,A.GSEQ,A.BNAME,B.DID FROM BUILDING AS A\r\n"
 			+ "RIGHT JOIN BUILDING_DCU_MAP AS B\r\n" + "ON A.BSEQ=B.BSEQ\r\n" + ") T1\r\n" + "LEFT JOIN\r\n"
 			+ "(SELECT A.GSEQ,A.RSEQ,A.GID,A.GNAME,B.RNAME FROM GROUPSET AS A\r\n" + "LEFT JOIN REGION AS B\r\n"
-			+ "ON A.RSEQ=B.RSEQ\r\n" + ") T2\r\n" + "ON T1.GSEQ=T2.GSEQ\r\n" + "LEFT JOIN (SELECT * FROM METER_INFO WHERE IS_DELETE ='N') AS T3\r\n"
-			+ "ON T1.DID=T3.DID\r\n" + "LEFT JOIN (SELECT A.GSEQ,A.BSEQ,A.HSEQ,A.HO,B.METER_ID FROM HOUSEHOLD AS A\r\n"
+			+ "ON A.RSEQ=B.RSEQ\r\n" + ") T2\r\n" + "ON T1.GSEQ=T2.GSEQ\r\n"
+			+ "LEFT JOIN (SELECT * FROM METER_INFO WHERE IS_DELETE ='N') AS T3\r\n" + "ON T1.DID=T3.DID\r\n"
+			+ "LEFT JOIN (SELECT A.GSEQ,A.BSEQ,A.HSEQ,A.HO,B.METER_ID FROM HOUSEHOLD AS A\r\n"
 			+ "LEFT JOIN HOUSE_METER_MAP AS B\r\n" + "ON A.HSEQ=B.HSEQ\r\n" + ") AS T4\r\n"
 			+ "ON T3.METER_ID=T4.METER_ID\r\n" + "ORDER BY T1.BNAME ASC, T1.DID ASC, T4.HO ASC", nativeQuery = true)
 	List<MeterInfoInterfaceVO> getMeterList();
 
-	@Query(value = "SELECT 0 AS RSEQ,0 AS GSEQ,0 AS BSEQ,T1.DID,T1.MAC,T1.METER_ID,T1.MRD,T1.UDATE FROM\r\n" + "(SELECT * FROM METER_INFO WHERE IS_DELETE ='N') AS T1\r\n"
-			+ "LEFT JOIN HOUSE_METER_MAP AS T2\r\n" + "ON T1.METER_ID=T2.METER_ID\r\n" + "WHERE T2.HSEQ IS NULL\r\n"
+	@Query(value = "SELECT 0 AS RSEQ,0 AS GSEQ,0 AS BSEQ,T1.DID,T1.MAC,T1.METER_ID,T1.MRD,T1.UDATE FROM\r\n"
+			+ "(SELECT * FROM METER_INFO WHERE IS_DELETE ='N') AS T1\r\n" + "LEFT JOIN HOUSE_METER_MAP AS T2\r\n"
+			+ "ON T1.METER_ID=T2.METER_ID\r\n" + "WHERE T2.HSEQ IS NULL\r\n"
 			+ "ORDER BY T1.DID ASC, T1.MAC ASC, T1.METER_ID;", nativeQuery = true)
 	List<MeterInfoInterfaceVO> getMeterNoMappList();
 
@@ -36,8 +38,8 @@ public interface MeterInfoDAO extends JpaRepository<MeterInfoEntity, String> { /
 			+ "RIGHT JOIN BUILDING_DCU_MAP AS B\r\n" + "ON A.BSEQ=B.BSEQ\r\n" + "WHERE A.GSEQ=:gseq) T1\r\n"
 			+ "LEFT JOIN\r\n" + "(SELECT A.GSEQ,A.RSEQ,A.GID,A.GNAME,B.RNAME FROM GROUPSET AS A\r\n"
 			+ "LEFT JOIN REGION AS B\r\n" + "ON A.RSEQ=B.RSEQ\r\n" + "WHERE A.GSEQ=:gseq) T2\r\n"
-			+ "ON T1.GSEQ=T2.GSEQ\r\n" + "LEFT JOIN (SELECT * FROM METER_INFO WHERE IS_DELETE ='N') AS T3\r\n" + "ON T1.DID=T3.DID\r\n"
-			+ "LEFT JOIN (SELECT A.GSEQ,A.BSEQ,A.HSEQ,A.HO,B.METER_ID FROM HOUSEHOLD AS A\r\n"
+			+ "ON T1.GSEQ=T2.GSEQ\r\n" + "LEFT JOIN (SELECT * FROM METER_INFO WHERE IS_DELETE ='N') AS T3\r\n"
+			+ "ON T1.DID=T3.DID\r\n" + "LEFT JOIN (SELECT A.GSEQ,A.BSEQ,A.HSEQ,A.HO,B.METER_ID FROM HOUSEHOLD AS A\r\n"
 			+ "LEFT JOIN HOUSE_METER_MAP AS B\r\n" + "ON A.HSEQ=B.HSEQ\r\n" + "WHERE A.GSEQ=:gseq) AS T4\r\n"
 			+ "ON T3.METER_ID=T4.METER_ID\r\n" + "ORDER BY T1.BNAME ASC, T1.DID ASC, T4.HO ASC", nativeQuery = true)
 	List<MeterInfoInterfaceVO> getMeterList(@Param("gseq") int gseq);
@@ -83,5 +85,8 @@ public interface MeterInfoDAO extends JpaRepository<MeterInfoEntity, String> { /
 			+ "JOIN HOUSEHOLD AS T2\r\n" + "ON T1.HSEQ=T2.HSEQ\r\n" + "JOIN BUILDING AS T3\r\n"
 			+ "ON T2.BSEQ=T3.BSEQ) AS S2\r\n" + "ON S1.GSEQ=S2.GSEQ", nativeQuery = true)
 	EstateMeterInfoInterfaceVO getEstateMeterInfo(@Param("gseq") int gseq, @Param("meterId") String meterId);
+
+	@Query(value = "SELECT COUNT(*) AS COUNT FROM METER_INFO WHERE DID=:did AND IS_DELETE='N'", nativeQuery = true)
+	public int getDcuMeterCount(@Param("did") String did);
 
 }
