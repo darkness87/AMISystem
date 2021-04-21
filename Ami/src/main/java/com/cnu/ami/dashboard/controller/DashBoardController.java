@@ -1,6 +1,7 @@
 package com.cnu.ami.dashboard.controller;
 
 import java.time.Duration;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,6 +31,7 @@ import com.cnu.ami.dashboard.models.WeatherVO;
 import com.cnu.ami.dashboard.service.DashBoardService;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * 메인현황판 (Flux 적용)
@@ -55,12 +57,12 @@ public class DashBoardController {
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 
 		if (duration == 0) { // 0일 경우 1회 전달
-			return Flux.just(dashBoardService.getElectricUseDayHourAll(request));
+			return Flux.just(new ResponseVO<UseDayHourAllVO>(request, dashBoardService.getElectricUseDayHourAll()));
 		} else {
 
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
-					return dashBoardService.getElectricUseDayHourAll(request);
+					return new ResponseVO<UseDayHourAllVO>(request, dashBoardService.getElectricUseDayHourAll());
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
@@ -76,12 +78,12 @@ public class DashBoardController {
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 
 		if (duration == 0) { // 0일 경우 1회 전달
-			return Flux.just(dashBoardService.getElectricUseDayHourAll(request));
+			return Flux.just(new ResponseVO<UseDayHourAllVO>(request, dashBoardService.getElectricUseDayHourAll()));
 		} else {
 
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
-					return dashBoardService.getElectricUseDayHourAll(request);
+					return new ResponseVO<UseDayHourAllVO>(request, dashBoardService.getElectricUseDayHourAll());
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
@@ -96,11 +98,11 @@ public class DashBoardController {
 	public Flux<ResponseVO<RateVO>> getElectricMeterReadingRateDayAll(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 		if (duration == 0) { // 0일 경우 1회 전달
-			return Flux.just(dashBoardService.getElectricMeterReadingRateDayAll(request));
+			return Flux.just(new ResponseVO<RateVO>(request, dashBoardService.getElectricMeterReadingRateDayAll()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
-					return dashBoardService.getElectricMeterReadingRateDayAll(request);
+					return new ResponseVO<RateVO>(request, dashBoardService.getElectricMeterReadingRateDayAll());
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
@@ -131,7 +133,7 @@ public class DashBoardController {
 
 	}
 
-	@RequestMapping(value = "/weather/realtime", method = RequestMethod.GET)
+	@RequestMapping(value = "/weather/realtime", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 오늘의 날씨")
 	public Flux<ResponseVO<WeatherVO>> getWeatherRealtimeAll(HttpServletRequest request,
@@ -152,7 +154,7 @@ public class DashBoardController {
 		}
 	}
 
-	@RequestMapping(value = "/weather/data", method = RequestMethod.GET)
+	@RequestMapping(value = "/weather/data", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 데이터날씨")
 	public Flux<ResponseVO<WeatherDataVO>> getWeatherDataWeatherAll(HttpServletRequest request,
@@ -170,7 +172,7 @@ public class DashBoardController {
 		}
 	}
 
-	@RequestMapping(value = "/location/failure/mapinfo", method = RequestMethod.GET)
+	@RequestMapping(value = "/location/failure/mapinfo", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 지도 정보")
 	public Flux<ResponseListVO<DashBoardMapVO>> getLocationFailureMapInfo(HttpServletRequest request,
@@ -191,19 +193,19 @@ public class DashBoardController {
 		}
 	}
 
-	@RequestMapping(value = "/server/management/info", method = RequestMethod.GET)
+	@RequestMapping(value = "/server/management/info", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 서버운영정보")
 	public Flux<ResponseVO<ServerManagementVO>> getServerManagementInfo(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 
 		if (duration == 0) { // 0일 경우 디폴트 15초
-			return Flux.just(dashBoardService.getServerManagementInfo(request));
+			return Flux.just(new ResponseVO<ServerManagementVO>(request, dashBoardService.getServerManagementInfo()));
 		} else {
 
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
-					return dashBoardService.getServerManagementInfo(request);
+					return new ResponseVO<ServerManagementVO>(request, dashBoardService.getServerManagementInfo());
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
@@ -213,7 +215,7 @@ public class DashBoardController {
 
 	}
 
-	@RequestMapping(value = "/registration/device", method = RequestMethod.GET)
+	@RequestMapping(value = "/registration/device", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 등록설비")
 	public Flux<ResponseListVO<DeviceRegVO>> getElectricRegistrationDevice(HttpServletRequest request,
@@ -235,7 +237,7 @@ public class DashBoardController {
 		}
 	}
 
-	@RequestMapping(value = "/location/use/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/location/use/list", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 지역별사용량")
 	public Flux<ResponseListVO<Object>> getLocationUseList(HttpServletRequest request,
@@ -252,6 +254,38 @@ public class DashBoardController {
 				}
 			}).log();
 		}
+	}
+	
+	
+	@RequestMapping(value = "/test/flux", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "현황판 : 테스트 flux event count")
+	public Flux<Object> getTestFluxEvent(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
+
+		// https://luvstudy.tistory.com/100
+		
+		WeatherVO weatherVO = new WeatherVO();
+		weatherVO.setDate(new Date());
+		WeatherDataVO weatherDataVO = new WeatherDataVO();
+		weatherDataVO.setDate(new Date());
+		
+//		Flux.interval(Duration.ofSeconds(10));
+//		return Flux.just(weatherVO,weatherDataVO);
+//		Flux.interval(Duration.ofSeconds(duration)).flatMap(response -> Flux.just(weatherVO));
+		
+//		return null;
+		
+		if (duration == 0) { // 0일 경우 1회 전달
+			return Flux.just(weatherVO,weatherDataVO);
+		} else {
+			try {
+				return Flux.interval(Duration.ofSeconds(duration)).flatMap(response -> Flux.just(weatherVO,weatherDataVO).log());
+			}catch (Exception e) {
+					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
+			}
+		}
+		
 	}
 
 }

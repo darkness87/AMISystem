@@ -2,9 +2,6 @@ package com.cnu.ami.dashboard.service;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
@@ -17,9 +14,9 @@ import com.cnu.ami.dashboard.models.WeatherVO;
 public interface DashBoardService {
 
 	// DashBoard
-	public ResponseVO<UseDayHourAllVO> getElectricUseDayHourAll(HttpServletRequest request) throws Exception;
+	public UseDayHourAllVO getElectricUseDayHourAll() throws Exception;
 
-	public ResponseVO<RateVO> getElectricMeterReadingRateDayAll(HttpServletRequest request) throws Exception;
+	public RateVO getElectricMeterReadingRateDayAll() throws Exception;
 
 	public FailureAllVO getElectricFailureDayHourAll() throws Exception;
 
@@ -29,7 +26,7 @@ public interface DashBoardService {
 
 	public List<DashBoardMapVO> getLocationFailureMapInfo() throws Exception;
 
-	public ResponseVO<ServerManagementVO> getServerManagementInfo(HttpServletRequest request) throws Exception;
+	public ServerManagementVO getServerManagementInfo() throws Exception;
 
 	public List<DeviceRegVO> getElectricRegistrationDevice() throws Exception;
 

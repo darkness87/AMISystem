@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
-import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.dashboard.dao.document.DayLpFailureTemp;
 import com.cnu.ami.dashboard.dao.document.DayRateTemp;
 import com.cnu.ami.dashboard.dao.document.UseDayHourTemp;
@@ -78,7 +74,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 	MongoTemplate mongoTemplate;
 
 	@Override
-	public ResponseVO<UseDayHourAllVO> getElectricUseDayHourAll(HttpServletRequest request) throws Exception {
+	public UseDayHourAllVO getElectricUseDayHourAll() throws Exception {
 
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -171,11 +167,11 @@ public class DashBoardServiceImpl implements DashBoardService {
 		useDayHourAllVO.setTodayData(todaylist);
 		useDayHourAllVO.setYesterdayData(yesterdaylist);
 
-		return new ResponseVO<UseDayHourAllVO>(request, useDayHourAllVO);
+		return useDayHourAllVO;
 	}
 
 	@Override
-	public ResponseVO<RateVO> getElectricMeterReadingRateDayAll(HttpServletRequest request) throws Exception {
+	public RateVO getElectricMeterReadingRateDayAll() throws Exception {
 
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -222,7 +218,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 			}
 		}
 
-		return new ResponseVO<RateVO>(request, rateVO);
+		return rateVO;
 	}
 
 	@Override
@@ -352,19 +348,58 @@ public class DashBoardServiceImpl implements DashBoardService {
 		List<DashBoardMapVO> dashmap = new ArrayList<DashBoardMapVO>();
 		DashBoardMapVO dashBoardMapVO = new DashBoardMapVO();
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 17; i++) {
 			dashBoardMapVO = new DashBoardMapVO();
 			if (i == 0) {
-				dashBoardMapVO.setHckey("kr-kg");
+				dashBoardMapVO.setHckey("kr-so"); // 서울특별시
 				dashBoardMapVO.setValue(5);
 			} else if (i == 1) {
-				dashBoardMapVO.setHckey("kr-in");
+				dashBoardMapVO.setHckey("kr-pu"); // 부산광역시
 				dashBoardMapVO.setValue(7);
 			} else if (i == 2) {
-				dashBoardMapVO.setHckey("kr-so");
+				dashBoardMapVO.setHckey("kr-tg"); // 대구광역시
 				dashBoardMapVO.setValue(10);
-			} else {
-				dashBoardMapVO.setHckey("kr-cb");
+			} else if (i == 3) {
+				dashBoardMapVO.setHckey("kr-in"); // 인천광역시
+				dashBoardMapVO.setValue(3);
+			} else if (i == 4) {
+				dashBoardMapVO.setHckey("kr-kj"); // 광주광역시
+				dashBoardMapVO.setValue(3);
+			} else if (i == 5) {
+				dashBoardMapVO.setHckey("kr-tj"); // 대전광역시
+				dashBoardMapVO.setValue(3);
+			} else if (i == 6) {
+				dashBoardMapVO.setHckey("kr-ul"); // 울산광역시
+				dashBoardMapVO.setValue(3);
+			} else if (i == 7) {
+				dashBoardMapVO.setHckey("kr-kg"); // 경기도
+				dashBoardMapVO.setValue(3);
+			} else if (i == 8) {
+				dashBoardMapVO.setHckey("kr-kw"); // 강원도
+				dashBoardMapVO.setValue(3);
+			} else if (i == 9) {
+				dashBoardMapVO.setHckey("kr-gb"); // 충청북도
+				dashBoardMapVO.setValue(3);
+			} else if (i == 10) {
+				dashBoardMapVO.setHckey("kr-gn"); // 충청남도
+				dashBoardMapVO.setValue(3);
+			} else if (i == 11) {
+				dashBoardMapVO.setHckey("kr-cb"); // 전라북도
+				dashBoardMapVO.setValue(3);
+			} else if (i == 12) {
+				dashBoardMapVO.setHckey("kr-2685"); // 전라남도
+				dashBoardMapVO.setValue(3);
+			} else if (i == 13) {
+				dashBoardMapVO.setHckey("kr-2688"); // 경상북도
+				dashBoardMapVO.setValue(3);
+			} else if (i == 14) {
+				dashBoardMapVO.setHckey("kr-kn"); // 경상남도
+				dashBoardMapVO.setValue(3);
+			} else if (i == 15) {
+				dashBoardMapVO.setHckey("kr-cj"); // 제주특별자치도
+				dashBoardMapVO.setValue(3);
+			} else if (i == 16) {
+				dashBoardMapVO.setHckey("kr-sj"); // 세종특별자치시
 				dashBoardMapVO.setValue(3);
 			}
 
@@ -376,7 +411,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 	@SuppressWarnings("restriction")
 	@Override
-	public ResponseVO<ServerManagementVO> getServerManagementInfo(HttpServletRequest request) throws Exception {
+	public ServerManagementVO getServerManagementInfo() throws Exception {
 
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -402,7 +437,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 		serverManagementVO.setJvmTotal(String.format("%.3f", (double) heapSize / gb));
 		serverManagementVO.setJvmMax(String.format("%.3f", (double) heapMaxSize / gb));
 
-		return new ResponseVO<ServerManagementVO>(request, serverManagementVO);
+		return serverManagementVO;
 	}
 
 	@Override
