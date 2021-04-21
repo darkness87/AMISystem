@@ -276,6 +276,18 @@ public class EquipmentServiceImpl implements EquipmentService {
 	}
 
 	@Override
+	public int setDcuPort(String dcuId, String dcuPort) throws Exception {
+
+		try {
+			dcuInfoDAO.setDcuPort(dcuId, dcuPort);
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+
+	}
+
+	@Override
 	public int setRouterIp(String dcuId, String routerIp) throws Exception {
 
 		try {

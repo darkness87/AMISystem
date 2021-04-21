@@ -141,6 +141,24 @@ public class EquipmentController {
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
+	@RequestMapping(value = "/dcu/update/port", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU Port 수정")
+	public Mono<ResponseVO<ResultVO>> updateDcuPort(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuPort) throws Exception {
+
+		ResultVO resultVO = new ResultVO();
+		int data = equipmentService.setDcuPort(dcuId, dcuPort);
+
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
 	@RequestMapping(value = "/dcu/update/routerip", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU IP 수정")

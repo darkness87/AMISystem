@@ -25,6 +25,8 @@ public interface EquipmentService {
 
 	public int setDcuIp(String did, String dcuIp) throws Exception;
 
+	public int setDcuPort(String did, String dcuPort) throws Exception;
+
 	public int setRouterIp(String did, String routerIp) throws Exception;
 
 	public int setLatLon(String did, float lat, float lon) throws Exception;

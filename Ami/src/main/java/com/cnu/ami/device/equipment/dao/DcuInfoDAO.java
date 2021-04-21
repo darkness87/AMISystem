@@ -63,6 +63,11 @@ public interface DcuInfoDAO extends JpaRepository<DcuInfoEntity, String> { // í‚
 
 	@Transactional
 	@Modifying
+	@Query(value = "UPDATE DCU_INFO SET DCU_PORT = :dcuPort WHERE DID = :did", nativeQuery = true)
+	public void setDcuPort(@Param("did") String did, @Param("dcuPort") String dcuPort);
+
+	@Transactional
+	@Modifying
 	@Query(value = "UPDATE DCU_INFO SET ROUTER_IP = :routerIp WHERE DID = :did", nativeQuery = true)
 	public void setRouterIp(@Param("did") String did, @Param("routerIp") String routerIp);
 
