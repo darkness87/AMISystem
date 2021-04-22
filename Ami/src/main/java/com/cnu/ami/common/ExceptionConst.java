@@ -27,6 +27,7 @@ public class ExceptionConst {
 	// AUTH (2xx)
 	public static final int CANNOT_FOUND_PRIVATE_KEY = 200;
 	public static final int NOT_SYSTEM_ADMIN = 201;
+	public static final int NOT_APPROVED = 299;
 
 	// FILE (3xx)
 	public static final int FILE_MOVE_FAILURE = 300;

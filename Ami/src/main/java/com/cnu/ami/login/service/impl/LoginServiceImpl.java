@@ -53,6 +53,11 @@ public class LoginServiceImpl implements LoginService {
 				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "회원정보 재확인 바랍니다.");
 			}
 
+			if (userLoginVO.getType().equals("N")) {
+				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NOT_APPROVED,
+						"관리자 승인이 필요합니다. 잠시만 기다려 주시거나 관리자에게 확인 요청 부탁드립니다.");
+			}
+
 			List<String> roles = new ArrayList<String>();
 
 			if (userLoginVO.getLevel() == 0) { // Level에 따른 ROLE 설정
@@ -94,6 +99,7 @@ public class LoginServiceImpl implements LoginService {
 		userLoginVO.setPassword(hashCode);
 
 		Date date = new Date();
+		userLoginVO.setType("N"); // 초기 가입시 미승인
 		userLoginVO.setRegDate(date.getTime() / 1000); // 등록일시 (현재서버시간)
 		userLoginVO.setUpdateDate(date.getTime() / 1000);
 

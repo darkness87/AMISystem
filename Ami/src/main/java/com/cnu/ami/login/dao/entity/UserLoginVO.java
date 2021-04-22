@@ -38,6 +38,9 @@ public class UserLoginVO implements UserDetails {
 	@Column(name = "UPW")
 	private String password;
 
+	@Column(name = "UTYPE")
+	private String type;
+
 	@Column(name = "UNAME")
 	private String name;
 
@@ -51,7 +54,7 @@ public class UserLoginVO implements UserDetails {
 	private String position;
 
 	@Column(name = "LEVEL")
-	private int level;	// 0:관리자, 1:운영자, 2:사용자
+	private int level; // 0:관리자, 1:운영자, 2:사용자
 
 //	@Column(name = "GSEQ")
 //	private String gSeq;
