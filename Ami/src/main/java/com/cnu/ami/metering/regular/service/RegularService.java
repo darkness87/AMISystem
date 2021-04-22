@@ -6,6 +6,6 @@ import com.cnu.ami.metering.regular.models.RegularMonthVO;
 
 public interface RegularService {
 
-	public List<RegularMonthVO> getMonthRegularData(int gseq) throws Exception;
+	public List<RegularMonthVO> getMonthRegularData(int gseq, String yearMonth) throws Exception;
 	
 }

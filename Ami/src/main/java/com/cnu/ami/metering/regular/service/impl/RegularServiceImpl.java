@@ -1,12 +1,16 @@
 package com.cnu.ami.metering.regular.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cnu.ami.device.estate.dao.EstateDAO;
+import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.metering.regular.dao.RegularDAO;
 import com.cnu.ami.metering.regular.dao.entity.RegularMonthInterfaceVO;
 import com.cnu.ami.metering.regular.models.RegularMonthVO;
@@ -18,40 +22,79 @@ public class RegularServiceImpl implements RegularService {
 	@Autowired
 	RegularDAO regularDAO;
 
-	@Override
-	public List<RegularMonthVO> getMonthRegularData(int gseq) throws Exception {
+	@Autowired
+	EstateDAO estateDAO;
 
-		List<RegularMonthInterfaceVO> data = regularDAO.getRegularData(gseq);
+	@Override
+	public List<RegularMonthVO> getMonthRegularData(int gseq, String yearMonth) throws Exception {
+
+		// 단지정보에서 검침일 값 가져오기
+		EstateEntity estate = estateDAO.findBygSeq(gseq);
+
+		int readingDay = estate.getDayPower();
+
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.valueOf(yearMonth.substring(0, 4)));
+		cal.set(Calendar.MONTH, Integer.valueOf(yearMonth.substring(4, 6)) - 1);
+		cal.set(Calendar.DATE, readingDay);
+
+		date = new Date(cal.getTimeInMillis());
+		String fromDate = dateFormat.format(date); // 현월
+
+		cal.set(Calendar.MONTH, Integer.valueOf(yearMonth.substring(4, 6)) - 2);
+		date = new Date(cal.getTimeInMillis());
+		String toDate = dateFormat.format(date); // 전월
+
+		List<RegularMonthInterfaceVO> data = regularDAO.getRegularData(gseq, toDate, fromDate);
 
 		List<RegularMonthVO> list = new ArrayList<RegularMonthVO>();
 		RegularMonthVO regularMonthVO = new RegularMonthVO();
 
-		for (int i = 0; data.size() > i; i++) {
+		for (RegularMonthInterfaceVO month : data) {
 			regularMonthVO = new RegularMonthVO();
 
-			regularMonthVO.setRegionSeq(data.get(i).getRseq());
-			regularMonthVO.setEstateSeq(data.get(i).getGseq());
-			regularMonthVO.setBuildingSeq(data.get(i).getBseq());
-			regularMonthVO.setRegionName(data.get(i).getRname());
-			regularMonthVO.setEstateId(data.get(i).getGid());
-			regularMonthVO.setEstateName(data.get(i).getGname());
-			regularMonthVO.setBuildingName(data.get(i).getBname());
-			regularMonthVO.setHouseName(data.get(i).getHo());
-			regularMonthVO.setDcuId(data.get(i).getDid());
-			regularMonthVO.setMeterid(data.get(i).getMeter_Id());
-			regularMonthVO.setMac(data.get(i).getMac());
-			regularMonthVO.setITIME(new Date(data.get(i).getItime()*1000));
-			regularMonthVO.setMTIME(new Date(data.get(i).getMtime()*1000));
-			regularMonthVO.setAPT1(data.get(i).getApt1());
-			regularMonthVO.setAPT2(data.get(i).getApt2());
-			regularMonthVO.setRPT(data.get(i).getRpt());
-			regularMonthVO.setLPT(data.get(i).getLpt());
-			regularMonthVO.setPFT(data.get(i).getPft());
+			regularMonthVO.setRegionName(month.getRname());
+			regularMonthVO.setEstateId(month.getGid());
+			regularMonthVO.setEstateName(month.getGname());
+			regularMonthVO.setBuildingName(month.getBname());
+			regularMonthVO.setHouseName(month.getHo());
+			regularMonthVO.setDcuId(month.getDid());
+			regularMonthVO.setMeterid(month.getMeter_Id());
+			regularMonthVO.setMac(month.getMac());
+
+			regularMonthVO.setEstateReadingDay(readingDay);
+			regularMonthVO.setMeterReadingDay(month.getMrd());
+
+			if (readingDay == month.getMrd()) {
+				regularMonthVO.setReadingDayCompare(true);
+			} else {
+				regularMonthVO.setReadingDayCompare(false);
+			}
+
+			regularMonthVO.setTo_meterTime(new Date(month.getTo_Mtime() * 1000));
+			regularMonthVO.setTo_apt1(month.getTo_Apt1());
+			regularMonthVO.setTo_rapt1(month.getTo_R_Apt1());
+
+			regularMonthVO.setFrom_meterTime(new Date(month.getFrom_Mtime() * 1000));
+			regularMonthVO.setFrom_apt1(month.getFrom_Apt1());
+			regularMonthVO.setFrom_rapt1(month.getFrom_R_Apt1());
+
+			regularMonthVO.setUse(month.getF_Use() - month.getR_Use());
+
+			if (month.getTo_Mtime() == 0 || month.getFrom_Mtime() == 0) {
+				regularMonthVO.setReadingStatus(1);
+			} else {
+				regularMonthVO.setReadingStatus(0);
+			}
 
 			list.add(regularMonthVO);
 		}
 
 		return list;
+
 	}
 
 }

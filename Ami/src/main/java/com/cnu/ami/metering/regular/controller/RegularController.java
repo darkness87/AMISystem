@@ -38,9 +38,11 @@ public class RegularController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "월검침 : 목록")
 	public Mono<ResponseListVO<RegularMonthVO>> getMonthListData(HttpServletRequest request,
-			@RequestParam int estateSeq, @RequestParam int yearMonth) throws Exception {
+			@RequestParam int estateSeq, @RequestParam String yearMonth) throws Exception {
 
-		List<RegularMonthVO> data = regularService.getMonthRegularData(estateSeq);
+		// TODO 데이터가 1달 이상 적재된후 확인필요
+		
+		List<RegularMonthVO> data = regularService.getMonthRegularData(estateSeq, yearMonth);
 
 		return Mono.just(new ResponseListVO<RegularMonthVO>(request, data));
 	}

@@ -443,8 +443,6 @@ public class EquipmentController {
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-//		boolean bool = false;
-
 		String[] meters = { meterId };
 
 		Date date = new Date();
@@ -470,7 +468,6 @@ public class EquipmentController {
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-//		boolean bool = false;
 		String[] meters = { meterId };
 
 		Date date = new Date();
@@ -503,7 +500,6 @@ public class EquipmentController {
 
 		String[] meters = { meterId };
 
-//		boolean bool = false;
 		boolean bool = comm.setMeterLpPeriod(meters, period);
 
 		log.info("result : {}", bool);

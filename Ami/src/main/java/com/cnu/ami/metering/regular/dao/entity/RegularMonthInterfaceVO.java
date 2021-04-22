@@ -2,26 +2,38 @@ package com.cnu.ami.metering.regular.dao.entity;
 
 public interface RegularMonthInterfaceVO {
 
-	int getRseq();
-	int getGseq();
-	int getBseq();
-
 	String getRname();
+
 	String getGid();
+
 	String getGname();
+
 	String getBname();
+
 	String getHo();
+
 	String getDid();
+
 	String getMeter_Id();
+
+	int getMrd();
+
 	String getMac();
 
-	long getItime();
-	long getMtime();
+	long getTo_Mtime(); // 전월시간
 
-	int getApt1(); // 유효전력량 Total
-	int getApt2(); // 피상전력량 Total
-	int getRpt(); // 지상 무효전력량 Total
-	int getLpt(); // 진상 무효전력량 Total
-	int getPft(); // 평균 역률 Total
-	
+	int getTo_Apt1(); // 전월 유효전력량
+
+	int getTo_R_Apt1(); // 전월 역방향
+
+	long getFrom_Mtime(); // 현월시간
+
+	int getFrom_Apt1(); // 현월 유효전력량
+
+	int getFrom_R_Apt1(); // 현월 역방향
+
+	int getF_Use(); // 정방향 사용량
+
+	int getR_Use(); // 역방향 사용량
+
 }

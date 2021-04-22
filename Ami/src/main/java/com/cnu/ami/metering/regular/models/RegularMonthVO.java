@@ -9,10 +9,6 @@ import lombok.Setter;
 @Setter
 public class RegularMonthVO {
 
-	private int regionSeq;
-	private int estateSeq;
-	private int buildingSeq;
-
 	private String regionName;
 	private String estateId;
 	private String estateName;
@@ -22,13 +18,20 @@ public class RegularMonthVO {
 	private String meterid;
 	private String mac;
 
-	private Date ITIME;
-	private Date MTIME;
+	private int estateReadingDay; // 단지 정기검침일
+	private int meterReadingDay; // 계량기 정기검침일
 
-	private int APT1; // 유효전력량 Total
-	private int APT2; // 피상전력량 Total
-	private int RPT; // 지상 무효전력량 Total
-	private int LPT; // 진상 무효전력량 Total
-	private int PFT; // 평균 역률 Total
+	private boolean readingDayCompare; // 정기검침일 비교
 
+	private Date to_meterTime; // 전월 미터 측정 날짜
+	private int to_apt1; // 전월 정방향 유효전력량 Total
+	private int to_rapt1; // 전월 역방향 유효전력량 Total
+
+	private Date from_meterTime; // 현월 미터 측정 날짜
+	private int from_apt1; // 현월 정방향 유효전력량 Total
+	private int from_rapt1; // 현월 역방향 유효전력량 Total
+
+	private int use; // 사용량 = (from_apt1 - to_apt1) - (from_rapt1 - to_rapt1)
+	private int readingStatus; // 검침 상태 코드, 0:정상, 1:오류
+	
 }
