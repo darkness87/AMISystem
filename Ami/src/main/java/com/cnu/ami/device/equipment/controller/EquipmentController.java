@@ -410,7 +410,7 @@ public class EquipmentController {
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
-	@RequestMapping(value = "/dcu/setting/recan", method = RequestMethod.GET)
+	@RequestMapping(value = "/dcu/setting/rescan", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 모뎀 재스캔")
 	public Mono<ResponseVO<ResultVO>> setRescanModem(HttpServletRequest request, @RequestParam String dcuId,
