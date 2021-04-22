@@ -144,8 +144,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 			dcuInfoVO.setTMask(dcu.getT_MASK());
 			dcuInfoVO.setSTypePeriod(dcu.getSM_P());
 			dcuInfoVO.setSTypeLpPeriod(dcu.getSMLP_P());
-			dcuInfoVO.setETypelpPeriod(dcu.getEMLP_P());
-			dcuInfoVO.setGTypelpPeriod(dcu.getGMLP_P());
+			dcuInfoVO.setETypeLpPeriod(dcu.getEMLP_P());
+			dcuInfoVO.setGTypeLpPeriod(dcu.getGMLP_P());
 			dcuInfoVO.setEaTypeLpPeriod(dcu.getEAMLP_P());
 			dcuInfoVO.setGTypeAvgVoltagePeriod(dcu.getGM_AVE_VA_P());
 			dcuInfoVO.setGTypeInstVoltagePeriod(dcu.getGM_INST_VA_P());

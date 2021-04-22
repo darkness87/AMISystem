@@ -28,8 +28,8 @@ public class DcuInfoVO {
 	private String tMask; // DCU에서 검침FEP으로 보내는 Trap 또는 자율보고 정보관리 금지 항목값 설정 (Default : 0x00000000, 모두 허용)
 	private int sTypePeriod; // 표준형 계기 현재 검침 수집 주기 조정
 	private int sTypeLpPeriod; // 표준형 계기 LP 수집 주기 조정
-	private int eTypelpPeriod; // E-TYPE 계기 LP 수집 주기 조정
-	private int gTypelpPeriod; // G-TYPE 계기 LP 수집 주기 조정
+	private int eTypeLpPeriod; // E-TYPE 계기 LP 수집 주기 조정
+	private int gTypeLpPeriod; // G-TYPE 계기 LP 수집 주기 조정
 	private int eaTypeLpPeriod; // EA-TYPE 계기 LP 수집 주기 조정
 	private int gTypeAvgVoltagePeriod; // G-TYPE 계기 평균 전압/전류 수집 주기 조정
 	private int gTypeInstVoltagePeriod; // G-TYPE 계기 순시 전압/전류 수집 주기 조정 
