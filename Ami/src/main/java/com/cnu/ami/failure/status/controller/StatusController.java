@@ -1,6 +1,5 @@
 package com.cnu.ami.failure.status.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,18 +16,29 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.common.ResultVO;
+import com.cnu.ami.failure.status.models.DcuFailureStatusVO;
+import com.cnu.ami.failure.status.service.StatusService;
+import com.cnu.network.client.fep.CnuComm;
+import com.dreamsecurity.amicipher.AMICipher;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 /**
  * 네트워크 상태코드
+ * 
  * @author sookwon
  * @apiNote status api
  */
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/api/failure/status")
 public class StatusController {
+
+	@Autowired
+	StatusService statusService;
 
 	@Autowired
 	PropertyData propertyData;
@@ -36,21 +46,36 @@ public class StatusController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "장애:네트워크 상태관리 : 리스트정보")
-	public Mono<ResponseListVO<Object>> getTestListData(HttpServletRequest request) throws Exception {
+	public Mono<ResponseListVO<DcuFailureStatusVO>> getDcuStatus(HttpServletRequest request,
+			@RequestParam int estateSeq) throws Exception {
 
-		List<Object> data = new ArrayList<Object>();
+		List<DcuFailureStatusVO> data = statusService.getDcuStatus(estateSeq);
 
-		return Mono.just(new ResponseListVO<Object>(request, data));
+		return Mono.just(new ResponseListVO<DcuFailureStatusVO>(request, data));
 	}
 
-	@RequestMapping(value = "/info", method = RequestMethod.GET)
+	@RequestMapping(value = "/dcu/reboot", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "장애:네트워크 상태관리 : 상세정보")
-	public Mono<ResponseVO<Object>> getTestData(HttpServletRequest request, @RequestParam String id) throws Exception {
+	@Description(value = "장애:네트워크 상태관리 : DCU 리부트")
+	public Mono<ResponseVO<ResultVO>> setDcuReboot(HttpServletRequest request, @RequestParam String dcuId,
+			@RequestParam String dcuIp) throws Exception {
 
-		Object data = new Object();
+		log.info("{} , {} , {}", request, dcuId, dcuIp);
 
-		return Mono.just(new ResponseVO<Object>(request, data));
+		ResultVO resultVO = new ResultVO();
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+
+		try {
+			AMICipher jni = new AMICipher();
+			log.info("AMICipher VERSION = {}", jni.amiGetVersion());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		boolean bool = comm.execDcuReboot();
+		resultVO.setResult(bool);
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
 }
