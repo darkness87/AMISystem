@@ -39,9 +39,9 @@ public class DcuInfoVO {
 	private int packetLength; // 검침FEP-DCU간 프로토콜 패킷 길이(bytes), 초기값 0x00의 경우, 통신망 혹은 DCU OS 기기 기본 MTU 설정치에서 TCP/IP 헤더길이를 뺀 길이 적용
 	private int timeOut; // DCU-FEP간 프로토콜상 Time out 시간, 초기값 : 3초
 	private int trapInterval; // DCU-FEP간 Trap 전송 실패시 재전송 Interval (단위 : 분), 초기값 : 15분
-	private int etypeTimeErrorLimit; // DCU와 E-type 전력량계간 시간오차 한계(Default 0x02, 2분)
-	private int gtypeTimeErrorLimit; // DCU와 G-type 전력량계간 시간오차 한계(Default 0x01, 1분)
-	private int eatypeTimeErrorLimit; // DCU와 Ea-type 전력량계간 시간오차 한계(Default 0x01, 1분)
+	private int eTypeTimeErrorLimit; // DCU와 E-type 전력량계간 시간오차 한계(Default 0x02, 2분)
+	private int gTypeTimeErrorLimit; // DCU와 G-type 전력량계간 시간오차 한계(Default 0x01, 1분)
+	private int eaTypeTimeErrorLimit; // DCU와 Ea-type 전력량계간 시간오차 한계(Default 0x01, 1분)
 	private int eTypeTimePeriod; // E-type 전력량계 시간확인 주기
 	private int gTypeTimePeriod; // G-type 전력량계 시간확인 주기 (Default 0x0F, 15분)
 	private int eaTypeTimePeriod; // Ea-type 전력량계 시간확인 주기 (Default 0x0F, 15분)

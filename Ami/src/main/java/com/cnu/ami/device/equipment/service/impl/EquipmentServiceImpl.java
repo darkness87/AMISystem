@@ -155,9 +155,9 @@ public class EquipmentServiceImpl implements EquipmentService {
 			dcuInfoVO.setPacketLength(dcu.getP_LENGTH());
 			dcuInfoVO.setTimeOut(dcu.getTIME_OUT());
 			dcuInfoVO.setTrapInterval(dcu.getTRAP_INTERVAL());
-			dcuInfoVO.setEtypeTimeErrorLimit(dcu.getE_MTIME_ERROR_LIMIT());
-			dcuInfoVO.setGtypeTimeErrorLimit(dcu.getG_MTIME_ERROR_LIMIT());
-			dcuInfoVO.setEatypeTimeErrorLimit(dcu.getEA_MTIME_ERROR_LIMIT());
+			dcuInfoVO.setETypeTimeErrorLimit(dcu.getE_MTIME_ERROR_LIMIT());
+			dcuInfoVO.setGTypeTimeErrorLimit(dcu.getG_MTIME_ERROR_LIMIT());
+			dcuInfoVO.setEaTypeTimeErrorLimit(dcu.getEA_MTIME_ERROR_LIMIT());
 			dcuInfoVO.setETypeTimePeriod(dcu.getEM_TIME_P());
 			dcuInfoVO.setGTypeTimePeriod(dcu.getGM_TIME_P());
 			dcuInfoVO.setEaTypeTimePeriod(dcu.getEAM_TIME_P());
