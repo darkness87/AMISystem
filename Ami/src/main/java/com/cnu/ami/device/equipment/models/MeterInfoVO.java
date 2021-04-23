@@ -20,6 +20,7 @@ public class MeterInfoVO {
 	private String meterId; // METER ID
 	private String mac; // MODEM MAC
 	private String dcuId; // DCU ID
+	private String dcuIp; // DCU IP
 	private String deviceName; // COSEM 계기 식별자
 	private int meterReadingDay; // 정기검침일
 	private Date dcuTime; // DCU 시각

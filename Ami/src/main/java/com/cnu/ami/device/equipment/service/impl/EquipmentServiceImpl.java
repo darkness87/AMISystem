@@ -379,6 +379,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "Meter ID 정보를 확인해주세요.");
 		}
 
+		DcuInfoEntity dcu = dcuInfoDAO.findByDID(meter.getDID());
+
 		EstateMeterInfoInterfaceVO data = meterInfoDAO.getEstateMeterInfo(gseq, meterid);
 
 		RealTimeEntity lp = realTimeDAO.findByMETERID(meterid);
@@ -399,6 +401,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		meterInfoVO.setMeterId(meter.getMETERID());
 		meterInfoVO.setMac(meter.getMAC());
 		meterInfoVO.setDcuId(meter.getDID());
+		meterInfoVO.setDcuIp(dcu.getDCU_IP());
 		meterInfoVO.setDeviceName(meter.getDEVICE_NAME());
 		meterInfoVO.setMeterReadingDay(meter.getMRD());
 		meterInfoVO.setDcuTime(new Date(meter.getITIME() * 1000));
@@ -504,7 +507,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
 		try {
-			long data[] = comm.getDcuStatus(); // 0 - DCU 동작 상태, 1 – DCU 평균 업로드, 2 – DCU 평균 다운로드, 3 – CPU 사용률, 4 – 메모리 사용률, 5 – 설비 온도, 6 - DCU 커버상태
+			long data[] = comm.getDcuStatus(); // 0 - DCU 동작 상태, 1 – DCU 평균 업로드, 2 – DCU 평균 다운로드, 3 – CPU 사용률, 4 – 메모리
+												// 사용률, 5 – 설비 온도, 6 - DCU 커버상태
 
 			dcuRealtimeStatusVO.setSysState(data[0]);
 			dcuRealtimeStatusVO.setSysUpBps(data[1]);
@@ -517,7 +521,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		} catch (Exception e) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "정보가 없습니다.");
 		}
-		
+
 		return dcuRealtimeStatusVO;
 	}
 
