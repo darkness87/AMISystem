@@ -1,5 +1,8 @@
 package com.cnu.ami.failure.status.controller;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,6 +55,47 @@ public class StatusController {
 		List<DcuFailureStatusVO> data = statusService.getDcuStatus(estateSeq);
 
 		return Mono.just(new ResponseListVO<DcuFailureStatusVO>(request, data));
+	}
+
+	@RequestMapping(value = "/test/ping", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "장애:네트워크 상태관리 : TEST 핑 테스트")
+	public Mono<ResponseVO<Object>> getTestPing(HttpServletRequest request, @RequestParam String ip) throws Exception {
+		
+		// TODO 정식 사용 가능하도록 변경
+		
+		String pingResult = "";
+		ProcessBuilder processBuilder = new ProcessBuilder();
+		processBuilder.command("bash", "-c", "ping -c 5 " + ip);
+		try {
+			Process process = processBuilder.start();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line;
+			int count = 0;
+
+			while ((line = reader.readLine()) != null) {
+				log.info(line);
+				count++;
+				pingResult = line;
+			}
+
+			log.info("count : {} / pingResult : {}", count, pingResult);
+			
+			if(pingResult == null || pingResult.equals("")) {
+				return Mono.just(new ResponseVO<Object>(request, null));
+			}
+
+			pingResult = pingResult.replace("rtt ", "");
+			pingResult = pingResult.replace(" ms", "");
+			String[] strArr = pingResult.split(" = ");
+			pingResult = strArr[1];
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return Mono.just(new ResponseVO<Object>(request, null));
+		}
+
+		return Mono.just(new ResponseVO<Object>(request, null));
 	}
 
 	@RequestMapping(value = "/dcu/reboot", method = RequestMethod.GET)

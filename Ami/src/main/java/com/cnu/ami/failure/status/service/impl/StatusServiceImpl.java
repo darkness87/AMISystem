@@ -1,5 +1,8 @@
 package com.cnu.ami.failure.status.service.impl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +17,9 @@ import com.cnu.ami.failure.status.dao.entity.DcuFailureStatusInterfaceVO;
 import com.cnu.ami.failure.status.models.DcuFailureStatusVO;
 import com.cnu.ami.failure.status.service.StatusService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class StatusServiceImpl implements StatusService {
 
@@ -21,7 +27,7 @@ public class StatusServiceImpl implements StatusService {
 	DcuFailureStatusDAO dcuFailureStatusDAO;
 
 	@Override
-	public List<DcuFailureStatusVO> getDcuStatus(int gseq) {
+	public List<DcuFailureStatusVO> getDcuStatus(int gseq) throws Exception {
 
 		List<DcuFailureStatusInterfaceVO> data = dcuFailureStatusDAO.getDcuFailureStatus(gseq);
 
@@ -40,15 +46,81 @@ public class StatusServiceImpl implements StatusService {
 			dcuFailureStatusVO.setDcuIp(dcu.getDCU_IP());
 			dcuFailureStatusVO.setDcuPort(dcu.getDCU_PORT());
 			dcuFailureStatusVO.setRouterIp(dcu.getROUTER_IP());
-			dcuFailureStatusVO.setDcuState(dcu.getS_SYS_STATE());
+			dcuFailureStatusVO.setSysState(dcu.getS_SYS_STATE());
 			dcuFailureStatusVO.setDcuStatus(dcu.getDSTATUS());
-			dcuFailureStatusVO.setDcuPingStatus(0);
-			dcuFailureStatusVO.setRouterPingStatus(0);
+
+			String[] pingResult = pingResult(dcu.getDCU_IP());
+
+			if (pingResult == null) {
+			} else {
+				dcuFailureStatusVO.setDcuPingMin(pingResult[0]);
+				dcuFailureStatusVO.setDcuPingAvg(pingResult[1]);
+				dcuFailureStatusVO.setDcuPingMax(pingResult[2]);
+			}
+			
+			if(dcu.getROUTER_IP() == null || dcu.getROUTER_IP().equals("")) {
+				
+			} else {
+				
+				String[] routerResult = pingResult(dcu.getDCU_IP());
+				
+				if (routerResult == null) {
+				} else {
+					dcuFailureStatusVO.setRouterPingMin(pingResult[0]);
+					dcuFailureStatusVO.setRouterPingAvg(pingResult[1]);
+					dcuFailureStatusVO.setRouterPingMax(pingResult[2]);
+				}
+			}
 
 			list.add(dcuFailureStatusVO);
 		}
 
 		return list;
+	}
+
+	public String[] pingResult(String ip) throws Exception {
+
+		String[] resultArr = null;
+		ProcessBuilder processBuilder = new ProcessBuilder();
+		processBuilder.command("bash", "-c", "ping -c 5 " + ip);
+		try {
+			Process process = processBuilder.start();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line;
+			String pingResult = "";
+			int count = 0;
+
+			while ((line = reader.readLine()) != null) {
+				log.info(line);
+				count++;
+				pingResult = line;
+			}
+
+			log.info("count : {} / pingResult : {}", count, pingResult);
+			
+			if(pingResult == null || pingResult.equals("")) {
+				resultArr=null;
+				return resultArr;
+			}
+
+			pingResult = pingResult.replace("rtt ", "");
+			pingResult = pingResult.replace(" ms", "");
+
+			String[] strArr = pingResult.split(" = ");
+
+			pingResult = strArr[1];
+
+			resultArr = pingResult.split("/");
+
+			log.info("replace : {}", pingResult);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			resultArr=null;
+			return resultArr;
+		}
+
+		return resultArr;
 	}
 
 }

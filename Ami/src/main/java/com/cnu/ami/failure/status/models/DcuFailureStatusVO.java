@@ -12,9 +12,13 @@ public class DcuFailureStatusVO {
 	private String dcuIp;
 	private int dcuPort;
 	private String routerIp;
-	private int dcuState;
+	private String sysState;
 	private String dcuStatus;
-	private int dcuPingStatus;
-	private int routerPingStatus;
+	private String dcuPingMin;
+	private String dcuPingAvg;
+	private String dcuPingMax;
+	private String routerPingMin;
+	private String routerPingAvg;
+	private String routerPingMax;
 
 }

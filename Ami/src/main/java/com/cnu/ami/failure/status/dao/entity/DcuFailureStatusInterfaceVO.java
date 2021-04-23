@@ -12,7 +12,7 @@ public interface DcuFailureStatusInterfaceVO {
 
 	String getROUTER_IP();
 
-	int getS_SYS_STATE();
+	String getS_SYS_STATE();
 
 	String getDSTATUS();
 
