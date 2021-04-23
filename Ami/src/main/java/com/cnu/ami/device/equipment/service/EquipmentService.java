@@ -5,6 +5,7 @@ import java.util.List;
 import com.cnu.ami.common.ResultCountVO;
 import com.cnu.ami.device.equipment.models.DcuInfoListVO;
 import com.cnu.ami.device.equipment.models.DcuInfoVO;
+import com.cnu.ami.device.equipment.models.DcuRealtimeStatusVO;
 import com.cnu.ami.device.equipment.models.DcuRegVO;
 import com.cnu.ami.device.equipment.models.MeterInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterInfoVO;
@@ -44,5 +45,7 @@ public interface EquipmentService {
 	public List<MeterOtherInfoListVO> getOtherMeterListData(int gseq) throws Exception;
 
 	public MeterOtherInfoVO getOtherMeterData(int gseq, String gatewayId, String meterId) throws Exception;
+	
+	public DcuRealtimeStatusVO getDcuRealTimeStatus(String dcuId, String dcuIp) throws Exception;
 
 }

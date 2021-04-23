@@ -25,6 +25,7 @@ import com.cnu.ami.device.equipment.dao.entity.MeterInfoEntity;
 import com.cnu.ami.device.equipment.dao.entity.MeterInfoInterfaceVO;
 import com.cnu.ami.device.equipment.models.DcuInfoListVO;
 import com.cnu.ami.device.equipment.models.DcuInfoVO;
+import com.cnu.ami.device.equipment.models.DcuRealtimeStatusVO;
 import com.cnu.ami.device.equipment.models.DcuRegVO;
 import com.cnu.ami.device.equipment.models.MeterInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterInfoVO;
@@ -33,6 +34,7 @@ import com.cnu.ami.device.equipment.models.MeterOtherInfoVO;
 import com.cnu.ami.device.equipment.service.EquipmentService;
 import com.cnu.ami.metering.info.dao.RealTimeDAO;
 import com.cnu.ami.metering.info.dao.entity.RealTimeEntity;
+import com.cnu.network.client.fep.CnuComm;
 
 @Service
 public class EquipmentServiceImpl implements EquipmentService {
@@ -493,6 +495,30 @@ public class EquipmentServiceImpl implements EquipmentService {
 		meterOtherInfoVO.setMeterTime(new Date());
 
 		return meterOtherInfoVO;
+	}
+
+	@Override
+	public DcuRealtimeStatusVO getDcuRealTimeStatus(String dcuId, String dcuIp) throws Exception {
+
+		DcuRealtimeStatusVO dcuRealtimeStatusVO = new DcuRealtimeStatusVO();
+		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
+
+		try {
+			long data[] = comm.getDcuStatus(); // 0 - DCU 동작 상태, 1 – DCU 평균 업로드, 2 – DCU 평균 다운로드, 3 – CPU 사용률, 4 – 메모리 사용률, 5 – 설비 온도, 6 - DCU 커버상태
+
+			dcuRealtimeStatusVO.setSysState(data[0]);
+			dcuRealtimeStatusVO.setSysUpBps(data[1]);
+			dcuRealtimeStatusVO.setSysDownBps(data[2]);
+			dcuRealtimeStatusVO.setSysCpuUsage(data[3]);
+			dcuRealtimeStatusVO.setSysMemoryUsage(data[4]);
+			dcuRealtimeStatusVO.setSysTempValue(data[5]);
+			dcuRealtimeStatusVO.setSysDcuCoverStatus(data[6]);
+
+		} catch (Exception e) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "정보가 없습니다.");
+		}
+		
+		return dcuRealtimeStatusVO;
 	}
 
 }

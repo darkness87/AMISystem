@@ -1,6 +1,7 @@
 package com.cnu.ami.device.equipment.controller;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,13 +19,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cnu.ami.common.ExceptionConst;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.ResultCountVO;
 import com.cnu.ami.common.ResultVO;
+import com.cnu.ami.common.SystemException;
+import com.cnu.ami.dashboard.models.UseDayHourAllVO;
 import com.cnu.ami.device.equipment.models.DcuInfoListVO;
 import com.cnu.ami.device.equipment.models.DcuInfoVO;
+import com.cnu.ami.device.equipment.models.DcuRealtimeStatusVO;
 import com.cnu.ami.device.equipment.models.DcuRegVO;
 import com.cnu.ami.device.equipment.models.MeterInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterInfoVO;
@@ -35,6 +40,7 @@ import com.cnu.network.client.fep.CnuComm;
 import com.dreamsecurity.amicipher.AMICipher;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -275,6 +281,30 @@ public class EquipmentController {
 		MeterOtherInfoVO data = equipmentService.getOtherMeterData(estateSeq, gatewayId, meterId);
 
 		return Mono.just(new ResponseVO<MeterOtherInfoVO>(request, data));
+	}
+
+	@RequestMapping(value = "/dcu/realtime/status", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:장비관리 : DCU 실시간 상태 정보")
+	public Flux<ResponseVO<DcuRealtimeStatusVO>> getDcuRealTimeStatus(HttpServletRequest request,
+			@RequestParam String dcuId, @RequestParam String dcuIp,
+			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
+
+		if (duration == 0) { // 0일 경우 1회 전달
+			return Flux.just(
+					new ResponseVO<DcuRealtimeStatusVO>(request, equipmentService.getDcuRealTimeStatus(dcuId, dcuIp)));
+		} else {
+
+			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
+				try {
+					return new ResponseVO<DcuRealtimeStatusVO>(request,
+							equipmentService.getDcuRealTimeStatus(dcuId, dcuIp));
+				} catch (Exception e) {
+					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
+				}
+			}).log();
+		}
+
 	}
 
 	@RequestMapping(value = "/dcu/setting/info", method = RequestMethod.GET)
