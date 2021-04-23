@@ -17,7 +17,7 @@ public class NmsDcuListVO {
 	private String dcuIp;
 	private int dcuPort;
 	private String firmwareVersion;
-	private String systemStatus;
-	private String dcuStatus;
+	private String sysState; // DCU 동작상태  // 0 : 이상 , 1 : 정상; // 
+	private String dcuStatus; // 'RET_SUCCESS','RET_FAIL_CONNECTION','RET_FAIL_SEND','RET_FAIL_READ','RET_FAIL_NOT_ACK'
 
 }

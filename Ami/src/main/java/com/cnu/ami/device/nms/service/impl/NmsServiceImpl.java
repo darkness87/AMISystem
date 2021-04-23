@@ -44,7 +44,7 @@ public class NmsServiceImpl implements NmsService {
 			nmsDcuListVO.setDcuIp(dcu.getDCU_IP());
 			nmsDcuListVO.setDcuPort(dcu.getDCU_PORT());
 			nmsDcuListVO.setFirmwareVersion(dcu.getFWV());
-			nmsDcuListVO.setSystemStatus(dcu.getS_SYS_STATE());
+			nmsDcuListVO.setSysState(dcu.getS_SYS_STATE());
 			nmsDcuListVO.setDcuStatus(dcu.getDSTATUS());
 
 			list.add(nmsDcuListVO);
