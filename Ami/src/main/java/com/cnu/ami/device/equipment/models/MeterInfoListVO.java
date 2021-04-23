@@ -20,7 +20,7 @@ public class MeterInfoListVO {
 	private String dcuId; // DCU ID
 	private String meterId; // METER ID
 	private String mac; // MODEM MAC
-	private int readingDay; // 검침일;
+	private int meterReadingDay; // 계량기 검침일;
 	private Date updateDate; // 변경일시
 
 }

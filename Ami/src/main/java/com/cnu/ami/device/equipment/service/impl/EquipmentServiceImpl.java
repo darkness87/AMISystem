@@ -357,7 +357,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			meterInfoListVO.setDcuId(meter.get(i).getDId());
 			meterInfoListVO.setMeterId(meter.get(i).getMeter_Id());
 			meterInfoListVO.setMac(meter.get(i).getMac());
-			meterInfoListVO.setReadingDay(meter.get(i).getMrd());
+			meterInfoListVO.setMeterReadingDay(meter.get(i).getMrd());
 			meterInfoListVO.setUpdateDate(new Date(meter.get(i).getUDate() * 1000));
 
 			list.add(meterInfoListVO);
@@ -411,8 +411,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 		meterInfoVO.setRcon(meter.getRCON());
 		meterInfoVO.setPcon(meter.getPCON());
 		meterInfoVO.setNetMetering(meter.getNET_METERING());
-		meterInfoVO.setMComp(meter.getMCOMP());
-		meterInfoVO.setMtype(meter.getMTYPE());
+		meterInfoVO.setMeterComp(meter.getMCOMP());
+		meterInfoVO.setMeterType(meter.getMTYPE());
 		meterInfoVO.setIsDelete(meter.getIS_DELETE());
 		meterInfoVO.setWriteDate(new Date(meter.getWDATE() * 1000));
 		meterInfoVO.setUpdateDate(new Date(meter.getUDATE() * 1000));
@@ -463,7 +463,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			meterOtherInfoListVO.setHouseName(device.getHO());
 			meterOtherInfoListVO.setGatewayId(device.getGATEWAYID());
 			meterOtherInfoListVO.setMeterId(device.getMETERID());
-			meterOtherInfoListVO.setMeterType(device.getTYPE()); // 계량기 타입 // 1:전기,2:가스,3:수도,4:온수,5:난방
+			meterOtherInfoListVO.setReadingType(device.getTYPE()); // 검침 타입 // 1:전기,2:가스,3:수도,4:온수,5:난방
 			meterOtherInfoListVO.setUpdateDate(new Date(device.getWDATE() * 1000));
 
 			list.add(meterOtherInfoListVO);
@@ -493,7 +493,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		meterOtherInfoVO.setReadingType(data.getTYPE());
 		meterOtherInfoVO.setMac(data.getMAC());
 		meterOtherInfoVO.setDeviceName(data.getDEVICE_NAME());
-		meterOtherInfoVO.setReadingDay(data.getMRD());
+		meterOtherInfoVO.setOtherReadingDay(data.getMRD());
 		meterOtherInfoVO.setLpPeriod(data.getLP_PERIOD());
 		meterOtherInfoVO.setMeterTime(new Date());
 

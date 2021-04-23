@@ -22,7 +22,7 @@ public class MeterOtherInfoVO {
 
 	private String mac;
 	private String deviceName;
-	private int readingDay;
-	private int lpPeriod;
+	private int otherReadingDay; // 계량기Other 검침일
+	private int lpPeriod; // 검침주기
 	private Date meterTime;
 }
