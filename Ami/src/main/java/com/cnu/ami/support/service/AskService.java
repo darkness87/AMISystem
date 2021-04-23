@@ -11,7 +11,7 @@ public interface AskService {
 
 	public AskVO getAskData(long aseq) throws Exception;
 
-	public List<AskListVO> getAskListData(int gseq) throws Exception;
+	public List<AskListVO> getAskListData(int gseq, String toDate, String fromDate, String userId) throws Exception;
 
 	public int setAskData(AskSetVO askSetVO) throws Exception;
 

@@ -1,12 +1,16 @@
 package com.cnu.ami.support.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.cnu.ami.common.ExceptionConst;
+import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.building.dao.BuildingDAO;
 import com.cnu.ami.device.building.dao.entity.BuildingEntity;
 import com.cnu.ami.device.estate.dao.EstateDAO;
@@ -72,9 +76,42 @@ public class AskServiceImpl implements AskService {
 	}
 
 	@Override
-	public List<AskListVO> getAskListData(int gseq) throws Exception {
-		List<AskInterfaceVO> askList = askDAO.getAskList(gseq);
+	public List<AskListVO> getAskListData(int gseq, String toDate, String fromDate, String userId) throws Exception {
+		List<AskInterfaceVO> askList = null;
 
+		if (toDate.equals("") || fromDate.equals("")) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.VALIDATION_DATE, "날짜 정보를 확인하여 주시기 바랍니다.");
+		}
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.valueOf(toDate.substring(0, 4)));
+		cal.set(Calendar.MONTH, Integer.valueOf(toDate.substring(4, 6)) - 1);
+		cal.set(Calendar.DATE, Integer.valueOf(toDate.substring(6, 8)));
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		long to_Date = cal.getTimeInMillis() / 1000;
+
+		cal.set(Calendar.YEAR, Integer.valueOf(fromDate.substring(0, 4)));
+		cal.set(Calendar.MONTH, Integer.valueOf(fromDate.substring(4, 6)) - 1);
+		cal.set(Calendar.DATE, Integer.valueOf(fromDate.substring(6, 8)));
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 999);
+
+		long from_Date = cal.getTimeInMillis() / 1000;
+
+		if (gseq == 0) {
+			askList = askDAO.getAskList(to_Date, from_Date);
+		} else if (gseq != 0 && userId.equals("")) {
+			askList = askDAO.getAskList(gseq, to_Date, from_Date);
+		} else {
+			askList = askDAO.getAskList(gseq, to_Date, from_Date, userId);
+		}
+		
 		List<AskListVO> list = new ArrayList<AskListVO>();
 		AskListVO askListVO = new AskListVO();
 

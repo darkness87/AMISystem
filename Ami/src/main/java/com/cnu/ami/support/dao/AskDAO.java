@@ -19,10 +19,22 @@ public interface AskDAO extends JpaRepository<AskEntity, Long> { // 키 값이 �
 	public List<AskEntity> findById(long id); // 찾고자 할때 find By 컬럼명(첫글자 대문자) 그 다음 컬럼 존재시 _ 로 이어져서 사용 // ** 함수명 중요 !!!
 
 	@Query(value = "SELECT A.ASEQ,A.UID,B.GNAME,C.BNAME,D.RNAME,A.ASK_CODE,A.ASK_MESSAGE,A.WDATE\r\n"
-			+ "FROM ASK AS A\r\n" + "LEFT JOIN GROUPSET AS B\r\n" + "ON A.GSEQ=B.GSEQ\r\n"
+			+ "FROM (SELECT * FROM ASK WHERE WDATE >= :toDate AND WDATE <= :fromDate) AS A\r\n" + "JOIN GROUPSET AS B\r\n" + "ON A.GSEQ=B.GSEQ\r\n"
 			+ "LEFT JOIN BUILDING AS C\r\n" + "ON A.BSEQ=C.BSEQ\r\n" + "LEFT JOIN REGION AS D\r\n"
-			+ "ON B.RSEQ=D.RSEQ\r\n" + "ORDER BY WDATE ASC, ASEQ DESC", nativeQuery = true)
-	public List<AskInterfaceVO> getAskList(@Param("gseq") int gseq);
+			+ "ON B.RSEQ=D.RSEQ\r\n" + "ORDER BY WDATE DESC, ASEQ ASC", nativeQuery = true)
+	public List<AskInterfaceVO> getAskList(@Param("toDate") long toDate, @Param("fromDate") long fromDate);
+	
+	@Query(value = "SELECT A.ASEQ,A.UID,B.GNAME,C.BNAME,D.RNAME,A.ASK_CODE,A.ASK_MESSAGE,A.WDATE\r\n"
+			+ "FROM (SELECT * FROM ASK WHERE WDATE >= :toDate AND WDATE <= :fromDate) AS A\r\n" + "JOIN (SELECT * FROM GROUPSET WHERE GSEQ = :gseq) AS B\r\n" + "ON A.GSEQ=B.GSEQ\r\n"
+			+ "LEFT JOIN BUILDING AS C\r\n" + "ON A.BSEQ=C.BSEQ\r\n" + "LEFT JOIN REGION AS D\r\n"
+			+ "ON B.RSEQ=D.RSEQ\r\n" + "ORDER BY WDATE DESC, ASEQ ASC", nativeQuery = true)
+	public List<AskInterfaceVO> getAskList(@Param("gseq") int gseq, @Param("toDate") long toDate, @Param("fromDate") long fromDate);
+
+	@Query(value = "SELECT A.ASEQ,A.UID,B.GNAME,C.BNAME,D.RNAME,A.ASK_CODE,A.ASK_MESSAGE,A.WDATE\r\n"
+			+ "FROM (SELECT * FROM ASK WHERE WDATE >= :toDate AND WDATE <= :fromDate AND USER_ID = :userId) AS A\r\n" + "JOIN (SELECT * FROM GROUPSET WHERE GSEQ = :gseq) AS B\r\n" + "ON A.GSEQ=B.GSEQ\r\n"
+			+ "LEFT JOIN BUILDING AS C\r\n" + "ON A.BSEQ=C.BSEQ\r\n" + "LEFT JOIN REGION AS D\r\n"
+			+ "ON B.RSEQ=D.RSEQ\r\n" + "ORDER BY WDATE DESC, ASEQ ASC", nativeQuery = true)
+	public List<AskInterfaceVO> getAskList(@Param("gseq") int gseq, @Param("toDate") long toDate, @Param("fromDate") long fromDate, @Param("userId") String userId);
 
 	public AskEntity findByaSeq(long aseq);
 

@@ -46,11 +46,13 @@ public class AskController {
 	@RequestMapping(value = "/ask/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "고객지원 : 문의게시판 목록")
-	public Mono<ResponseListVO<AskListVO>> getAskListData(HttpServletRequest request, @RequestParam int gSeq,
-			@RequestParam String ymd, @RequestParam String userId, @RequestParam int askType,
-			@RequestParam String pageSize, @RequestParam String pageNumber) throws Exception {
+	public Mono<ResponseListVO<AskListVO>> getAskListData(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int estateSeq,
+			@RequestParam(required = false, defaultValue = "") String toDate,
+			@RequestParam(required = false, defaultValue = "") String fromDate,
+			@RequestParam(required = false, defaultValue = "") String userId) throws Exception {
 
-		List<AskListVO> data = askService.getAskListData(gSeq);
+		List<AskListVO> data = askService.getAskListData(estateSeq, toDate, fromDate, userId); // TODO
 
 		return Mono.just(new ResponseListVO<AskListVO>(request, data));
 	}
@@ -100,22 +102,5 @@ public class AskController {
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
-
-//	@RequestMapping(value = "/ask/test/test", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-//	@ResponseStatus(value = HttpStatus.OK)
-//	@Description(value = "SSE : SSE 테스트")
-//	public Flux<AskVO> getAskTest(HttpServletRequest request) throws Exception {
-//
-//		AskVO askVO = new AskVO();
-//
-//		askVO.setWriteDate(new Date());
-//
-//		log.info("{}", askVO);
-//
-////		return Mono.just(new ResponseVO<AskVO>(request, askVO));
-//
-//		return Flux.interval(Duration.ofSeconds(15)).map(response -> askVO).log();
-//
-//	}
 
 }
