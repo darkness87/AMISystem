@@ -63,7 +63,7 @@ public class InfoController {
 	public Mono<ResponseListVO<CollectMeterVO>> getMeterListData(HttpServletRequest request, @RequestParam int estateSeq, @RequestParam String day,
 			@RequestParam String dcuId) throws Exception {
 
-		List<CollectMeterVO> data = infoService.getMeterData(day, dcuId);
+		List<CollectMeterVO> data = infoService.getMeterData(estateSeq, day, dcuId);
 
 		return Mono.just(new ResponseListVO<CollectMeterVO>(request, data));
 	}

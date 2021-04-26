@@ -110,13 +110,17 @@ public class InfoServiceImpl implements InfoService {
 	}
 
 	@Override
-	public List<CollectMeterVO> getMeterData(String day, String dcuId) throws Exception { // java에서 카운트 수 처리
+	public List<CollectMeterVO> getMeterData(int gseq, String day, String dcuId) throws Exception { // java에서 카운트 수 처리
 
 		List<MeterInterfaceVO> meterdata = meterDAO.getMeterData(dcuId);
 
 		Query query = new Query().addCriteria(Criteria.where("day").is(day))
 				.addCriteria(Criteria.where("did").is(dcuId));
-		List<LpDataTemp> lpdata = mongoTemplate.find(query, LpDataTemp.class, "CASS_1_2021_RAW_LP");
+		
+		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+		String collectName = collectionNameFormat.formatDay(gseq, day);
+		
+		List<LpDataTemp> lpdata = mongoTemplate.find(query, LpDataTemp.class, collectName);
 
 		List<CollectMeterVO> list = new ArrayList<CollectMeterVO>();
 		CollectMeterVO collectMeterVO = new CollectMeterVO();

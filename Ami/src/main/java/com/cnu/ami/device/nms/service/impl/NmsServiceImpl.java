@@ -12,8 +12,14 @@ import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
 import com.cnu.ami.device.equipment.dao.entity.DcuNmsInterfaceVO;
 import com.cnu.ami.device.nms.models.NmsDcuListVO;
+import com.cnu.ami.device.nms.models.NmsDcuRebootListVO;
 import com.cnu.ami.device.nms.service.NmsService;
+import com.cnu.network.client.fep.CnuComm;
+import com.dreamsecurity.amicipher.AMICipher;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class NmsServiceImpl implements NmsService {
 
@@ -21,7 +27,7 @@ public class NmsServiceImpl implements NmsService {
 	DcuInfoDAO dcuInfoDAO;
 
 	@Override
-	public List<NmsDcuListVO> getDcuList(int gseq) {
+	public List<NmsDcuListVO> getDcuList(int gseq) throws Exception {
 		List<DcuNmsInterfaceVO> data = dcuInfoDAO.getDcuNmsList(gseq);
 
 		if (data == null) {
@@ -51,6 +57,30 @@ public class NmsServiceImpl implements NmsService {
 		}
 
 		return list;
+	}
+
+	@Override
+	public boolean setDCURebootList(List<NmsDcuRebootListVO> nmsDcuRebootListVO) throws Exception {
+		// TODO 성공 DCU 수, 실패 DCU 수로 세분화 하여야 할듯
+
+		boolean bool = false;
+
+		for (NmsDcuRebootListVO list : nmsDcuRebootListVO) {
+
+			CnuComm comm = new CnuComm(list.getDcuId(), list.getDcuId()); // DCU ID, DCU IP
+
+			try {
+				AMICipher jni = new AMICipher();
+				log.info("AMICipher VERSION = {}", jni.amiGetVersion());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			bool = comm.execDcuReboot();
+
+		}
+
+		return bool;
 	}
 
 }

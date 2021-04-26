@@ -12,7 +12,7 @@ public interface InfoService {
 
 	public List<CollectDcuVO> getDcuData(int gseq) throws Exception;
 
-	public List<CollectMeterVO> getMeterData(String day, String dcuId) throws Exception;
+	public List<CollectMeterVO> getMeterData(int gseq, String day, String dcuId) throws Exception;
 
 	public List<CollectMeterVO> getMeterAggrData(int gseq, String day, String dcuId) throws Exception;
 

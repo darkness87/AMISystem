@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.device.nms.models.NmsDcuListVO;
+import com.cnu.ami.device.nms.models.NmsDcuRebootListVO;
 import com.cnu.ami.device.nms.service.NmsService;
 
 import reactor.core.publisher.Mono;
@@ -34,24 +36,42 @@ public class NmsController {
 
 	@Autowired
 	NmsService nmsService;
-	
+
 	@Autowired
 	PropertyData propertyData;
 
 	@RequestMapping(value = "/dcu/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:NMS : DCU 리스트정보")
-	public Mono<ResponseListVO<NmsDcuListVO>> getDCUList(HttpServletRequest request, @RequestParam int estateSeq) throws Exception {
+	public Mono<ResponseListVO<NmsDcuListVO>> getDCUList(HttpServletRequest request, @RequestParam int estateSeq)
+			throws Exception {
 
 		List<NmsDcuListVO> data = nmsService.getDcuList(estateSeq);
 
 		return Mono.just(new ResponseListVO<NmsDcuListVO>(request, data));
 	}
 
+	@RequestMapping(value = "/dcu/reboot/list", method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "설비:NMS : DCU 리부트 리스트")
+	public Mono<ResponseVO<ResultVO>> setDCURebootList(HttpServletRequest request,
+			@RequestParam List<NmsDcuRebootListVO> nmsDcuRebootListVO) throws Exception {
+
+		boolean bool = nmsService.setDCURebootList(nmsDcuRebootListVO);
+
+		ResultVO resultVO = new ResultVO();
+		resultVO.setResult(bool);
+
+		// TODO 성공 DCU 수, 실패 DCU 수로 세분화 하여야 할듯
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
 	@RequestMapping(value = "/meter/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:NMS : METER 리스트정보")
-	public Mono<ResponseVO<Object>> getModemMeterList(HttpServletRequest request, @RequestParam String dcuId) throws Exception {
+	public Mono<ResponseVO<Object>> getModemMeterList(HttpServletRequest request, @RequestParam String dcuId)
+			throws Exception {
 
 		Object data = new Object();
 

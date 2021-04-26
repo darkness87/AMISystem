@@ -289,39 +289,6 @@ public class DashBoardController {
 
 	}
 	
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/all/data/test", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "현황판 : 전체 데이터 API")
-	public <T> T getDashBoardAllDataTest(HttpServletRequest request,
-			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
-
-		ResponseArrayVO responseArrayVO = new ResponseArrayVO(request);
-
-		responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
-		responseArrayVO.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
-		responseArrayVO.setFailureStatus(dashBoardService.getElectricFailureDayHourAll());
-		responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
-		responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
-//		responseArrayVO.setMap(dashBoardService.getLocationFailureMapInfo());
-//		responseArrayVO.setServer(dashBoardService.getServerManagementInfo());
-		responseArrayVO.setDevice(dashBoardService.getElectricRegistrationDevice());
-		responseArrayVO.setRegionData(dashBoardService.getLocationUseList());
-
-		if (duration == 0) { // 0일 경우 1회 전달
-			return (T) Mono.just(responseArrayVO);
-		} else {
-			return (T) Flux.interval(Duration.ofSeconds(duration)).map(response -> {
-				try {
-					return responseArrayVO;
-				} catch (Exception e) {
-					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
-				}
-			}).log();
-		}
-
-	}
-	
 //	@RequestMapping(value = "/test/flux", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 //	@ResponseStatus(value = HttpStatus.OK)
 //	@Description(value = "현황판 : 테스트 flux event count")
