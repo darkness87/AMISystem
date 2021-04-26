@@ -57,13 +57,12 @@ public class StatusController {
 		return Mono.just(new ResponseListVO<DcuFailureStatusVO>(request, data));
 	}
 
-	@RequestMapping(value = "/test/ping", method = RequestMethod.GET)
+	@RequestMapping(value = "/device/ping", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "장애:네트워크 상태관리 : TEST 핑 테스트")
-	public Mono<ResponseVO<Object>> getTestPing(HttpServletRequest request, @RequestParam String ip) throws Exception {
-		
-		// TODO 정식 사용 가능하도록 변경
-		
+	@Description(value = "장애:네트워크 상태관리 : 장비 설비 핑 체크")
+	public Mono<ResponseVO<String>> getDevicePing(HttpServletRequest request, @RequestParam String ip)
+			throws Exception {
+
 		String pingResult = "";
 		ProcessBuilder processBuilder = new ProcessBuilder();
 		processBuilder.command("bash", "-c", "ping -c 5 " + ip);
@@ -76,26 +75,23 @@ public class StatusController {
 			while ((line = reader.readLine()) != null) {
 				log.info(line);
 				count++;
-				pingResult = line;
+				pingResult = pingResult + " \r\n " + line;
 			}
 
 			log.info("count : {} / pingResult : {}", count, pingResult);
-			
-			if(pingResult == null || pingResult.equals("")) {
-				return Mono.just(new ResponseVO<Object>(request, null));
+
+			if (pingResult == null || pingResult.equals("")) {
+				return Mono.just(new ResponseVO<String>(request, null));
 			}
 
-			pingResult = pingResult.replace("rtt ", "");
-			pingResult = pingResult.replace(" ms", "");
-			String[] strArr = pingResult.split(" = ");
-			pingResult = strArr[1];
+			pingResult = pingResult + " \r\n ";
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			return Mono.just(new ResponseVO<Object>(request, null));
+			return Mono.just(new ResponseVO<String>(request, null));
 		}
 
-		return Mono.just(new ResponseVO<Object>(request, null));
+		return Mono.just(new ResponseVO<String>(request, pingResult));
 	}
 
 	@RequestMapping(value = "/dcu/reboot", method = RequestMethod.GET)

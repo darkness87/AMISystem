@@ -106,11 +106,14 @@ public class StatusServiceImpl implements StatusService {
 			pingResult = pingResult.replace("rtt ", "");
 			pingResult = pingResult.replace(" ms", "");
 
+			try {
 			String[] strArr = pingResult.split(" = ");
-
 			pingResult = strArr[1];
-
 			resultArr = pingResult.split("/");
+			} catch (Exception e) {
+				resultArr=null;
+				return resultArr;
+			}
 
 			log.info("replace : {}", pingResult);
 
