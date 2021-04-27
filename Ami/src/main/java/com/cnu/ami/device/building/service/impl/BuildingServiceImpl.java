@@ -356,7 +356,7 @@ public class BuildingServiceImpl implements BuildingService {
 
 				dcuSeqStatusVO.setStatusCode(check.getStatusCode());
 				dcuSeqStatusVO.setDcuId(data.getDId());
-				dcuSeqStatusVO.setBSeq(data.getBSEQ());
+				dcuSeqStatusVO.setBuildingSeq(data.getBSEQ());
 
 				result.setResult(true);
 				result.setReturnData(dcuSeqStatusVO);
@@ -367,7 +367,7 @@ public class BuildingServiceImpl implements BuildingService {
 
 				dcuSeqStatusVO.setStatusCode(check.getStatusCode());
 				dcuSeqStatusVO.setDcuId(check.getDcuId());
-				dcuSeqStatusVO.setBSeq(0);
+				dcuSeqStatusVO.setBuildingSeq(0);
 
 				result.setReturnData(dcuSeqStatusVO);
 

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class DcuSeqStatusVO {
 
-	private int bSeq;
+	private int buildingSeq;
 	private String dcuId;
 	private int statusCode;
 
