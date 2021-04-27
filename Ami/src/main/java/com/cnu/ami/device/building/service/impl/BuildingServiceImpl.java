@@ -346,12 +346,12 @@ public class BuildingServiceImpl implements BuildingService {
 		DcuSeqStatusVO dcuSeqStatusVO = new DcuSeqStatusVO();
 
 		try {
-			DcuStatusVO check = getDcuIdCheck(dcuId);
+			DcuStatusVO check = getDcuIdCheck(dcuId.toUpperCase());
 
 			if (check.getStatusCode() == 1 || check.getStatusCode() == 0) { // 0: 이상, 1:정상
 				BuildingDcuMappingEntity buildingDcuMappingEntity = new BuildingDcuMappingEntity();
 				buildingDcuMappingEntity.setBSEQ(bseq);
-				buildingDcuMappingEntity.setDId(dcuId);
+				buildingDcuMappingEntity.setDId(dcuId.toUpperCase());
 				BuildingDcuMappingEntity data = buildingDcuMappDAO.save(buildingDcuMappingEntity);
 
 				dcuSeqStatusVO.setStatusCode(check.getStatusCode());
@@ -386,8 +386,7 @@ public class BuildingServiceImpl implements BuildingService {
 	public int setDcuMappDelete(String dcuId, int bseq) throws Exception {
 
 		try {
-			buildingDcuMappDAO.deleteBydIdAndBSEQ(dcuId, bseq);
-
+			buildingDcuMappDAO.deleteBydIdAndBSEQ(dcuId.toUpperCase(), bseq);
 			return 0;
 		} catch (Exception e) {
 			return 1;
