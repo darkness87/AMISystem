@@ -21,10 +21,14 @@ import com.cnu.ami.device.building.dao.entity.HouseInterfaceVO;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.metering.lookup.dao.document.RawLpCycleTemp;
+import com.cnu.ami.metering.lookup.dao.document.RawLpDurationChartTemp;
 import com.cnu.ami.metering.lookup.dao.document.RawLpDurationTemp;
+import com.cnu.ami.metering.lookup.dao.document.RawLpHourChartTemp;
 import com.cnu.ami.metering.lookup.dao.document.RawLpHourTemp;
 import com.cnu.ami.metering.lookup.models.RawLpCycleVO;
+import com.cnu.ami.metering.lookup.models.RawLpDurationChartVO;
 import com.cnu.ami.metering.lookup.models.RawLpDurationVO;
+import com.cnu.ami.metering.lookup.models.RawLpHourChartVO;
 import com.cnu.ami.metering.lookup.models.RawLpHourVO;
 import com.cnu.ami.metering.lookup.service.LookupService;
 
@@ -151,7 +155,7 @@ public class LookupServiceImpl implements LookupService {
 
 				rawLpHourVO = new RawLpHourVO();
 
-				if (i == 24) { // 중간 사이값 삭제 // 전일에서 금일 사이 중복 값
+				if (i == 24) { // 마지막 불필요 값 삭제
 					continue;
 				}
 
@@ -328,21 +332,98 @@ public class LookupServiceImpl implements LookupService {
 		}
 	}
 
-//	@Override
-//	public List<Object> getLpRepo() {
-//		List<LpDataDocument> data = lookupRepo.findAll();
-//		log.info("Repo : {},{},{},{},{},{}", data.get(0).getMid(), data.get(0).getDay(), data.get(0).getDid(), data.get(0).getMac(), data.get(0).getLp().get(0).getFap(),data.get(0).getCntLp().get(90).intValue());
-//		return null;
-//	}
-//
-//	@Override
-//	public List<Object> getLpTemp() {
-//		List<LpDataTemp> data = mongoTemplate.findAll(LpDataTemp.class, "CASS_1_2021_RAW_LP");
-//		log.info("Temp : {},{},{},{},{},{}", data.get(0).getMid(), data.get(0).getDay(), data.get(0).getDid(), data.get(0).getMac(), data.get(0).getLp().get(0).getFap(),data.get(0).getCntLp().get(90).intValue());
-//		Query query = new Query().addCriteria(Criteria.where("day").is("20210331")).addCriteria(Criteria.where("mid").is("25250074013"));
-//		List<LpDataTemp> data2 = mongoTemplate.find(query, LpDataTemp.class, "CASS_1_2021_RAW_LP");
-//		log.info("{},{}",data2,data2.get(0).getMid());
-//		return null;
-//	}
+	@Override
+	public List<RawLpHourChartVO> getLpHourChart(int gseq, int bseq, String dcuId, String day) {
+
+		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+
+		String collectionName = collectionNameFormat.formatDcu(day);
+
+		String[] jsonRawString = { String.format("{ $match: { day: '%s', did: '%s' } }", day, dcuId),
+				"{ $unwind: { path: '$mids' } }",
+				"{$project: {day: '$day',did: '$did',mid: '$mids.mid',e: '$mids.e',re: '$mids.re',v: '$mids.v',rv: '$mids.rv'}}",
+				"{$unwind: {path: '$v',includeArrayIndex: 'hour'}}",
+				/* "{$unwind: {path: '$rv',includeArrayIndex: 'hour'}}", */ // TODO 따로 따로 가지고 와야함
+				"{$group: {_id: {day: '$day',hour: '$hour'},sumV: {$sum: '$v'},sumRV: {$sum: '$rv'}}}",
+				"{$project: {hour: '$_id.hour',v: '$sumV',rv: '$sumRV'}}", "{$sort: {hour: 1}}" };
+
+		Aggregation aggregation = Aggregation.newAggregation(
+				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[3])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[4])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[5])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[6])));
+
+		AggregationResults<RawLpHourChartTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+				RawLpHourChartTemp.class);
+
+		List<RawLpHourChartTemp> data = result.getMappedResults();
+
+		List<RawLpHourChartVO> list = new ArrayList<RawLpHourChartVO>();
+		RawLpHourChartVO rawLpHourChartVO = new RawLpHourChartVO();
+
+		for (int i = 0; i < data.size(); i++) {
+
+			rawLpHourChartVO = new RawLpHourChartVO();
+
+			if (i == 24) { // 마지막 불필요 값 삭제
+				continue;
+			}
+
+			rawLpHourChartVO.setHour(data.get(i).getHour());
+			rawLpHourChartVO.setUse((data.get(i + 1).getV() - data.get(i).getV()));
+
+			list.add(rawLpHourChartVO);
+		}
+
+		return list;
+	}
+
+	@Override
+	public List<RawLpDurationChartVO> getLpDurationChart(int gseq, int bseq, String dcuId, String toDate,
+			String fromDate) {
+
+		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+
+		String collectionName = collectionNameFormat.formatDcu(fromDate);
+
+		String[] jsonRawString = {
+				String.format("{ $match: { day: {$gte : '%s', $lte : '%s'}, did: '%s' } }", toDate, fromDate, dcuId),
+				"{ $unwind: { path: '$mids' } }",
+				"{$project: {day: '$day',did: '$did',mid: '$mids.mid',e: '$mids.e',re: '$mids.re'}}",
+				"{$group: {_id: {day: '$day'},sumE: {$sum: '$e'},sumRE: {$sum: '$re'}}}",
+				"{$project: {day: '$_id.day',e: '$sumE',re: '$sumRE'}}", "{$sort: {day: 1}}" };
+
+		Aggregation aggregation = Aggregation.newAggregation(
+				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[3])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[4])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[5])));
+
+		AggregationResults<RawLpDurationChartTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+				RawLpDurationChartTemp.class);
+
+		List<RawLpDurationChartTemp> data = result.getMappedResults();
+
+		List<RawLpDurationChartVO> list = new ArrayList<RawLpDurationChartVO>();
+		RawLpDurationChartVO rawLpDurationChartVO = new RawLpDurationChartVO();
+
+		for (RawLpDurationChartTemp lp : data) {
+
+			rawLpDurationChartVO = new RawLpDurationChartVO();
+
+			rawLpDurationChartVO.setDay(lp.getDay());
+			rawLpDurationChartVO.setUse(lp.getE() - lp.getRe());
+
+			list.add(rawLpDurationChartVO);
+
+		}
+
+		return list;
+	}
 
 }

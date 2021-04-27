@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.metering.lookup.models.RawLpCycleVO;
+import com.cnu.ami.metering.lookup.models.RawLpDurationChartVO;
 import com.cnu.ami.metering.lookup.models.RawLpDurationVO;
+import com.cnu.ami.metering.lookup.models.RawLpHourChartVO;
 import com.cnu.ami.metering.lookup.models.RawLpHourVO;
 import com.cnu.ami.metering.lookup.service.LookupService;
 
@@ -63,6 +65,20 @@ public class LookupController {
 		return Mono.just(new ResponseListVO<RawLpHourVO>(request, data));
 	}
 
+	@RequestMapping(value = "/lp/hour/chart", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "검침조회 : 1시간 데이터 차트")
+	public Mono<ResponseListVO<RawLpHourChartVO>> getMeteringHourChart(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int estateSeq,
+			@RequestParam(required = false, defaultValue = "0") int buildingSeq,
+			@RequestParam(required = false, defaultValue = "") String dcuId,
+			@RequestParam(required = false, defaultValue = "") String day) throws Exception {
+
+		List<RawLpHourChartVO> data = lookupService.getLpHourChart(estateSeq, buildingSeq, dcuId, day);
+
+		return Mono.just(new ResponseListVO<RawLpHourChartVO>(request, data));
+	}
+
 	@RequestMapping(value = "/lp/duration", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "검침조회 : 기간 데이터")
@@ -76,6 +92,21 @@ public class LookupController {
 		List<RawLpDurationVO> data = lookupService.getLpDuration(estateSeq, buildingSeq, dcuId, toDate, fromDate);
 
 		return Mono.just(new ResponseListVO<RawLpDurationVO>(request, data));
+	}
+
+	@RequestMapping(value = "/lp/duration/chart", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "검침조회 : 기간 데이터")
+	public Mono<ResponseListVO<RawLpDurationChartVO>> getMeteringDurationChart(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int estateSeq,
+			@RequestParam(required = false, defaultValue = "0") int buildingSeq,
+			@RequestParam(required = false, defaultValue = "") String dcuId,
+			@RequestParam(required = false, defaultValue = "") String toDate,
+			@RequestParam(required = false, defaultValue = "") String fromDate) throws Exception {
+
+		List<RawLpDurationChartVO> data = lookupService.getLpDurationChart(estateSeq, buildingSeq, dcuId, toDate, fromDate);
+
+		return Mono.just(new ResponseListVO<RawLpDurationChartVO>(request, data));
 	}
 
 }
