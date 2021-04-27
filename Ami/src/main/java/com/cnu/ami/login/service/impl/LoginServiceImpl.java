@@ -119,6 +119,8 @@ public class LoginServiceImpl implements LoginService {
 
 		UserLoginVO userLoginVO = loginDAO.findByUserid(userid);
 
+		log.info("userLoginVO : {}", userLoginVO);
+		
 		List<String> roles = new ArrayList<String>();
 
 		if (userLoginVO.getLevel() == 0) { // Level에 따른 ROLE 설정

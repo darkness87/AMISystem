@@ -1,6 +1,8 @@
 package com.cnu.ami.metering.lookup.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.bson.Document;
@@ -19,7 +21,11 @@ import com.cnu.ami.device.building.dao.entity.HouseInterfaceVO;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.metering.lookup.dao.document.RawLpCycleTemp;
+import com.cnu.ami.metering.lookup.dao.document.RawLpDurationTemp;
+import com.cnu.ami.metering.lookup.dao.document.RawLpHourTemp;
 import com.cnu.ami.metering.lookup.models.RawLpCycleVO;
+import com.cnu.ami.metering.lookup.models.RawLpDurationVO;
+import com.cnu.ami.metering.lookup.models.RawLpHourVO;
 import com.cnu.ami.metering.lookup.service.LookupService;
 
 @Service
@@ -40,6 +46,7 @@ public class LookupServiceImpl implements LookupService {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<RawLpCycleVO> getLpCycle(int gseq, int bseq, String dcuId, String day) {
 
@@ -101,19 +108,224 @@ public class LookupServiceImpl implements LookupService {
 			list.add(rawLpCycleVO);
 		}
 
+		Collections.sort(list, new ListComparatorCycleHouse());
+		Collections.sort(list, new ListComparatorCycleTime());
+
 		return list;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<RawLpCycleTemp> getLpHour(int gseq, int bseq, String dcuId, String day) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<RawLpHourVO> getLpHour(int gseq, int bseq, String dcuId, String day) {
+
+		EstateEntity estate = estateDAO.findBygSeq(gseq);
+
+		BuildingEntity building = buildingDAO.findByBSEQ(bseq); // => DCU ID까지 표기
+
+		List<HouseInterfaceVO> house = houseDAO.getHouseHoList(bseq);
+
+		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+
+		String collectionName = collectionNameFormat.formatDcu(day);
+
+		String[] jsonRawString = { String.format("{ $match: { day: '%s', did: '%s' } }", day, dcuId),
+				"{ $unwind: { path: '$mids' } }",
+				"{ $project: { day: '$day', did: '$did', mid: '$mids.mid', e: '$mids.e', re: '$mids.re', v: '$mids.v', rv: '$mids.rv' } }" };
+
+		Aggregation aggregation = Aggregation.newAggregation(
+				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
+
+		AggregationResults<RawLpHourTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+				RawLpHourTemp.class);
+
+		List<RawLpHourTemp> data = result.getMappedResults();
+
+		List<RawLpHourVO> list = new ArrayList<RawLpHourVO>();
+		RawLpHourVO rawLpHourVO = new RawLpHourVO();
+
+		for (RawLpHourTemp lp : data) {
+
+			for (int i = 0; i < lp.getV().size(); i++) {
+
+				rawLpHourVO = new RawLpHourVO();
+
+				if (i == 24) { // 중간 사이값 삭제 // 전일에서 금일 사이 중복 값
+					continue;
+				}
+
+				rawLpHourVO.setEstateName(estate.getGName());
+				rawLpHourVO.setBuildingName(building.getBNAME());
+
+				for (HouseInterfaceVO ho : house) {
+					if (ho.getMETER_ID().equals(lp.getMid())) {
+						rawLpHourVO.setHouseName(ho.getHO());
+						break;
+					}
+				}
+
+				rawLpHourVO.setDcuId(lp.getDid());
+				rawLpHourVO.setMeterId(lp.getMid());
+				rawLpHourVO.setDay(lp.getDay());
+
+				rawLpHourVO.setHour(i);
+				rawLpHourVO.setFap(lp.getV().get(i));
+				rawLpHourVO.setRfap(lp.getRv().get(i));
+
+				if (lp.getV().get(i + 1) == 0) {
+					rawLpHourVO.setUse(0);
+				} else {
+					rawLpHourVO.setUse(
+							(lp.getV().get(i + 1) - lp.getV().get(i)) - (lp.getRv().get(i + 1) - lp.getRv().get(i)));
+				}
+
+				list.add(rawLpHourVO);
+			}
+
+		}
+
+		Collections.sort(list, new ListComparatorHourHouse());
+		Collections.sort(list, new ListComparatorHourTime());
+
+		return list;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public List<RawLpCycleTemp> getLpDuration(int gseq, int bseq, String dcuId, String day) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<RawLpDurationVO> getLpDuration(int gseq, int bseq, String dcuId, String toDate, String fromDate) {
+
+		EstateEntity estate = estateDAO.findBygSeq(gseq);
+
+		BuildingEntity building = buildingDAO.findByBSEQ(bseq); // => DCU ID까지 표기
+
+		List<HouseInterfaceVO> house = houseDAO.getHouseHoList(bseq);
+
+		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+
+		String collectionName = collectionNameFormat.formatDcu(fromDate);
+
+		String[] jsonRawString = {
+				String.format("{ $match: { day: {$gte : '%s', $lte : '%s'}, did: '%s' } }", toDate, fromDate, dcuId),
+				"{ $unwind: { path: '$mids' } }",
+				"{ $project: { day: '$day', did: '$did', mid: '$mids.mid', e: '$mids.e', re: '$mids.re' } }" };
+
+		Aggregation aggregation = Aggregation.newAggregation(
+				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
+
+		AggregationResults<RawLpDurationTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+				RawLpDurationTemp.class);
+
+		List<RawLpDurationTemp> data = result.getMappedResults();
+
+		List<RawLpDurationVO> list = new ArrayList<RawLpDurationVO>();
+		RawLpDurationVO rawLpDurationVO = new RawLpDurationVO();
+
+		for (RawLpDurationTemp lp : data) {
+
+			rawLpDurationVO = new RawLpDurationVO();
+
+			rawLpDurationVO.setEstateName(estate.getGName());
+			rawLpDurationVO.setBuildingName(building.getBNAME());
+
+			for (HouseInterfaceVO ho : house) {
+				if (ho.getMETER_ID().equals(lp.getMid())) {
+					rawLpDurationVO.setHouseName(ho.getHO());
+					break;
+				}
+			}
+
+			rawLpDurationVO.setDcuId(lp.getDid());
+			rawLpDurationVO.setMeterId(lp.getMid());
+			rawLpDurationVO.setDay(lp.getDay());
+
+			rawLpDurationVO.setFapUse(lp.getE());
+			rawLpDurationVO.setRfapUse(lp.getRe());
+			rawLpDurationVO.setUse(lp.getE() - lp.getRe());
+
+			list.add(rawLpDurationVO);
+
+		}
+
+		Collections.sort(list, new ListComparatorDurationHouse());
+		Collections.sort(list, new ListComparatorDurationDay());
+
+		return list;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public class ListComparatorDurationDay implements Comparator {
+
+		@Override
+		public int compare(Object o1, Object o2) {
+			String string1 = ((RawLpDurationVO) o1).getDay();
+			String string2 = ((RawLpDurationVO) o2).getDay();
+			return string1.compareTo(string2);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public class ListComparatorDurationHouse implements Comparator {
+
+		@Override
+		public int compare(Object o1, Object o2) {
+			String string1 = ((RawLpDurationVO) o1).getHouseName();
+			String string2 = ((RawLpDurationVO) o2).getHouseName();
+			return string1.compareTo(string2);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public class ListComparatorCycleTime implements Comparator {
+
+		@Override
+		public int compare(Object o1, Object o2) {
+			String string1 = ((RawLpCycleVO) o1).getTime();
+			String string2 = ((RawLpCycleVO) o2).getTime();
+			return string1.compareTo(string2);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public class ListComparatorCycleHouse implements Comparator {
+
+		@Override
+		public int compare(Object o1, Object o2) {
+			String string1 = ((RawLpCycleVO) o1).getHouseName();
+			String string2 = ((RawLpCycleVO) o2).getHouseName();
+			return string1.compareTo(string2);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public class ListComparatorHourTime implements Comparator {
+
+		@Override
+		public int compare(Object o1, Object o2) {
+			int int1 = ((RawLpHourVO) o1).getHour();
+			int int2 = ((RawLpHourVO) o2).getHour();
+
+			if (int1 > int2) {
+				return 1;
+			} else if (int1 < int2) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public class ListComparatorHourHouse implements Comparator {
+
+		@Override
+		public int compare(Object o1, Object o2) {
+			String string1 = ((RawLpHourVO) o1).getHouseName();
+			String string2 = ((RawLpHourVO) o2).getHouseName();
+			return string1.compareTo(string2);
+		}
 	}
 
 //	@Override
