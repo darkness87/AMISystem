@@ -34,7 +34,7 @@ public class LookupController {
 	@Autowired
 	LookupService lookupService;
 
-	@RequestMapping(value = "/test/lp/cycle", method = RequestMethod.GET)
+	@RequestMapping(value = "/lp/cycle", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "검침조회 : 검침 주기별 데이터")
 	public Mono<ResponseListVO<RawLpCycleVO>> getMeteringCycleData(HttpServletRequest request,

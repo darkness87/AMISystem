@@ -57,7 +57,7 @@ public class InfoController {
 		return Mono.just(new ResponseListVO<CollectDcuVO>(request, data));
 	}
 
-	@RequestMapping(value = "/collection/meter", method = RequestMethod.GET)
+	@RequestMapping(value = "/collection/meterGeneal", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "수집정보 : 단지별 METER")
 	public Mono<ResponseListVO<CollectMeterVO>> getMeterListData(HttpServletRequest request, @RequestParam int estateSeq, @RequestParam String day,
@@ -68,7 +68,7 @@ public class InfoController {
 		return Mono.just(new ResponseListVO<CollectMeterVO>(request, data));
 	}
 	
-	@RequestMapping(value = "/collection/meterAggr", method = RequestMethod.GET)
+	@RequestMapping(value = "/collection/meter", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "수집정보 : 단지별 METER")
 	public Mono<ResponseListVO<CollectMeterVO>> getMeterListAggrData(HttpServletRequest request, @RequestParam int estateSeq, @RequestParam String day,
