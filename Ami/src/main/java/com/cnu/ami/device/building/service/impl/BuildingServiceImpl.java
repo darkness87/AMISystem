@@ -386,7 +386,12 @@ public class BuildingServiceImpl implements BuildingService {
 	public int setDcuMappDelete(String dcuId, int bseq) throws Exception {
 
 		try {
-			buildingDcuMappDAO.deleteBydIdAndBSEQ(dcuId.toUpperCase(), bseq);
+			int data = buildingDcuMappDAO.deleteBydIdAndBSEQ(dcuId.toUpperCase(), bseq);
+
+			if (data == 0) {
+				return 1;
+			}
+
 			return 0;
 		} catch (Exception e) {
 			return 1;
