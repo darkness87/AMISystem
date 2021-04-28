@@ -1,27 +1,19 @@
-package com.cnu.ami.device.mapping.dao.document;
+package com.cnu.ami.device.mapping.models;
 
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.Id;
-
-import com.cnu.ami.device.mapping.models.MappingListVO;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class MappingTemp {
-
-	@Id
-	private String mappingSeq;
+public class MappingVO {
 
 	private int estateSeq;
 	private String estateId;
 	private String estateName;
 	private Date dateTime;
-	private int count;
 	private List<MappingListVO> mappingData;
 
 }

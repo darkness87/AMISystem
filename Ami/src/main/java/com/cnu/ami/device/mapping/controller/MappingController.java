@@ -19,6 +19,7 @@ import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.device.mapping.dao.document.MappingTemp;
+import com.cnu.ami.device.mapping.models.MappingVO;
 import com.cnu.ami.device.mapping.service.MappingService;
 
 import reactor.core.publisher.Mono;
@@ -36,20 +37,21 @@ public class MappingController {
 
 	@Autowired
 	MappingService mappingService;
-	
+
 	@Autowired
 	PropertyData propertyData;
 
 	@RequestMapping(value = "/estate", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:매핑관리 : 단지매핑정보")
-	public Mono<ResponseListVO<Object>> getEstateMapp(HttpServletRequest request, @RequestParam int estateSeq)
+	public Mono<ResponseVO<MappingVO>> getEstateMapp(HttpServletRequest request, @RequestParam int estateSeq)
 			throws Exception {
 
-		List<Object> data = new ArrayList<Object>();
-		// sql에서 매핑된 정보를 가지고 와서 전달
+		// 1. mysql에서 매핑된 정보를 가지고 와서 전달 - join 관련
 
-		return Mono.just(new ResponseListVO<Object>(request, data));
+		MappingVO data = mappingService.getEstateMapp(estateSeq);
+
+		return Mono.just(new ResponseVO<MappingVO>(request, data));
 	}
 
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
@@ -59,8 +61,8 @@ public class MappingController {
 			throws Exception {
 
 		int data = mappingService.setEstateMapp(mappingTemp);
-		// 1. mongoDB에 이력 저장
-		// 2. sql에 선택,삭제,저장 등을 사용하여 매핑정보 저장
+		// 1. mongoDB에 이력 저장 - 이력 저장시 기존과 비교하여 바뀐 수 set 필요
+		// 2. sql에 선택,삭제,저장 등을 사용하여 매핑정보 저장 TODO 추후 예정
 
 		return Mono.just(new ResponseVO<Object>(request, data));
 	}
@@ -72,7 +74,7 @@ public class MappingController {
 			throws Exception {
 
 		List<Object> data = new ArrayList<Object>();
-		// 1. 해당 단지의 이력정보를 출력
+		// 1. 해당 단지의 이력정보를 출력 - MongoDB
 
 		return Mono.just(new ResponseListVO<Object>(request, data));
 	}
@@ -84,6 +86,9 @@ public class MappingController {
 			@RequestParam int estateSeq, @RequestParam String date) throws Exception {
 
 		List<Object> data = new ArrayList<Object>();
+		// 1. 이력 리스트의 상세 - MongoDB
+		// 2. 매핑정보 가져오기 - mysql
+		// 3. java에서 매핑하여 던지기
 
 		return Mono.just(new ResponseListVO<Object>(request, data));
 	}
