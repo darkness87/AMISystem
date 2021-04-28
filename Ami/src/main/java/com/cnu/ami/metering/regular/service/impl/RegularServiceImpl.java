@@ -7,8 +7,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.cnu.ami.common.ExceptionConst;
+import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.metering.regular.dao.RegularDAO;
@@ -30,6 +33,10 @@ public class RegularServiceImpl implements RegularService {
 
 		// 단지정보에서 검침일 값 가져오기
 		EstateEntity estate = estateDAO.findBygSeq(gseq);
+		
+		if(estate==null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "단지 정보가 없습니다.");
+		}
 
 		int readingDay = estate.getDayPower();
 
@@ -56,6 +63,10 @@ public class RegularServiceImpl implements RegularService {
 		for (RegularMonthInterfaceVO month : data) {
 			regularMonthVO = new RegularMonthVO();
 
+			if(month.getMeter_Id()==null) {
+				continue; // 해당 DCU에 속한 계량기 정보가 없을 경우
+			}
+			
 			regularMonthVO.setRegionName(month.getRname());
 			regularMonthVO.setEstateId(month.getGid());
 			regularMonthVO.setEstateName(month.getGname());
