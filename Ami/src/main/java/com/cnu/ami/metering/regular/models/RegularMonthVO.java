@@ -15,7 +15,7 @@ public class RegularMonthVO {
 	private String buildingName;
 	private String houseName;
 	private String dcuId;
-	private String meterid;
+	private String meterId;
 	private String mac;
 
 	private int estateReadingDay; // 단지 정기검침일

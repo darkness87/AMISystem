@@ -73,7 +73,7 @@ public class RegularServiceImpl implements RegularService {
 			regularMonthVO.setBuildingName(month.getBname());
 			regularMonthVO.setHouseName(month.getHo());
 			regularMonthVO.setDcuId(month.getDid());
-			regularMonthVO.setMeterid(month.getMeter_Id());
+			regularMonthVO.setMeterId(month.getMeter_Id());
 			regularMonthVO.setMac(month.getMac());
 
 			regularMonthVO.setEstateReadingDay(readingDay);
