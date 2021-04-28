@@ -49,13 +49,13 @@ public class RegularServiceImpl implements RegularService {
 		cal.set(Calendar.DATE, readingDay);
 
 		date = new Date(cal.getTimeInMillis());
-		String fromDate = dateFormat.format(date); // 현월
+		String toDate = dateFormat.format(date); // 현월
 
 		cal.set(Calendar.MONTH, Integer.valueOf(yearMonth.substring(4, 6)) - 2);
 		date = new Date(cal.getTimeInMillis());
-		String toDate = dateFormat.format(date); // 전월
+		String fromDate = dateFormat.format(date); // 전월
 
-		List<RegularMonthInterfaceVO> data = regularDAO.getRegularData(gseq, toDate, fromDate);
+		List<RegularMonthInterfaceVO> data = regularDAO.getRegularData(gseq, fromDate, toDate);
 
 		List<RegularMonthVO> list = new ArrayList<RegularMonthVO>();
 		RegularMonthVO regularMonthVO = new RegularMonthVO();

@@ -197,7 +197,7 @@ public class LookupServiceImpl implements LookupService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<RawLpDurationVO> getLpDuration(int gseq, int bseq, String dcuId, String toDate, String fromDate) {
+	public List<RawLpDurationVO> getLpDuration(int gseq, int bseq, String dcuId, String fromDate, String toDate) {
 
 		EstateEntity estate = estateDAO.findBygSeq(gseq);
 
@@ -210,7 +210,7 @@ public class LookupServiceImpl implements LookupService {
 		String collectionName = collectionNameFormat.formatDcu(fromDate);
 
 		String[] jsonRawString = {
-				String.format("{ $match: { day: {$gte : '%s', $lte : '%s'}, did: '%s' } }", toDate, fromDate, dcuId),
+				String.format("{ $match: { day: {$gte : '%s', $lte : '%s'}, did: '%s' } }", fromDate, toDate, dcuId),
 				"{ $unwind: { path: '$mids' } }",
 				"{ $project: { day: '$day', did: '$did', mid: '$mids.mid', e: '$mids.e', re: '$mids.re' } }" };
 
@@ -382,15 +382,14 @@ public class LookupServiceImpl implements LookupService {
 	}
 
 	@Override
-	public List<RawLpDurationChartVO> getLpDurationChart(int gseq, int bseq, String dcuId, String toDate,
-			String fromDate) {
+	public List<RawLpDurationChartVO> getLpDurationChart(int gseq, int bseq, String dcuId, String fromDate, String toDate) {
 
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 
-		String collectionName = collectionNameFormat.formatDcu(fromDate);
+		String collectionName = collectionNameFormat.formatDcu(toDate);
 
 		String[] jsonRawString = {
-				String.format("{ $match: { day: {$gte : '%s', $lte : '%s'}, did: '%s' } }", toDate, fromDate, dcuId),
+				String.format("{ $match: { day: {$gte : '%s', $lte : '%s'}, did: '%s' } }", fromDate, toDate, dcuId),
 				"{ $unwind: { path: '$mids' } }",
 				"{$project: {day: '$day',did: '$did',mid: '$mids.mid',e: '$mids.e',re: '$mids.re'}}",
 				"{$group: {_id: {day: '$day'},sumE: {$sum: '$e'},sumRE: {$sum: '$re'}}}",

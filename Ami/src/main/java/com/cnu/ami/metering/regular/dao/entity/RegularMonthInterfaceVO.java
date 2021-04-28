@@ -20,17 +20,17 @@ public interface RegularMonthInterfaceVO {
 
 	String getMac();
 
-	long getTo_Mtime(); // 전월시간
+	long getFrom_Mtime(); // 전월시간
 
-	int getTo_Apt1(); // 전월 유효전력량
+	int getFrom_Apt1(); // 전월 유효전력량
 
-	int getTo_R_Apt1(); // 전월 역방향
+	int getFrom_R_Apt1(); // 전월 역방향
 
-	long getFrom_Mtime(); // 현월시간
+	long getTo_Mtime(); // 현월시간
 
-	int getFrom_Apt1(); // 현월 유효전력량
+	int getTo_Apt1(); // 현월 유효전력량
 
-	int getFrom_R_Apt1(); // 현월 역방향
+	int getTo_R_Apt1(); // 현월 역방향
 
 	int getF_Use(); // 정방향 사용량
 

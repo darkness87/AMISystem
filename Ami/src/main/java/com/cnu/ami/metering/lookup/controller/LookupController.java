@@ -86,10 +86,10 @@ public class LookupController {
 			@RequestParam(required = false, defaultValue = "0") int estateSeq,
 			@RequestParam(required = false, defaultValue = "0") int buildingSeq,
 			@RequestParam(required = false, defaultValue = "") String dcuId,
-			@RequestParam(required = false, defaultValue = "") String toDate,
-			@RequestParam(required = false, defaultValue = "") String fromDate) throws Exception {
+			@RequestParam(required = false, defaultValue = "") String fromDate,
+			@RequestParam(required = false, defaultValue = "") String toDate) throws Exception {
 
-		List<RawLpDurationVO> data = lookupService.getLpDuration(estateSeq, buildingSeq, dcuId, toDate, fromDate);
+		List<RawLpDurationVO> data = lookupService.getLpDuration(estateSeq, buildingSeq, dcuId, fromDate, toDate);
 
 		return Mono.just(new ResponseListVO<RawLpDurationVO>(request, data));
 	}
@@ -101,10 +101,10 @@ public class LookupController {
 			@RequestParam(required = false, defaultValue = "0") int estateSeq,
 			@RequestParam(required = false, defaultValue = "0") int buildingSeq,
 			@RequestParam(required = false, defaultValue = "") String dcuId,
-			@RequestParam(required = false, defaultValue = "") String toDate,
-			@RequestParam(required = false, defaultValue = "") String fromDate) throws Exception {
+			@RequestParam(required = false, defaultValue = "") String fromDate,
+			@RequestParam(required = false, defaultValue = "") String toDate) throws Exception {
 
-		List<RawLpDurationChartVO> data = lookupService.getLpDurationChart(estateSeq, buildingSeq, dcuId, toDate, fromDate);
+		List<RawLpDurationChartVO> data = lookupService.getLpDurationChart(estateSeq, buildingSeq, dcuId, fromDate, toDate);
 
 		return Mono.just(new ResponseListVO<RawLpDurationChartVO>(request, data));
 	}

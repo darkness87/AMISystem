@@ -17,10 +17,10 @@ public interface LookupService {
 
 	public List<RawLpHourVO> getLpHour(int gseq, int bseq, String dcuId, String day);
 
-	public List<RawLpDurationVO> getLpDuration(int gseq, int bseq, String dcuId, String toDate, String fromDate);
+	public List<RawLpDurationVO> getLpDuration(int gseq, int bseq, String dcuId, String fromDate, String toDate);
 
 	public List<RawLpHourChartVO> getLpHourChart(int gseq, int bseq, String dcuId, String day);
 
-	public List<RawLpDurationChartVO> getLpDurationChart(int gseq, int bseq, String dcuId, String toDate, String fromDate);
+	public List<RawLpDurationChartVO> getLpDurationChart(int gseq, int bseq, String dcuId, String fromDate, String toDate);
 
 }
