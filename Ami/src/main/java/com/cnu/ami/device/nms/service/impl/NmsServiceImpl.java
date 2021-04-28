@@ -1,6 +1,7 @@
 package com.cnu.ami.device.nms.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,13 @@ import com.cnu.ami.common.ExceptionConst;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
 import com.cnu.ami.device.equipment.dao.entity.DcuNmsInterfaceVO;
+import com.cnu.ami.device.nms.dao.ModemDAO;
+import com.cnu.ami.device.nms.dao.entity.ModemTreeInterfaceVO;
+import com.cnu.ami.device.nms.models.MasterModemListVO;
 import com.cnu.ami.device.nms.models.NmsDcuListVO;
 import com.cnu.ami.device.nms.models.NmsDcuRebootListVO;
+import com.cnu.ami.device.nms.models.StepMeterListVO;
+import com.cnu.ami.device.nms.models.StepModemListVO;
 import com.cnu.ami.device.nms.service.NmsService;
 import com.cnu.network.client.fep.CnuComm;
 import com.dreamsecurity.amicipher.AMICipher;
@@ -25,6 +31,9 @@ public class NmsServiceImpl implements NmsService {
 
 	@Autowired
 	DcuInfoDAO dcuInfoDAO;
+	
+	@Autowired
+	ModemDAO modemDAO;
 
 	@Override
 	public List<NmsDcuListVO> getDcuList(int gseq) throws Exception {
@@ -81,6 +90,48 @@ public class NmsServiceImpl implements NmsService {
 		}
 
 		return bool;
+	}
+
+	@Override
+	public List<MasterModemListVO> getModemMeterList(String dcuId) throws Exception {
+		
+		// TODO NMS 트리구조 관련
+		List<ModemTreeInterfaceVO> data = modemDAO.getModemMeterTree(dcuId);
+		
+		log.info("{}",data);
+		
+		List<StepMeterListVO> meter = new ArrayList<StepMeterListVO>();
+		StepMeterListVO stepMeterListVO = new StepMeterListVO();
+		
+		stepMeterListVO.setMeterId("");
+		stepMeterListVO.setHouseName("");
+		stepMeterListVO.setMeterTime(new Date());
+		stepMeterListVO.setFap(0);
+		
+		meter.add(stepMeterListVO);
+		
+		
+		List<StepModemListVO> step = new ArrayList<StepModemListVO>();
+		StepModemListVO stepModemListVO = new StepModemListVO();
+		
+		stepModemListVO.setModemMac("");
+		stepModemListVO.setModemStatus("");
+		stepModemListVO.setStepCount(0);
+		stepModemListVO.setStepMeter(meter);
+		
+		step.add(stepModemListVO);
+		
+		
+		List<MasterModemListVO> master = new ArrayList<MasterModemListVO>();
+		MasterModemListVO masterModemListVO = new MasterModemListVO();
+		
+		masterModemListVO.setMasterModemMac("");
+		masterModemListVO.setStepModem(step);
+		
+		master.add(masterModemListVO);
+
+		
+		return master;
 	}
 
 }
