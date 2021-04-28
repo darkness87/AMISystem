@@ -12,10 +12,13 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
+import com.cnu.ami.common.ExceptionConst;
+import com.cnu.ami.common.SystemException;
 import com.cnu.ami.metering.info.dao.DcuDAO;
 import com.cnu.ami.metering.info.dao.MeterDAO;
 import com.cnu.ami.metering.info.dao.RealTimeDAO;
@@ -49,27 +52,36 @@ public class InfoServiceImpl implements InfoService {
 
 		List<RealTimeInterfaceVO> data = realTimeDAO.getRealTimeData(gseq);
 
+		if(data==null) {
+			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "검침 정보가 없습니다.");
+		}
+
+		
 		List<RealTimeVO> list = new ArrayList<RealTimeVO>();
 		RealTimeVO realTimeVO = new RealTimeVO();
 
-		for (int i = 0; data.size() > i; i++) {
+		for (RealTimeInterfaceVO real : data) {
 			realTimeVO = new RealTimeVO();
+			
+			if(real.getMETER_ID()==null) {
+				continue; // 해당 DCU에 속한 계량기 정보가 없을 경우
+			}
 
-			realTimeVO.setRegionSeq(data.get(i).getRSEQ());
-			realTimeVO.setEstateSeq(data.get(i).getGSEQ());
-			realTimeVO.setBuildingSeq(data.get(i).getBSEQ());
-			realTimeVO.setRegionName(data.get(i).getRNAME());
-			realTimeVO.setEstateId(data.get(i).getGID());
-			realTimeVO.setEstateName(data.get(i).getGNAME());
-			realTimeVO.setBuildingName(data.get(i).getBNAME());
-			realTimeVO.setHouseName(data.get(i).getHO());
-			realTimeVO.setDcuId(data.get(i).getDID());
-			realTimeVO.setMeterId(data.get(i).getMETER_ID());
-			realTimeVO.setMac(data.get(i).getMAC());
-			realTimeVO.setMeterTime(new Date(data.get(i).getMTIME() * 1000));
-			realTimeVO.setFap(data.get(i).getFAP());
-			realTimeVO.setRfap(data.get(i).getRFAP());
-			realTimeVO.setUpdateDate(new Date(data.get(i).getUDATE() * 1000));
+			realTimeVO.setRegionSeq(real.getRSEQ());
+			realTimeVO.setEstateSeq(real.getGSEQ());
+			realTimeVO.setBuildingSeq(real.getBSEQ());
+			realTimeVO.setRegionName(real.getRNAME());
+			realTimeVO.setEstateId(real.getGID());
+			realTimeVO.setEstateName(real.getGNAME());
+			realTimeVO.setBuildingName(real.getBNAME());
+			realTimeVO.setHouseName(real.getHO());
+			realTimeVO.setDcuId(real.getDID());
+			realTimeVO.setMeterId(real.getMETER_ID());
+			realTimeVO.setMac(real.getMAC());
+			realTimeVO.setMeterTime(new Date(real.getMTIME() * 1000));
+			realTimeVO.setFap(real.getFAP());
+			realTimeVO.setRfap(real.getRFAP());
+			realTimeVO.setUpdateDate(new Date(real.getUDATE() * 1000));
 
 			list.add(realTimeVO);
 		}
