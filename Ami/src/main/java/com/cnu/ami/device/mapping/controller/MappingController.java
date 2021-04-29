@@ -1,6 +1,5 @@
 package com.cnu.ami.device.mapping.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
+import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.device.mapping.dao.document.MappingTemp;
+import com.cnu.ami.device.mapping.models.MappingHistroyVO;
 import com.cnu.ami.device.mapping.models.MappingVO;
 import com.cnu.ami.device.mapping.service.MappingService;
 
@@ -57,40 +58,47 @@ public class MappingController {
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:매핑관리 : 단지매핑저장")
-	public Mono<ResponseVO<Object>> setEstateMapp(HttpServletRequest request, @RequestBody MappingTemp mappingTemp)
+	public Mono<ResponseVO<ResultVO>> setEstateMapp(HttpServletRequest request, @RequestBody MappingTemp mappingTemp)
 			throws Exception {
 
+		ResultVO resultVO = new ResultVO();
 		int data = mappingService.setEstateMapp(mappingTemp);
 		// 1. mongoDB에 이력 저장 - 이력 저장시 기존과 비교하여 바뀐 수 set 필요
 		// 2. sql에 선택,삭제,저장 등을 사용하여 매핑정보 저장 TODO 추후 예정
 
-		return Mono.just(new ResponseVO<Object>(request, data));
+		if (data == 0) { // 0: Success , 1: Fail
+			resultVO.setResult(true);
+		} else {
+			resultVO.setResult(false);
+		}
+
+		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
-	@RequestMapping(value = "/histroy/list", method = RequestMethod.GET)
+	@RequestMapping(value = "/history/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:매핑관리 : 이력 리스트정보")
-	public Mono<ResponseListVO<Object>> getEstateMappHistory(HttpServletRequest request, @RequestParam int estateSeq)
-			throws Exception {
+	public Mono<ResponseListVO<MappingHistroyVO>> getEstateMappHistory(HttpServletRequest request,
+			@RequestParam int estateSeq) throws Exception {
 
-		List<Object> data = new ArrayList<Object>();
+		List<MappingHistroyVO> data = mappingService.getEstateMappHistory(estateSeq);
 		// 1. 해당 단지의 이력정보를 출력 - MongoDB
 
-		return Mono.just(new ResponseListVO<Object>(request, data));
+		return Mono.just(new ResponseListVO<MappingHistroyVO>(request, data));
 	}
 
-	@RequestMapping(value = "/histroy/detail", method = RequestMethod.GET)
+	@RequestMapping(value = "/history/detail", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:매핑관리 : 이력 상세정보")
-	public Mono<ResponseListVO<Object>> getEstateMappHistoryDetail(HttpServletRequest request,
-			@RequestParam int estateSeq, @RequestParam String date) throws Exception {
+	public Mono<ResponseVO<MappingVO>> getEstateMappHistoryDetail(HttpServletRequest request,
+			@RequestParam String mappingId) throws Exception {
 
-		List<Object> data = new ArrayList<Object>();
+		MappingVO data = mappingService.getEstateHistoryMapp(mappingId);
 		// 1. 이력 리스트의 상세 - MongoDB
 		// 2. 매핑정보 가져오기 - mysql
 		// 3. java에서 매핑하여 던지기
 
-		return Mono.just(new ResponseListVO<Object>(request, data));
+		return Mono.just(new ResponseVO<MappingVO>(request, data));
 	}
 
 }

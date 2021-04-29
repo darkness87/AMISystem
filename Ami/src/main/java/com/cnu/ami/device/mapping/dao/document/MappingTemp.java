@@ -3,8 +3,6 @@ package com.cnu.ami.device.mapping.dao.document;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Id;
-
 import com.cnu.ami.device.mapping.models.MappingListVO;
 
 import lombok.Getter;
@@ -13,9 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MappingTemp {
-
-	@Id
-	private String mappingSeq;
 
 	private int estateSeq;
 	private String estateId;

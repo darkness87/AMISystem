@@ -208,6 +208,8 @@ public class FBoardServiceImpl implements FBoardService {
 	@Override
 	public List<FailureRegionAggrVO> getFailureRegionAggr() throws Exception {
 
+		// TODO 데이터를 MongoDB에서 상태코드 수, Mysql DCU 네트워크 장애 판단 수, Mysql 계량기 스냅샷 현재시간 기준 12시간 미검침 장애수
+		
 		List<FailureRegionAggrVO> list = new ArrayList<FailureRegionAggrVO>();
 		FailureRegionAggrVO failureRegionAggrVO = new FailureRegionAggrVO();
 

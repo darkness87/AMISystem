@@ -32,7 +32,7 @@ public class CodeServiceImpl implements CodeService {
 	MongoTemplate mongoTemplate;
 
 	@Override
-	public List<CodeValueVO> getDataList(int gseq, String dcuId, String startDay, String endDay, int statusCode)
+	public List<CodeValueVO> getDataList(int gseq, String dcuId, String fromDate, String toDate, int statusCode)
 			throws Exception {
 
 		// TODO 개선사항 찾아보기
@@ -44,16 +44,16 @@ public class CodeServiceImpl implements CodeService {
 		if (gseq == 0 && dcuId.equals("")) {
 			log.info("전체");
 			meterlist = meterInfoDAO.getMeterType();
-			query.addCriteria(Criteria.where("day").gte(startDay).lte(endDay));
+			query.addCriteria(Criteria.where("day").gte(fromDate).lte(toDate));
 		} else if (gseq != 0 && dcuId.equals("")) {
 			log.info("그룹");
 			meterlist = meterInfoDAO.getMeterType(gseq);
-			query.addCriteria(Criteria.where("day").gte(startDay).lte(endDay));
+			query.addCriteria(Criteria.where("day").gte(fromDate).lte(toDate));
 		} else {
 			log.info("DCU");
 			meterlist = meterInfoDAO.getMeterType(gseq, dcuId);
 			query.addCriteria(Criteria.where("did").is(dcuId))
-					.addCriteria(Criteria.where("day").gte(startDay).lte(endDay));
+					.addCriteria(Criteria.where("day").gte(fromDate).lte(toDate));
 		}
 
 		List<LpFaultTemp> data = mongoTemplate.find(query, LpFaultTemp.class, "CASS_LP_FAULT");

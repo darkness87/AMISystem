@@ -5,16 +5,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.stereotype.Service;
 
+import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.device.mapping.dao.MappingDAO;
+import com.cnu.ami.device.mapping.dao.document.MappingHistoryTemp;
 import com.cnu.ami.device.mapping.dao.document.MappingTemp;
 import com.cnu.ami.device.mapping.dao.entity.MappingInterfaceVO;
+import com.cnu.ami.device.mapping.models.MappingHistroyVO;
 import com.cnu.ami.device.mapping.models.MappingListVO;
 import com.cnu.ami.device.mapping.models.MappingVO;
 import com.cnu.ami.device.mapping.service.MappingService;
@@ -90,11 +96,77 @@ public class MappingServiceImpl implements MappingService {
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 		String collectName = collectionNameFormat.formatMapp();
 
-		MappingTemp data = mongoTemplate.save(mappingTemp, collectName);
+		mappingTemp.setDateTime(new Date());
+		mappingTemp.setCount(0); // TODO 기존과 비교하여야 함
 
-		log.info("{}", data);
+		try {
+			MappingTemp data = mongoTemplate.save(mappingTemp, collectName);
+			log.info("{}", data);
 
-		return 0;
+			if (data == null) {
+				return 1;
+			}
+
+			return 0;
+		} catch (Exception e) {
+			return 1;
+		}
+
+	}
+
+	@Override
+	public List<MappingHistroyVO> getEstateMappHistory(int gseq) throws Exception {
+
+		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+		String collectionName = collectionNameFormat.formatMapp();
+
+		String[] jsonRawString = { String.format("{$match: { estateSeq: %s }}", gseq),
+				"{ $project: { dateTime:'$dateTime', count:'$count' } }",
+				"{ $sort: { dateTime: -1 } }" };
+
+		Aggregation aggregation = Aggregation.newAggregation(
+				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
+
+		AggregationResults<MappingHistoryTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+				MappingHistoryTemp.class);
+
+		List<MappingHistoryTemp> data = result.getMappedResults();
+
+		List<MappingHistroyVO> list = new ArrayList<MappingHistroyVO>();
+		MappingHistroyVO mappingHistroyVO = new MappingHistroyVO();
+
+		for (int i = 0; i < data.size(); i++) {
+			mappingHistroyVO = new MappingHistroyVO();
+
+			mappingHistroyVO.setMappingSeq(i + 1);
+			mappingHistroyVO.setMappingId(data.get(i).get_id());
+			mappingHistroyVO.setDateTime(data.get(i).getDateTime());
+			mappingHistroyVO.setCheckCount(data.get(i).getCount());
+
+			list.add(mappingHistroyVO);
+		}
+
+		return list;
+	}
+
+	@Override
+	public MappingVO getEstateHistoryMapp(String mappingId) throws Exception {
+
+		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+		String collectionName = collectionNameFormat.formatMapp();
+
+		String[] jsonRawString = { String.format("{$match: { _id:ObjectId('%s') }}", mappingId) };
+
+		Aggregation aggregation = Aggregation
+				.newAggregation(new CnuAggregationOperation(Document.parse(jsonRawString[0])));
+
+		AggregationResults<MappingVO> result = mongoTemplate.aggregate(aggregation, collectionName, MappingVO.class);
+
+		MappingVO data = result.getUniqueMappedResult();
+
+		return data;
 	}
 
 }

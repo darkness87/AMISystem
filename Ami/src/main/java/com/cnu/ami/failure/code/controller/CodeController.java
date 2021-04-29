@@ -40,8 +40,8 @@ public class CodeController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "장애:상태관리 : 리스트정보")
-	public Mono<ResponseListVO<CodeValueVO>> getTestListData(HttpServletRequest request, @RequestParam int gseq,
-			@RequestParam String dcuId, @RequestParam String startDay, @RequestParam String endDay,
+	public Mono<ResponseListVO<CodeValueVO>> getListData(HttpServletRequest request, @RequestParam int estateSeq,
+			@RequestParam String dcuId, @RequestParam String fromDate, @RequestParam String toDate,
 			@RequestParam int statusCode) throws Exception {
 
 		// gseq : 0 , dcuId = "" 일때 전체 조회
@@ -50,7 +50,7 @@ public class CodeController {
 		// 13:자계 감지,14:부하제한 차단,15:현재 Tariff,16:현재 Tariff,17:SR,18:정전,19:시각 변경,20:수동검침,21:DR,22:배터리 없음,23:전압 결상,24:프로그램 변경,
 		// 25:과전압,26:저전압,27:비설정 LP 기록주기,28:비정기검침
 
-		List<CodeValueVO> data = codeService.getDataList(gseq, dcuId, startDay, endDay, statusCode);
+		List<CodeValueVO> data = codeService.getDataList(estateSeq, dcuId, fromDate, toDate, statusCode);
 
 		return Mono.just(new ResponseListVO<CodeValueVO>(request, data));
 	}

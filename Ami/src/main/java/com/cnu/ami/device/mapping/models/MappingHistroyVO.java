@@ -10,6 +10,7 @@ import lombok.Setter;
 public class MappingHistroyVO {
 
 	private int mappingSeq;
+	private String mappingId;
 	private Date dateTime;
 	private int checkCount;
 

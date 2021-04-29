@@ -6,7 +6,7 @@ import com.cnu.ami.failure.code.models.CodeValueVO;
 
 public interface CodeService {
 
-	public List<CodeValueVO> getDataList(int gseq, String dcuId, String startDay, String endDay, int statusCode)
+	public List<CodeValueVO> getDataList(int gseq, String dcuId, String fromDate, String toDate, int statusCode)
 			throws Exception;
 
 }
