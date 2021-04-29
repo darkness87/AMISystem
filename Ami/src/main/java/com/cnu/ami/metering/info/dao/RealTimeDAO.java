@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.cnu.ami.metering.info.dao.entity.RealTimeDcuInterfaceVO;
 import com.cnu.ami.metering.info.dao.entity.RealTimeEntity;
 import com.cnu.ami.metering.info.dao.entity.RealTimeInterfaceVO;
 
@@ -26,5 +27,15 @@ public interface RealTimeDAO extends JpaRepository<RealTimeEntity, Long> {
 	List<RealTimeInterfaceVO> getRealTimeData(@Param("gseq") int gseq);
 
 	RealTimeEntity findByMETERID(String meterid);
+	
+	@Query(value = "SELECT T1.METER_ID,T1.MAC,T2.FAP,T2.RFAP,T2.MTIME,T4.HO\r\n" + 
+			"FROM (SELECT METER_ID,MAC FROM METER_INFO WHERE DID = :dcuId AND IS_DELETE = 'N') AS T1\r\n" + 
+			"JOIN (SELECT METER_ID,FAP,RFAP,MTIME FROM GAUGE_LP_SNAPSHOT) AS T2\r\n" + 
+			"ON T1.METER_ID=T2.METER_ID\r\n" + 
+			"JOIN (SELECT HSEQ,METER_ID FROM HOUSE_METER_MAP) AS T3\r\n" + 
+			"ON T1.METER_ID=T3.METER_ID\r\n" + 
+			"JOIN (SELECT HSEQ,HO FROM HOUSEHOLD) AS T4\r\n" + 
+			"ON T3.HSEQ=T4.HSEQ", nativeQuery = true)
+	List<RealTimeDcuInterfaceVO> getRealTimeDCUData(@Param("dcuId") String dcuId);
 
 }
