@@ -11,5 +11,8 @@ public class MasterModemListVO {
 
 	private String masterModemMac;
 	private List<StepModemListVO> stepModem;
+	
+	private int modemCount;
+	private int meterCount;
 
 }

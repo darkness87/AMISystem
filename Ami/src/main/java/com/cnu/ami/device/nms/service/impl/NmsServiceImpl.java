@@ -113,8 +113,6 @@ public class NmsServiceImpl implements NmsService {
 
 		DcuInfoEntity dcuInfo = dcuInfoDAO.findByDID(dcuId);
 
-		log.info("{}", data);
-
 		List<StepMeterListVO> meter = new ArrayList<StepMeterListVO>();
 		StepMeterListVO stepMeterListVO = new StepMeterListVO();
 
@@ -177,6 +175,8 @@ public class NmsServiceImpl implements NmsService {
 		}
 
 		masterModemListVO.setMasterModemMac(dcuInfo.getMAC_A());
+		masterModemListVO.setModemCount(data.size());
+		masterModemListVO.setMeterCount(meterInfo.size());
 		masterModemListVO.setStepModem(step);
 
 		master.add(masterModemListVO);
