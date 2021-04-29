@@ -17,8 +17,10 @@ public class DcuFailureStatusVO {
 	private String dcuPingMin;
 	private String dcuPingAvg;
 	private String dcuPingMax;
+	private int dcuPingCode;
 	private String routerPingMin;
 	private String routerPingAvg;
 	private String routerPingMax;
+	private int routerPingCode;
 
 }

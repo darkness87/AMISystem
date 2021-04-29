@@ -52,23 +52,27 @@ public class StatusServiceImpl implements StatusService {
 			String[] pingResult = pingResult(dcu.getDCU_IP());
 
 			if (pingResult == null) {
+				dcuFailureStatusVO.setDcuPingCode(1);
 			} else {
 				dcuFailureStatusVO.setDcuPingMin(pingResult[0]);
 				dcuFailureStatusVO.setDcuPingAvg(pingResult[1]);
 				dcuFailureStatusVO.setDcuPingMax(pingResult[2]);
+				dcuFailureStatusVO.setDcuPingCode(0);
 			}
 			
 			if(dcu.getROUTER_IP() == null || dcu.getROUTER_IP().equals("")) {
-				
+				dcuFailureStatusVO.setRouterPingCode(1);
 			} else {
 				
 				String[] routerResult = pingResult(dcu.getDCU_IP());
 				
 				if (routerResult == null) {
+					dcuFailureStatusVO.setRouterPingCode(1);
 				} else {
 					dcuFailureStatusVO.setRouterPingMin(pingResult[0]);
 					dcuFailureStatusVO.setRouterPingAvg(pingResult[1]);
 					dcuFailureStatusVO.setRouterPingMax(pingResult[2]);
+					dcuFailureStatusVO.setRouterPingCode(0);
 				}
 			}
 
