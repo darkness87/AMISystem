@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.ExceptionConst;
 import com.cnu.ami.common.PropertyData;
+import com.cnu.ami.common.ResponseFailureArrayVO;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.SystemException;
@@ -26,6 +27,7 @@ import com.cnu.ami.failure.fboard.models.FailureRegionAggrVO;
 import com.cnu.ami.failure.fboard.service.FBoardService;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * 
@@ -118,6 +120,22 @@ public class FBoardController {
 				}
 			}).log();
 		}
+	}
+	
+	@RequestMapping(value = "/all/firstdata", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "장애현황판 : 전체 데이터 처음 전달 API")
+	public Mono<ResponseFailureArrayVO> getDashBoardAllDataFirst(HttpServletRequest request) throws Exception {
+
+		ResponseFailureArrayVO responseFailureArrayVO = new ResponseFailureArrayVO(request);
+
+		responseFailureArrayVO.setFailureStatus(fBoardService.getElectricFailureDayHourAll());
+		responseFailureArrayVO.setMap(fBoardService.getLocationFailureMapInfo());
+		responseFailureArrayVO.setFailureCompare(fBoardService.getFailureCompare());
+		responseFailureArrayVO.setFailureRegion(fBoardService.getFailureRegionAggr());
+
+		return Mono.just(responseFailureArrayVO);
+
 	}
 
 }
