@@ -13,5 +13,6 @@ public class StepMeterListVO {
 	private String houseName;
 	private Date meterTime;
 	private int fap;
+	private int status; // 0: 정상, 1:오류(빨간색글씨표기)
 
 }

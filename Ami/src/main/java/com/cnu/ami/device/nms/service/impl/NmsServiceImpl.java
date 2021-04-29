@@ -1,6 +1,7 @@
 package com.cnu.ami.device.nms.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.cnu.ami.common.ExceptionConst;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.equipment.dao.DcuInfoDAO;
+import com.cnu.ami.device.equipment.dao.entity.DcuInfoEntity;
 import com.cnu.ami.device.equipment.dao.entity.DcuNmsInterfaceVO;
 import com.cnu.ami.device.nms.dao.ModemDAO;
 import com.cnu.ami.device.nms.dao.entity.ModemTreeInterfaceVO;
@@ -20,6 +22,8 @@ import com.cnu.ami.device.nms.models.NmsDcuRebootListVO;
 import com.cnu.ami.device.nms.models.StepMeterListVO;
 import com.cnu.ami.device.nms.models.StepModemListVO;
 import com.cnu.ami.device.nms.service.NmsService;
+import com.cnu.ami.metering.info.dao.RealTimeDAO;
+import com.cnu.ami.metering.info.dao.entity.RealTimeDcuInterfaceVO;
 import com.cnu.network.client.fep.CnuComm;
 import com.dreamsecurity.amicipher.AMICipher;
 
@@ -31,9 +35,12 @@ public class NmsServiceImpl implements NmsService {
 
 	@Autowired
 	DcuInfoDAO dcuInfoDAO;
-	
+
 	@Autowired
 	ModemDAO modemDAO;
+
+	@Autowired
+	RealTimeDAO realTimeDAO;
 
 	@Override
 	public List<NmsDcuListVO> getDcuList(int gseq) throws Exception {
@@ -94,43 +101,80 @@ public class NmsServiceImpl implements NmsService {
 
 	@Override
 	public List<MasterModemListVO> getModemMeterList(String dcuId) throws Exception {
-		
+
 		// TODO NMS 트리구조 관련
 		List<ModemTreeInterfaceVO> data = modemDAO.getModemMeterTree(dcuId);
-		
-		log.info("{}",data);
-		
+
+		List<RealTimeDcuInterfaceVO> meterInfo = realTimeDAO.getRealTimeDCUData(dcuId);
+
+		DcuInfoEntity dcuInfo = dcuInfoDAO.findByDID(dcuId);
+
+		log.info("{}", data);
+
 		List<StepMeterListVO> meter = new ArrayList<StepMeterListVO>();
 		StepMeterListVO stepMeterListVO = new StepMeterListVO();
-		
-		stepMeterListVO.setMeterId("");
-		stepMeterListVO.setHouseName("");
-		stepMeterListVO.setMeterTime(new Date());
-		stepMeterListVO.setFap(0);
-		
-		meter.add(stepMeterListVO);
-		
-		
+
 		List<StepModemListVO> step = new ArrayList<StepModemListVO>();
 		StepModemListVO stepModemListVO = new StepModemListVO();
-		
-		stepModemListVO.setModemMac("");
-		stepModemListVO.setModemStatus("");
-		stepModemListVO.setStepCount(0);
-		stepModemListVO.setStepMeter(meter);
-		
-		step.add(stepModemListVO);
-		
-		
+
 		List<MasterModemListVO> master = new ArrayList<MasterModemListVO>();
 		MasterModemListVO masterModemListVO = new MasterModemListVO();
-		
-		masterModemListVO.setMasterModemMac("");
+
+		Date date = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		long toTime = cal.getTimeInMillis();
+		cal.add(Calendar.HOUR_OF_DAY, -12);
+		long fromTime = cal.getTimeInMillis();
+
+		for (ModemTreeInterfaceVO modem : data) {
+			stepModemListVO = new StepModemListVO();
+			
+			stepModemListVO.setModemMac(modem.getMAC_STEP1());
+			stepModemListVO.setModemStatus(modem.getREGI_STAT()); // 1:default(초기상태값), 2:Active(정상 동작중), 3:Suspend(통신금지), 4:RegAction(등록 중), 5:Fault(통신실패)
+			String[] meterList = modem.getMETER_STEP1().split(";");
+
+			stepModemListVO.setStepCount(meterList.length);
+
+			meter = new ArrayList<StepMeterListVO>(); // 미터 리스트 초기화 필수
+			
+			for (RealTimeDcuInterfaceVO datalist : meterInfo) {
+				
+				for (int i = 0; i < meterList.length; i++) {
+
+					if (datalist.getMETER_ID().equals(meterList[i])) {
+
+						stepMeterListVO = new StepMeterListVO();
+
+						stepMeterListVO.setMeterId(meterList[i]);
+						stepMeterListVO.setHouseName(datalist.getHO());
+						stepMeterListVO.setMeterTime(new Date(datalist.getMTIME() * 1000));
+						stepMeterListVO.setFap(datalist.getFAP());
+
+						// 시간 비교
+						if (datalist.getMTIME() * 1000 >= fromTime && datalist.getMTIME() * 1000 <= toTime) {
+							stepMeterListVO.setStatus(0);
+						} else {
+							stepMeterListVO.setStatus(1);
+						}
+
+						meter.add(stepMeterListVO);
+						continue;
+					}
+
+				}
+
+			}
+
+			stepModemListVO.setStepMeter(meter);
+			step.add(stepModemListVO);
+		}
+
+		masterModemListVO.setMasterModemMac(dcuInfo.getMAC_A());
 		masterModemListVO.setStepModem(step);
-		
+
 		master.add(masterModemListVO);
 
-		
 		return master;
 	}
 
