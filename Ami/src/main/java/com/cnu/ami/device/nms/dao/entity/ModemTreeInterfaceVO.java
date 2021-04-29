@@ -26,4 +26,8 @@ public interface ModemTreeInterfaceVO {
 
 	String getREGI_STAT();
 
+	String getHWV_H();
+
+	String getAPMV_H();
+
 }

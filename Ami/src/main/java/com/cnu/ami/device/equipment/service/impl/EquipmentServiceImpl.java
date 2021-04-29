@@ -343,22 +343,26 @@ public class EquipmentServiceImpl implements EquipmentService {
 		List<MeterInfoListVO> list = new ArrayList<MeterInfoListVO>();
 		MeterInfoListVO meterInfoListVO = new MeterInfoListVO();
 
-		for (int i = 0; meter.size() > i; i++) {
+		for (MeterInfoInterfaceVO data : meter) {
 			meterInfoListVO = new MeterInfoListVO();
+			
+			if(data.getMeter_Id()==null) {
+				continue; // 등록된 DCU에 연동된 계량기가 없을경우
+			}
 
-			meterInfoListVO.setRegionSeq(meter.get(i).getRSeq());
-			meterInfoListVO.setEstateSeq(meter.get(i).getGSeq());
-			meterInfoListVO.setBuildingSeq(meter.get(i).getBSeq());
-			meterInfoListVO.setRegionName(meter.get(i).getRName());
-			meterInfoListVO.setEstateId(meter.get(i).getGId());
-			meterInfoListVO.setEstateName(meter.get(i).getGName());
-			meterInfoListVO.setBuildingName(meter.get(i).getBName());
-			meterInfoListVO.setHouseName(meter.get(i).getHo());
-			meterInfoListVO.setDcuId(meter.get(i).getDId());
-			meterInfoListVO.setMeterId(meter.get(i).getMeter_Id());
-			meterInfoListVO.setMac(meter.get(i).getMac());
-			meterInfoListVO.setMeterReadingDay(meter.get(i).getMrd());
-			meterInfoListVO.setUpdateDate(new Date(meter.get(i).getUDate() * 1000));
+			meterInfoListVO.setRegionSeq(data.getRSeq());
+			meterInfoListVO.setEstateSeq(data.getGSeq());
+			meterInfoListVO.setBuildingSeq(data.getBSeq());
+			meterInfoListVO.setRegionName(data.getRName());
+			meterInfoListVO.setEstateId(data.getGId());
+			meterInfoListVO.setEstateName(data.getGName());
+			meterInfoListVO.setBuildingName(data.getBName());
+			meterInfoListVO.setHouseName(data.getHo());
+			meterInfoListVO.setDcuId(data.getDId());
+			meterInfoListVO.setMeterId(data.getMeter_Id());
+			meterInfoListVO.setMac(data.getMac());
+			meterInfoListVO.setMeterReadingDay(data.getMrd());
+			meterInfoListVO.setUpdateDate(new Date(data.getUDate() * 1000));
 
 			list.add(meterInfoListVO);
 		}

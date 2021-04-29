@@ -66,6 +66,10 @@ public class NmsServiceImpl implements NmsService {
 			nmsDcuListVO.setDcuIp(dcu.getDCU_IP());
 			nmsDcuListVO.setDcuPort(dcu.getDCU_PORT());
 			nmsDcuListVO.setFirmwareVersion(dcu.getFWV());
+			
+			String[] nmsVer = dcu.getS_SYS_DESCR().split("Ver:");
+			
+			nmsDcuListVO.setNmsVersion(nmsVer[1].replace(")", ""));
 			nmsDcuListVO.setSysState(dcu.getS_SYS_STATE());
 			nmsDcuListVO.setDcuStatus(dcu.getDSTATUS());
 
@@ -132,6 +136,8 @@ public class NmsServiceImpl implements NmsService {
 			
 			stepModemListVO.setModemMac(modem.getMAC_STEP1());
 			stepModemListVO.setModemStatus(modem.getREGI_STAT()); // 1:default(초기상태값), 2:Active(정상 동작중), 3:Suspend(통신금지), 4:RegAction(등록 중), 5:Fault(통신실패)
+			stepModemListVO.setHardwareVersion(modem.getHWV_H());
+			stepModemListVO.setProgramVersion(modem.getAPMV_H());
 			String[] meterList = modem.getMETER_STEP1().split(";");
 
 			stepModemListVO.setStepCount(meterList.length);

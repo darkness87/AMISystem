@@ -22,6 +22,8 @@ public interface DcuNmsInterfaceVO {
 	
 	String getFWV();
 	
+	String getS_SYS_DESCR();
+	
 	String getS_SYS_STATE();
 	
 	String getDSTATUS();
