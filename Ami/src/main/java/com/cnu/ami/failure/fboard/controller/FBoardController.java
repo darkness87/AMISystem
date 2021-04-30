@@ -121,7 +121,7 @@ public class FBoardController {
 			}).log();
 		}
 	}
-	
+
 	@RequestMapping(value = "/all/firstdata", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "장애현황판 : 전체 데이터 처음 전달 API")
