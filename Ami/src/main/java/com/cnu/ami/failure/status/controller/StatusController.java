@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +27,7 @@ import com.cnu.network.client.fep.CnuComm;
 import com.dreamsecurity.amicipher.AMICipher;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -81,14 +83,14 @@ public class StatusController {
 			log.info("count : {} / pingResult : {}", count, pingResult);
 
 			if (pingResult == null || pingResult.equals("")) {
-				return Mono.just(new ResponseVO<String>(request, null));
+				return Mono.just(new ResponseVO<String>(request, "Ping "+ip+" Result null"));
 			}
 
 			pingResult = pingResult + " \r\n ";
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			return Mono.just(new ResponseVO<String>(request, null));
+			return Mono.just(new ResponseVO<String>(request, "Ping Exception"));
 		}
 
 		return Mono.just(new ResponseVO<String>(request, pingResult));
@@ -116,6 +118,28 @@ public class StatusController {
 		resultVO.setResult(bool);
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
+	}
+
+	@RequestMapping(value = "/test/device/ping", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "장애:네트워크 상태관리 : 장비 설비 핑 체크 플럭스 테스트")
+	public Flux<ResponseVO<String>> getDeviceFluxPing(HttpServletRequest request, @RequestParam String ip)
+			throws Exception {
+
+		// TODO
+		
+		ProcessBuilder processBuilder = new ProcessBuilder();
+		processBuilder.command("bash", "-c", "ping -c 5 " + ip);
+
+		Process process = processBuilder.start();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		String line;
+
+		while ((line = reader.readLine()) != null) {
+			log.info(line);
+		}
+
+		return Flux.just(new ResponseVO<String>(request, line));
 	}
 
 }
