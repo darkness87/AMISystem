@@ -162,11 +162,11 @@ public class BuildingController {
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:동관리 : 동 삭제")
-	public Mono<ResponseVO<ResultVO>> deleteBuildingDcuMapp(HttpServletRequest request, @RequestParam String dcuId,
+	public Mono<ResponseVO<ResultVO>> deleteBuildingDcuMapp(HttpServletRequest request,
 			@RequestParam int buildingSeq) throws Exception {
 
 		ResultVO resultVO = new ResultVO();
-		int data = buildingService.setBuildingDelete(dcuId, buildingSeq);
+		int data = buildingService.setBuildingDelete(buildingSeq);
 
 		if (data == 0) { // 0: Success , 1: Fail
 			resultVO.setResult(true);

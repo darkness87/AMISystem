@@ -28,7 +28,7 @@ public interface BuildingService {
 
 	public DcuStatusVO getDcuIdCheck(int bseq, String dcuId) throws Exception;
 
-	public int setBuildingDelete(String dcuId, int bseq) throws Exception;
+	public int setBuildingDelete(int bseq) throws Exception;
 
 	public ResultDataVO<DcuSeqStatusVO> setDcuMappInsert(String dcuId, int bseq) throws Exception;
 

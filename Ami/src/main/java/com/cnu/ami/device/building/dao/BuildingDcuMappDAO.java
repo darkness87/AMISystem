@@ -12,6 +12,8 @@ public interface BuildingDcuMappDAO extends JpaRepository<BuildingDcuMappingEnti
 
 	public BuildingDcuMappingEntity findBydId(String dId);
 
+	public int deleteByBSEQ(int bSeq);
+	
 	public int deleteBydIdAndBSEQ(String dId, int bSeq);
 
 	public List<BuildingDcuMappingEntity> findByBSEQ(int bSeq);

@@ -319,15 +319,11 @@ public class BuildingServiceImpl implements BuildingService {
 
 	@Transactional
 	@Override
-	public int setBuildingDelete(String dcuId, int bseq) throws Exception {
+	public int setBuildingDelete(int bseq) throws Exception {
 
 		try {
 
-			if (dcuId.equals("")) {
-				log.info("DCU ID 정보 없음");
-			} else {
-				buildingDcuMappDAO.deleteBydIdAndBSEQ(dcuId, bseq);
-			}
+			int count = buildingDcuMappDAO.deleteByBSEQ(bseq);
 
 			buildingDAO.deleteByBSEQ(bseq);
 
