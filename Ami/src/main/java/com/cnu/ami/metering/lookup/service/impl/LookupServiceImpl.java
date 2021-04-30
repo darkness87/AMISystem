@@ -1,8 +1,11 @@
 package com.cnu.ami.metering.lookup.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.bson.Document;
@@ -363,6 +366,15 @@ public class LookupServiceImpl implements LookupService {
 
 		List<RawLpHourChartVO> list = new ArrayList<RawLpHourChartVO>();
 		RawLpHourChartVO rawLpHourChartVO = new RawLpHourChartVO();
+		
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		String today = dateFormat.format(cal.getTime());
+		String hour = hourFormat.format(cal.getTime());
 
 		for (int i = 0; i < data.size(); i++) {
 
@@ -373,7 +385,12 @@ public class LookupServiceImpl implements LookupService {
 			}
 
 			rawLpHourChartVO.setHour(data.get(i).getHour());
-			rawLpHourChartVO.setUse((data.get(i + 1).getV() - data.get(i).getV()));
+			
+			if(today.equals(day) && i >= Integer.valueOf(hour)) {
+				rawLpHourChartVO.setUse(0);
+			} else {
+				rawLpHourChartVO.setUse((data.get(i + 1).getV() - data.get(i).getV()));
+			}
 
 			list.add(rawLpHourChartVO);
 		}

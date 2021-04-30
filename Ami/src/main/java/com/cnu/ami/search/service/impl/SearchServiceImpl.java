@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cnu.ami.device.building.dao.entity.BuildingEntity;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.search.dao.SearchBuildingDAO;
 import com.cnu.ami.search.dao.SearchDcuDAO;
