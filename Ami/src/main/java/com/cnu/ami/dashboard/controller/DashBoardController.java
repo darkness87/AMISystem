@@ -253,6 +253,7 @@ public class DashBoardController {
 //		responseArrayVO.setServer(dashBoardService.getServerManagementInfo());
 		responseArrayVO.setDevice(dashBoardService.getElectricRegistrationDevice());
 		responseArrayVO.setRegionData(dashBoardService.getLocationUseList());
+		responseArrayVO.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
 
 		if (duration == 0) { // 0일 경우 1회 전달
 			return Flux.just(responseArrayVO);
@@ -284,6 +285,7 @@ public class DashBoardController {
 //		responseArrayVO.setServer(dashBoardService.getServerManagementInfo());
 		responseArrayVO.setDevice(dashBoardService.getElectricRegistrationDevice());
 		responseArrayVO.setRegionData(dashBoardService.getLocationUseList());
+		responseArrayVO.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
 
 		return Mono.just(responseArrayVO);
 

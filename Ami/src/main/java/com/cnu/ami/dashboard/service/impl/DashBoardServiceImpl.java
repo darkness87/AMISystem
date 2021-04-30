@@ -22,6 +22,7 @@ import com.cnu.ami.dashboard.dao.document.DayRateTemp;
 import com.cnu.ami.dashboard.dao.document.UseDayHourTemp;
 import com.cnu.ami.dashboard.dao.entity.RegionNameIneterfaceVO;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
+import com.cnu.ami.dashboard.models.DeviceErrorCountVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
@@ -493,6 +494,33 @@ public class DashBoardServiceImpl implements DashBoardService {
 		list.add(useLocationVO);
 
 		return list;
+	}
+
+	@Override
+	public DeviceErrorCountVO getDeviceErrorCount() throws Exception {
+		// TODO Auto-generated method stub
+		
+		DeviceErrorCountVO deviceErrorCountVO = new DeviceErrorCountVO();
+		
+		int dcuCount = dcuInfoDAO.getDcuCount();
+		int dcuErrorCount = dcuInfoDAO.getDcuErrorCount();
+		
+		int meterCount = meterInfoDAO.getMeterCount();
+		
+		Date date = new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.HOUR_OF_DAY, -12);
+		
+		int meterErrorCount = meterInfoDAO.getMeterErrorCount(cal.getTimeInMillis()/1000);
+		
+		deviceErrorCountVO.setDcuOperationCount(dcuCount);
+		deviceErrorCountVO.setDcuErrorCount(dcuErrorCount);
+		
+		deviceErrorCountVO.setMeterOperationCount(meterCount);
+		deviceErrorCountVO.setMeterErrorCount(meterErrorCount);
+		
+		return deviceErrorCountVO;
 	}
 
 }

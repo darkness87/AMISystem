@@ -88,5 +88,13 @@ public interface MeterInfoDAO extends JpaRepository<MeterInfoEntity, String> { /
 
 	@Query(value = "SELECT COUNT(*) AS COUNT FROM METER_INFO WHERE DID=:did AND IS_DELETE='N'", nativeQuery = true)
 	public int getDcuMeterCount(@Param("did") String did);
+	
+	@Query(value = "SELECT COUNT(*) AS COUNT FROM METER_INFO WHERE IS_DELETE='N'", nativeQuery = true)
+	public int getMeterCount();
+	
+	@Query(value = "SELECT COUNT(*) AS COUNT FROM(SELECT METER_ID FROM METER_INFO WHERE IS_DELETE='N') AS T1\r\n" + 
+			"JOIN (SELECT METER_ID FROM GAUGE_LP_SNAPSHOT WHERE MTIME <= :time) AS T2\r\n" + 
+			"ON T1.METER_ID=T2.METER_ID", nativeQuery = true)
+	public int getMeterErrorCount(@Param("time") long time);
 
 }

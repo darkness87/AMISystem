@@ -3,6 +3,7 @@ package com.cnu.ami.dashboard.service;
 import java.util.List;
 
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
+import com.cnu.ami.dashboard.models.DeviceErrorCountVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
 import com.cnu.ami.dashboard.models.RateVO;
@@ -32,5 +33,7 @@ public interface DashBoardService {
 	public List<DeviceRegVO> getElectricRegistrationDevice() throws Exception;
 
 	public List<UseLocationVO> getLocationUseList() throws Exception;
+	
+	public DeviceErrorCountVO getDeviceErrorCount() throws Exception;
 
 }

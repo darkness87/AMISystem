@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
+import com.cnu.ami.dashboard.models.DeviceErrorCountVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
 import com.cnu.ami.dashboard.models.RateVO;
@@ -39,6 +40,7 @@ public class ResponseArrayVO {
 //	private ServerManagementVO server;
 	private List<DeviceRegVO> device;
 	private List<UseLocationVO> regionData;
+	private DeviceErrorCountVO deviceMapErrorCount;
 
 	@Getter
 	@Setter

@@ -86,5 +86,11 @@ public interface DcuInfoDAO extends JpaRepository<DcuInfoEntity, String> { // í‚
 	@Modifying
 	@Query(value = "UPDATE DCU_INFO SET LAT = :lat, LON = :lon WHERE DID = :did", nativeQuery = true)
 	public void setLatLon(@Param("did") String did, @Param("lat") float lat, @Param("lon") float lon);
+	
+	@Query(value = "SELECT COUNT(*) AS COUNT FROM DCU_INFO WHERE IS_DELETE='N'", nativeQuery = true)
+	public int getDcuCount();
+	
+	@Query(value = "SELECT COUNT(*) AS COUNT FROM DCU_INFO WHERE IS_DELETE='N' AND DSTATUS !='RET_SUCCESS'", nativeQuery = true)
+	public int getDcuErrorCount();
 
 }
