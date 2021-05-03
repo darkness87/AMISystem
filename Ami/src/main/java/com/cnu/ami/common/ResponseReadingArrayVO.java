@@ -6,7 +6,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
+import com.cnu.ami.metering.mboard.models.LpCountVO;
 import com.cnu.ami.metering.mboard.models.MeterRateVO;
+import com.cnu.ami.metering.mboard.models.ReadingRegionAggrVO;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,8 +25,10 @@ import lombok.Setter;
 public class ResponseReadingArrayVO {
 
 	private Api api;
+	private List<LpCountVO> lp;
 	private MeterRateVO rate;
 	private List<DashBoardMapVO> map;
+	private List<ReadingRegionAggrVO> region;
 
 	@Getter
 	@Setter

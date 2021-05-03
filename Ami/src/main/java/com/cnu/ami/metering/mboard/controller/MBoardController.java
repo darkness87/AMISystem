@@ -129,8 +129,10 @@ public class MBoardController {
 
 		ResponseReadingArrayVO responseReadingArrayVO = new ResponseReadingArrayVO(request);
 
+		responseReadingArrayVO.setLp(mBoardService.getElectricLPDataCount());
 		responseReadingArrayVO.setRate(mBoardService.getElectricMeterReadingRateDayAll());
 		responseReadingArrayVO.setMap(mBoardService.getLocationMapInfo());
+		responseReadingArrayVO.setRegion(mBoardService.getReadingRegionAggr());
 
 		return Mono.just(responseReadingArrayVO);
 
