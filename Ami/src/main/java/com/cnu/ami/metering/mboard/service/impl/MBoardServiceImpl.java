@@ -17,7 +17,6 @@ import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
 import com.cnu.ami.common.TimeCode;
 import com.cnu.ami.dashboard.dao.document.DayRateTemp;
-import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.metering.info.models.EstateListReadingCountVO;
@@ -25,6 +24,7 @@ import com.cnu.ami.metering.mboard.dao.MBoardDAO;
 import com.cnu.ami.metering.mboard.dao.document.EstateCountTemp;
 import com.cnu.ami.metering.mboard.dao.document.MeterReadingCountTemp;
 import com.cnu.ami.metering.mboard.dao.entity.MBoardCountInterfaceVO;
+import com.cnu.ami.metering.mboard.models.DashReadingMapVO;
 import com.cnu.ami.metering.mboard.models.LpCountVO;
 import com.cnu.ami.metering.mboard.models.MeterRateVO;
 import com.cnu.ami.metering.mboard.models.ReadingRegionAggrVO;
@@ -47,7 +47,6 @@ public class MBoardServiceImpl implements MBoardService {
 
 	@Override
 	public List<LpCountVO> getElectricLPDataCount() throws Exception {
-		// TODO Auto-generated method stub
 
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -55,7 +54,7 @@ public class MBoardServiceImpl implements MBoardService {
 		cal.setTime(date);
 
 		String today = dateFormat.format(cal.getTime());
-		
+
 		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
 		SimpleDateFormat minFormat = new SimpleDateFormat("mm");
 
@@ -110,11 +109,11 @@ public class MBoardServiceImpl implements MBoardService {
 			for (MeterReadingCountTemp lpCount : data) {
 
 				lpCountVO = new LpCountVO();
-				
-				if(lpCount.getIdx()>hour) {
+
+				if (lpCount.getIdx() > hour) {
 					continue;
 				}
-				
+
 				lpCountVO.setTime(TimeCode.checkTime(lpCount.getIdx()));
 				lpCountVO.setCount(lpCount.getCount());
 
@@ -127,77 +126,162 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 
 	@Override
-	public List<DashBoardMapVO> getLocationMapInfo() throws Exception {
-		// TODO key,value 형식 해결 , 검침 데이터 넘기기
+	public List<DashReadingMapVO> getLocationMapInfo() throws Exception {
+
 		Date date = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.HOUR_OF_DAY, -12);
 
-		List<MBoardCountInterfaceVO> meter = mBoardDAO.getMeterCount(cal.getTimeInMillis() / 1000);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
+		SimpleDateFormat minFormat = new SimpleDateFormat("mm");
 
-		List<DashBoardMapVO> dashmap = new ArrayList<DashBoardMapVO>();
-		DashBoardMapVO dashBoardMapVO = new DashBoardMapVO();
+		String year = yearFormat.format(date);
+		float hour = Integer.valueOf(hourFormat.format(date));
+		int min = Integer.valueOf(minFormat.format(date));
 
-		for (MBoardCountInterfaceVO map : meter) {
-			dashBoardMapVO = new DashBoardMapVO();
+		if (min >= 0 && min < 15) {
+			hour = hour * 4;
+		} else if (min >= 15 && min < 30) {
+			hour = (hour * 4) + 1;
+		} else if (min >= 30 && min < 45) {
+			hour = (hour * 4) + 2;
+		} else if (min >= 45 && min <= 59) {
+			hour = (hour * 4) + 3;
+		} else {
+			hour = hour * 4;
+		}
 
-			if (map.getRSEQ() == 2) {
-				dashBoardMapVO.setHckey("kr-so"); // 서울특별시
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 3) {
-				dashBoardMapVO.setHckey("kr-pu"); // 부산광역시
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 4) {
-				dashBoardMapVO.setHckey("kr-tg"); // 대구광역시
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 5) {
-				dashBoardMapVO.setHckey("kr-in"); // 인천광역시
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 6) {
-				dashBoardMapVO.setHckey("kr-kj"); // 광주광역시
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 7) {
-				dashBoardMapVO.setHckey("kr-tj"); // 대전광역시
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 8) {
-				dashBoardMapVO.setHckey("kr-ul"); // 울산광역시
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 9) {
-				dashBoardMapVO.setHckey("kr-kg"); // 경기도
-				dashBoardMapVO.setValue(map.getCOUNT() + meter.get(0).getCOUNT()); // 판교 더해주기
-			} else if (map.getRSEQ() == 10) {
-				dashBoardMapVO.setHckey("kr-kw"); // 강원도
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 11) {
-				dashBoardMapVO.setHckey("kr-gb"); // 충청북도
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 12) {
-				dashBoardMapVO.setHckey("kr-gn"); // 충청남도
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 13) {
-				dashBoardMapVO.setHckey("kr-cb"); // 전라북도
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 14) {
-				dashBoardMapVO.setHckey("kr-2685"); // 전라남도
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 15) {
-				dashBoardMapVO.setHckey("kr-2688"); // 경상북도
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 16) {
-				dashBoardMapVO.setHckey("kr-kn"); // 경상남도
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 17) {
-				dashBoardMapVO.setHckey("kr-cj"); // 제주특별자치도
-				dashBoardMapVO.setValue(map.getCOUNT());
-			} else if (map.getRSEQ() == 18) {
-				dashBoardMapVO.setHckey("kr-sj"); // 세종특별자치시
-				dashBoardMapVO.setValue(map.getCOUNT());
+		List<EstateEntity> estate = estateDAO.findAll();
+
+		List<EstateListReadingCountVO> estateListCount = new ArrayList<EstateListReadingCountVO>();
+		EstateListReadingCountVO estateListReadingCountVO = new EstateListReadingCountVO();
+
+		for (EstateEntity est : estate) {
+			estateListReadingCountVO = new EstateListReadingCountVO();
+
+			CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+			String collectionName = collectionNameFormat.formatMonth(est.getGSeq(), year);
+
+			String[] jsonRawString = { String.format("{$match: { day: '%s' } }", dateFormat.format(date)),
+					"{ $project: { did: '$did', day: '$day', idxStart: '$idxStart', idxEnd: '$idxEnd', idx: { $subtract: ['$idxEnd', '$idxStart'] } } }",
+					"{ $group: { _id: { day: '$day' }, sum: { '$sum': '$idx' } } }",
+					"{ $project: { day: '$_id.day', sum: '$sum' } }", "{ $sort: { did: 1 } }" };
+
+			Aggregation aggregation = Aggregation.newAggregation(
+					new CnuAggregationOperation(Document.parse(jsonRawString[0])),
+					new CnuAggregationOperation(Document.parse(jsonRawString[1])),
+					new CnuAggregationOperation(Document.parse(jsonRawString[2])),
+					new CnuAggregationOperation(Document.parse(jsonRawString[3])),
+					new CnuAggregationOperation(Document.parse(jsonRawString[4])));
+
+			AggregationResults<EstateCountTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+					EstateCountTemp.class);
+
+			EstateCountTemp data = result.getUniqueMappedResult();
+
+			if (data == null) {
+				continue;
+			}
+
+			estateListReadingCountVO.setEstateSeq(est.getGSeq());
+			estateListReadingCountVO.setRegionSeq(est.getRSeq());
+			estateListReadingCountVO.setReadingCount(data.getSum());
+
+			estateListCount.add(estateListReadingCountVO);
+		}
+
+		List<DashReadingMapVO> dashmap = new ArrayList<DashReadingMapVO>();
+		DashReadingMapVO dashReadingMapVO = new DashReadingMapVO();
+
+		List<MBoardCountInterfaceVO> house = mBoardDAO.getHouseCount();
+
+		for (int i = 0; i < house.size(); i++) {
+			int count = 0;
+
+			for (EstateListReadingCountVO readingCount : estateListCount) {
+				if (readingCount.getRegionSeq() == house.get(i).getRSEQ()) {
+					count = count + readingCount.getReadingCount();
+				}
+			}
+
+			dashReadingMapVO = new DashReadingMapVO();
+
+			float val = 0.0f;
+			try {
+				val = ((house.get(i).getCOUNT() * hour) - count) / (house.get(i).getCOUNT() * hour) * 100f;
+			} catch (Exception e) {
+				val = 0.0f;
+			}
+
+			if (house.get(i).getRSEQ() == 2) {
+				dashReadingMapVO.setHckey("kr-so"); // 서울특별시
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 3) {
+				dashReadingMapVO.setHckey("kr-pu"); // 부산광역시
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 4) {
+				dashReadingMapVO.setHckey("kr-tg"); // 대구광역시
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 5) {
+				dashReadingMapVO.setHckey("kr-in"); // 인천광역시
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 6) {
+				dashReadingMapVO.setHckey("kr-kj"); // 광주광역시
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 7) {
+				dashReadingMapVO.setHckey("kr-tj"); // 대전광역시
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 8) {
+				dashReadingMapVO.setHckey("kr-ul"); // 울산광역시
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 9) {
+				int etcCount = 0;
+				for (EstateListReadingCountVO readingCount : estateListCount) {
+					if (readingCount.getRegionSeq() == 1) {
+						etcCount = etcCount + readingCount.getReadingCount(); // 판교 더해주기
+					}
+				}
+				try {
+					val = (((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) - (count + etcCount))
+							/ ((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) * 100f;
+				} catch (Exception e) {
+					val = 0.0f;
+				}
+				dashReadingMapVO.setHckey("kr-kg"); // 경기도
+				dashReadingMapVO.setValue(val); // 판교 더해주기
+			} else if (house.get(i).getRSEQ() == 10) {
+				dashReadingMapVO.setHckey("kr-kw"); // 강원도
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 11) {
+				dashReadingMapVO.setHckey("kr-gb"); // 충청북도
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 12) {
+				dashReadingMapVO.setHckey("kr-gn"); // 충청남도
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 13) {
+				dashReadingMapVO.setHckey("kr-cb"); // 전라북도
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 14) {
+				dashReadingMapVO.setHckey("kr-2685"); // 전라남도
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 15) {
+				dashReadingMapVO.setHckey("kr-2688"); // 경상북도
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 16) {
+				dashReadingMapVO.setHckey("kr-kn"); // 경상남도
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 17) {
+				dashReadingMapVO.setHckey("kr-cj"); // 제주특별자치도
+				dashReadingMapVO.setValue(val);
+			} else if (house.get(i).getRSEQ() == 18) {
+				dashReadingMapVO.setHckey("kr-sj"); // 세종특별자치시
+				dashReadingMapVO.setValue(val);
 			} else {
 				continue;
 			}
 
-			dashmap.add(dashBoardMapVO);
+			dashmap.add(dashReadingMapVO);
+
 		}
 
 		return dashmap;
@@ -307,7 +391,6 @@ public class MBoardServiceImpl implements MBoardService {
 
 		List<MBoardCountInterfaceVO> house = mBoardDAO.getHouseCount();
 		List<MBoardCountInterfaceVO> dcu = mBoardDAO.getDcuCount();
-//		List<MBoardCountInterfaceVO> meter = mBoardDAO.getMeterCount(cal.getTimeInMillis() / 1000);
 
 		List<ReadingRegionAggrVO> list = new ArrayList<ReadingRegionAggrVO>();
 		ReadingRegionAggrVO readingRegionAggrVO = new ReadingRegionAggrVO();

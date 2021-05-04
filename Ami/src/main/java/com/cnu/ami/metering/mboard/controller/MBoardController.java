@@ -20,7 +20,7 @@ import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseReadingArrayVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.SystemException;
-import com.cnu.ami.dashboard.models.DashBoardMapVO;
+import com.cnu.ami.metering.mboard.models.DashReadingMapVO;
 import com.cnu.ami.metering.mboard.models.LpCountVO;
 import com.cnu.ami.metering.mboard.models.MeterRateVO;
 import com.cnu.ami.metering.mboard.models.ReadingRegionAggrVO;
@@ -68,15 +68,15 @@ public class MBoardController {
 	@RequestMapping(value = "/location/mapinfo", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "검침현황판 : 지도 정보")
-	public Flux<ResponseListVO<DashBoardMapVO>> getLocationFailureMapInfo(HttpServletRequest request,
+	public Flux<ResponseListVO<DashReadingMapVO>> getLocationFailureMapInfo(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 
 		if (duration == 0) { // 0일 경우 1회 전달
-			return Flux.just(new ResponseListVO<DashBoardMapVO>(request, mBoardService.getLocationMapInfo()));
+			return Flux.just(new ResponseListVO<DashReadingMapVO>(request, mBoardService.getLocationMapInfo()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
-					return new ResponseListVO<DashBoardMapVO>(request, mBoardService.getLocationMapInfo());
+					return new ResponseListVO<DashReadingMapVO>(request, mBoardService.getLocationMapInfo());
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}

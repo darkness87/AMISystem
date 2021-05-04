@@ -15,21 +15,21 @@ public class CollectionNameFormat {
 
 		return collectionName;
 	}
-	
+
 	public String formatDcu(String day) {
 
-		String collectionName = "CASS" +  "_" + day.substring(0, 4) + "_" + "DCU" + "_" + "LP";
+		String collectionName = "CASS" + "_" + day.substring(0, 4) + "_" + "DCU" + "_" + "LP";
 
 		return collectionName;
 	}
-	
+
 	public String formatMapp() {
 
 		String collectionName = "MAPP" + "_" + "HISTORY";
 
 		return collectionName;
 	}
-	
+
 	public String formatFault() {
 
 		String collectionName = "CASS" + "_" + "LP" + "_" + "FAULT";

@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.cnu.ami.dashboard.models.DashBoardMapVO;
+import com.cnu.ami.metering.mboard.models.DashReadingMapVO;
 import com.cnu.ami.metering.mboard.models.LpCountVO;
 import com.cnu.ami.metering.mboard.models.MeterRateVO;
 import com.cnu.ami.metering.mboard.models.ReadingRegionAggrVO;
@@ -27,7 +27,7 @@ public class ResponseReadingArrayVO {
 	private Api api;
 	private List<LpCountVO> lp;
 	private MeterRateVO rate;
-	private List<DashBoardMapVO> map;
+	private List<DashReadingMapVO> map;
 	private List<ReadingRegionAggrVO> region;
 
 	@Getter
