@@ -134,7 +134,7 @@ public class MBoardController {
 		responseReadingArrayVO.setMap(mBoardService.getLocationMapInfo());
 		responseReadingArrayVO.setRegion(mBoardService.getReadingRegionAggr());
 
-		return Mono.just(responseReadingArrayVO);
+		return Mono.just(responseReadingArrayVO).log();
 
 	}
 

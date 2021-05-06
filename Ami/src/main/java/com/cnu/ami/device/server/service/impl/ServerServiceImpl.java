@@ -109,8 +109,7 @@ public class ServerServiceImpl implements ServerService {
 
 	@Override
 	public List<ServerProcessVO> getServerProcess() throws Exception {
-		// TODO Auto-generated method stub
-		// 서버 프로세스 정보 추가하기
+		// TODO 서버 프로세스 정보 추가하기
 
 		List<ServerProcessVO> list = new ArrayList<ServerProcessVO>();
 		ServerProcessVO serverProcessVO = new ServerProcessVO();

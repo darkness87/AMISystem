@@ -32,7 +32,7 @@ public class FailureReadingServiceImpl implements FailureReadingService {
 		Date date = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		cal.add(Calendar.HOUR_OF_DAY, -6); // TODO 6시간전 미검침 장애정보 // TEST시 +1
+		cal.add(Calendar.HOUR_OF_DAY, -6);
 		date = new Date(cal.getTimeInMillis());
 
 		cal.add(Calendar.HOUR_OF_DAY, -6);

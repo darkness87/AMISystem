@@ -70,7 +70,6 @@ public class EquipmentServiceImpl implements EquipmentService {
 		List<DcuInfoInterfaceVO> data = null;
 
 		if (gseq == 0) {
-//			data = dcuInfoDAO.getDcuList();
 			data = dcuInfoDAO.getDcuNoMappList(); // 미 매핑 정보
 		} else {
 			data = dcuInfoDAO.getDcuList(gseq);
@@ -330,7 +329,6 @@ public class EquipmentServiceImpl implements EquipmentService {
 		List<MeterInfoInterfaceVO> meter = null;
 
 		if (gseq == 0) {
-//			meter = meterInfoDAO.getMeterList();
 			meter = meterInfoDAO.getMeterNoMappList(); // 미매핑 정보 목록
 		} else {
 			meter = meterInfoDAO.getMeterList(gseq);

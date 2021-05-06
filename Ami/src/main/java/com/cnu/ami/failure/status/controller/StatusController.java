@@ -120,26 +120,25 @@ public class StatusController {
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
 
-	@RequestMapping(value = "/test/device/ping", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	@ResponseStatus(value = HttpStatus.OK)
-	@Description(value = "장애:네트워크 상태관리 : 장비 설비 핑 체크 플럭스 테스트")
-	public Flux<ResponseVO<String>> getDeviceFluxPing(HttpServletRequest request, @RequestParam String ip)
-			throws Exception {
-
-		// TODO
-		
-		ProcessBuilder processBuilder = new ProcessBuilder();
-		processBuilder.command("bash", "-c", "ping -c 5 " + ip);
-
-		Process process = processBuilder.start();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-		String line;
-
-		while ((line = reader.readLine()) != null) {
-			log.info(line);
-		}
-
-		return Flux.just(new ResponseVO<String>(request, line));
-	}
+// TODO
+//	@RequestMapping(value = "/test/device/ping", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+//	@ResponseStatus(value = HttpStatus.OK)
+//	@Description(value = "장애:네트워크 상태관리 : 장비 설비 핑 체크 플럭스 테스트")
+//	public Flux<ResponseVO<String>> getDeviceFluxPing(HttpServletRequest request, @RequestParam String ip)
+//			throws Exception {
+//
+//		ProcessBuilder processBuilder = new ProcessBuilder();
+//		processBuilder.command("bash", "-c", "ping -c 5 " + ip);
+//
+//		Process process = processBuilder.start();
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//		String line;
+//
+//		while ((line = reader.readLine()) != null) {
+//			log.info(line);
+//		}
+//
+//		return Flux.just(new ResponseVO<String>(request, line));
+//	}
 
 }

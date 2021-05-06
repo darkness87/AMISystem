@@ -134,7 +134,7 @@ public class FBoardController {
 		responseFailureArrayVO.setFailureCompare(fBoardService.getFailureCompare());
 		responseFailureArrayVO.setFailureRegion(fBoardService.getFailureRegionAggr());
 
-		return Mono.just(responseFailureArrayVO);
+		return Mono.just(responseFailureArrayVO).log();
 
 	}
 

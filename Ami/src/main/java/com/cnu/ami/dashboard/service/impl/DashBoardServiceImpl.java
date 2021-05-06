@@ -96,7 +96,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 		String collectionName = collectionNameFormat.formatDcu(today);
 
 		String[] jsonRawString = { String.format("{ $match: { '$or':[{'day':'%s'},{'day':'%s'}] } }", today, yesterday)
-//				  String.format("{ $match: { 'day':'%s' } }", today)
 				, String.format("{ $unwind: { path: '$mids' } }"),
 				String.format("{ $unwind: { path: '$mids.v',includeArrayIndex:'hour' } }"),
 				"{ $group: { _id: {'day':'$day','hour':'$hour'} ,sum:{ '$sum':'$mids.v' } } }",
@@ -114,11 +113,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 		AggregationResults<UseDayHourTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
 				UseDayHourTemp.class);
 
-//		log.info("{}", result.getRawResults());
-
 		List<UseDayHourTemp> data = result.getMappedResults();
-
-//		log.info("size : {}", data.size());
 
 		UseDayHourAllVO useDayHourAllVO = new UseDayHourAllVO();
 
@@ -129,11 +124,8 @@ public class DashBoardServiceImpl implements DashBoardService {
 		for (int i = 0; i < data.size(); i++) {
 
 			if (i == 24 || i == 49) { // 중간 사이값 삭제 // 전일에서 금일 사이 중복 값
-//				log.info("i continue : {}", i);
 				continue;
 			}
-
-//			log.info("i : {}, {}, {}", i, data.get(i).getHour(), data.get(i).getSum());
 
 			useDayHourAllListVO = new UseDayHourAllListVO();
 
@@ -208,8 +200,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		AggregationResults<DayRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
 				DayRateTemp.class);
-
-//		log.info("{}", result.getRawResults());
 
 		List<DayRateTemp> data = result.getMappedResults();
 
@@ -350,7 +340,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Override
 	public List<DashBoardMapVO> getLocationFailureMapInfo() throws Exception {
 
-		// TODO key,value 형식 해결 , 장애 데이터 넘기기
+		// TODO key,value 형식 해결 , 장애 데이터 넘기기 - 장애 현황판과 동일
 
 		List<DashBoardMapVO> dashmap = new ArrayList<DashBoardMapVO>();
 		DashBoardMapVO dashBoardMapVO = new DashBoardMapVO();
@@ -502,7 +492,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 	@Override
 	public DeviceErrorCountVO getDeviceErrorCount() throws Exception {
-		// TODO Auto-generated method stub
 		
 		DeviceErrorCountVO deviceErrorCountVO = new DeviceErrorCountVO();
 		

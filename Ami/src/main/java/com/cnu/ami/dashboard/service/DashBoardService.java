@@ -15,7 +15,6 @@ import com.cnu.ami.dashboard.models.WeatherVO;
 
 public interface DashBoardService {
 
-	// DashBoard
 	public UseDayHourAllVO getElectricUseDayHourAll() throws Exception;
 
 	public RateVO getElectricMeterReadingRateDayAll() throws Exception;

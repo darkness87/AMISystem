@@ -30,9 +30,6 @@ import com.cnu.ami.metering.mboard.models.MeterRateVO;
 import com.cnu.ami.metering.mboard.models.ReadingRegionAggrVO;
 import com.cnu.ami.metering.mboard.service.MBoardService;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 public class MBoardServiceImpl implements MBoardService {
 
@@ -99,8 +96,6 @@ public class MBoardServiceImpl implements MBoardService {
 					MeterReadingCountTemp.class);
 
 			List<MeterReadingCountTemp> data = result.getMappedResults();
-
-			log.info("data : {}", data);
 
 			if (data == null) {
 				continue;

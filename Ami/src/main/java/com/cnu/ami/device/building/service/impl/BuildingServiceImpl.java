@@ -31,9 +31,6 @@ import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.search.dao.SearchRegionDAO;
 import com.cnu.ami.search.dao.entity.RegionEntity;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 public class BuildingServiceImpl implements BuildingService {
 
@@ -74,13 +71,7 @@ public class BuildingServiceImpl implements BuildingService {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "단지에 대한 정보가 없습니다.");
 		}
 
-//		DcuInfoEntity dcu = dcuInfoDAO.findByDID(buildingVO.getDcuMapp().getDcuId());
-
 		List<BuildingDcuMappingEntity> mappList = buildingDcuMappDAO.findByBSEQ(buildingVO.getBuildingSeq());
-
-//		if (dcu == null) {
-//			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "DCU에 대한 정보가 없습니다.");
-//		}
 
 		List<RegionEntity> region = searchRegionDAO.findAll();
 
@@ -149,7 +140,6 @@ public class BuildingServiceImpl implements BuildingService {
 			buildingVO.setEstategId(data.get(i).getGid());
 			buildingVO.setEstateName(data.get(i).getGname());
 
-			// TODO
 			// BSEQ 로 매핑된 DCU 조회
 			List<BuildingDcuMappingEntity> mappList = buildingDcuMappDAO.findByBSEQ(data.get(i).getBseq());
 
@@ -323,7 +313,7 @@ public class BuildingServiceImpl implements BuildingService {
 
 		try {
 
-			int count = buildingDcuMappDAO.deleteByBSEQ(bseq);
+			buildingDcuMappDAO.deleteByBSEQ(bseq);
 
 			buildingDAO.deleteByBSEQ(bseq);
 

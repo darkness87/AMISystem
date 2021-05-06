@@ -82,15 +82,11 @@ public class SearchServiceImpl implements SearchService {
 	@Override
 	public List<BuildingVO> getBuildingList(int gseq) throws Exception {
 
-//		List<BuildingEntity> data = new ArrayList<BuildingEntity>();
-		
 		List<BuildingDcuInterfaceVO> data = new ArrayList<BuildingDcuInterfaceVO>();
 
 		if (gseq == 0) { // 전체
-//			data = searchBuildingDAO.findAll();
 			data = searchBuildingDAO.getBuildingDcuList();
 		} else {
-//			data = searchBuildingDAO.findByGSEQ(gseq);
 			data = searchBuildingDAO.getBuildingDcuList(gseq);
 		}
 

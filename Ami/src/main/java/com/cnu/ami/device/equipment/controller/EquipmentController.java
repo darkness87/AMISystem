@@ -26,7 +26,6 @@ import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.ResultCountVO;
 import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.common.SystemException;
-import com.cnu.ami.dashboard.models.UseDayHourAllVO;
 import com.cnu.ami.device.equipment.models.DcuInfoListVO;
 import com.cnu.ami.device.equipment.models.DcuInfoVO;
 import com.cnu.ami.device.equipment.models.DcuRealtimeStatusVO;
@@ -35,6 +34,10 @@ import com.cnu.ami.device.equipment.models.MeterInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterInfoVO;
 import com.cnu.ami.device.equipment.models.MeterOtherInfoListVO;
 import com.cnu.ami.device.equipment.models.MeterOtherInfoVO;
+import com.cnu.ami.device.equipment.models.SetDcuCheckIntervalVO;
+import com.cnu.ami.device.equipment.models.SetDcuInfoVO;
+import com.cnu.ami.device.equipment.models.SetDcuSecureFactorVO;
+import com.cnu.ami.device.equipment.models.SetDcuTimeLimitVO;
 import com.cnu.ami.device.equipment.service.EquipmentService;
 import com.cnu.network.client.fep.CnuComm;
 import com.dreamsecurity.amicipher.AMICipher;
@@ -311,15 +314,19 @@ public class EquipmentController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 정보설정")
 	public Mono<ResponseVO<ResultVO>> setDcuInfo(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp) throws Exception {
+			@RequestParam String dcuIp, @RequestBody SetDcuInfoVO setDcuInfoVO) throws Exception {
 
 		log.info("{} , {} , {}", request, dcuId, dcuIp);
 
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-		boolean bool = false;
-//		boolean bool = comm.setDcuInfo(fepIp, fepPort, tMask, smP, smlpP, emlpP, gmlpP, eamlpP, gmAveVaP, gmInstVaP, eamAveVaP, eamInstVaP, pLength, timeout, trapItv, emTimeP, gmTimeP, eamTimeP, cpuReset);
+		boolean bool = comm.setDcuInfo(setDcuInfoVO.getFepIp(), setDcuInfoVO.getFepPort(), setDcuInfoVO.getTMask(),
+				setDcuInfoVO.getSmP(), setDcuInfoVO.getSmlpP(), setDcuInfoVO.getEmlpP(), setDcuInfoVO.getGmlpP(),
+				setDcuInfoVO.getEamlpP(), setDcuInfoVO.getGmAveVaP(), setDcuInfoVO.getGmInstVaP(),
+				setDcuInfoVO.getEamAveVaP(), setDcuInfoVO.getEamInstVaP(), setDcuInfoVO.getPLength(),
+				setDcuInfoVO.getTimeout(), setDcuInfoVO.getTrapItv(), setDcuInfoVO.getEmTimeP(),
+				setDcuInfoVO.getGmTimeP(), setDcuInfoVO.getEamTimeP(), setDcuInfoVO.getCpuReset());
 
 		log.info("result : {}", bool);
 
@@ -354,15 +361,14 @@ public class EquipmentController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 시간오차한계")
 	public Mono<ResponseVO<ResultVO>> setDcuTimeLimit(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp) throws Exception {
+			@RequestParam String dcuIp, @RequestBody SetDcuTimeLimitVO setDcuTimeLimitVO) throws Exception {
 
 		log.info("{} , {} , {}", request, dcuId, dcuIp);
 
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-		boolean bool = false;
-//		boolean bool = comm.setDcuTimeLimit(iMtype, iTimeLimit);
+		boolean bool = comm.setDcuTimeLimit(setDcuTimeLimitVO.getIMtype(), setDcuTimeLimitVO.getITimeLimit());
 
 		log.info("result : {}", bool);
 
@@ -375,15 +381,15 @@ public class EquipmentController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 시간확인주기")
 	public Mono<ResponseVO<ResultVO>> setDcuCheckInterval(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp) throws Exception {
+			@RequestParam String dcuIp, @RequestBody SetDcuCheckIntervalVO setDcuCheckIntervalVO) throws Exception {
 
 		log.info("{} , {} , {}", request, dcuId, dcuIp);
 
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-		boolean bool = false;
-//		boolean bool = comm.setDcuCheckInterval(iMtype, iInterval);
+		boolean bool = comm.setDcuCheckInterval(setDcuCheckIntervalVO.getIMtype(),
+				setDcuCheckIntervalVO.getIInterval());
 
 		log.info("result : {}", bool);
 
@@ -396,15 +402,16 @@ public class EquipmentController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 보안항목설정")
 	public Mono<ResponseVO<ResultVO>> setDcuSecureFactor(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp) throws Exception {
+			@RequestParam String dcuIp, @RequestBody SetDcuSecureFactorVO setDcuSecureFactorVO) throws Exception {
 
 		log.info("{} , {} , {}", request, dcuId, dcuIp);
 
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-		boolean bool = false;
-//		boolean bool = comm.setDcuSecureFactor(pnid, osPw, acodeRo, acodeRw, snmpRo, snmpRw);
+		boolean bool = comm.setDcuSecureFactor(setDcuSecureFactorVO.getPnid(), setDcuSecureFactorVO.getOsPw(),
+				setDcuSecureFactorVO.getAcodeRo(), setDcuSecureFactorVO.getAcodeRw(), setDcuSecureFactorVO.getSnmpRo(),
+				setDcuSecureFactorVO.getSnmpRw());
 
 		log.info("result : {}", bool);
 
@@ -444,16 +451,15 @@ public class EquipmentController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:장비관리 : DCU 모뎀 재스캔")
 	public Mono<ResponseVO<ResultVO>> setRescanModem(HttpServletRequest request, @RequestParam String dcuId,
-			@RequestParam String dcuIp) throws Exception {
+			@RequestParam String dcuIp, @RequestParam String mac) throws Exception {
 
 		log.info("{} , {} , {}", request, dcuId, dcuIp);
 
 		ResultVO resultVO = new ResultVO();
 		CnuComm comm = new CnuComm(dcuId, dcuIp); // DCU ID, DCU IP
 
-		// DCU ID에 해당하는 모뎀 MAC 가져오기
-		boolean bool = false;
-//		boolean bool = comm.rescanModem(mac);
+		// TODO DCU ID에 해당하는 모뎀 MAC 가져오기
+		boolean bool = comm.rescanModem(mac);
 
 		log.info("result : {}", bool);
 

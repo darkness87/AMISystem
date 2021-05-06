@@ -35,7 +35,6 @@ public class SchedulerServiceImpl implements SchedulerService {
 	@Override
 	@SuppressWarnings("deprecation")
 	public void setResultData(int rseq, String hourtime, String result) throws Exception {
-//		System.out.println("==================================== : " + rseq);
 
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = (JsonObject) jsonParser.parse(result);
@@ -65,9 +64,6 @@ public class SchedulerServiceImpl implements SchedulerService {
 			value = weather.get("fcstValue");
 
 			if (hourtime.equals(fcstTime.toString().replaceAll("\"", ""))) {
-//				System.out.println(rseq + " : " + fcstDate.toString().replaceAll("\"", "") + " : "
-//						+ fcstTime.toString().replaceAll("\"", "") + " : " + category.toString().replaceAll("\"", "")
-//						+ " : " + value.toString().replaceAll("\"", ""));
 
 				weatherEntity.setRSEQ(rseq);
 				weatherEntity.setBASEDATE(baseDate.toString().replaceAll("\"", ""));

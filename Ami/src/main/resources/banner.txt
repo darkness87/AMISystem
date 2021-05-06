@@ -9,8 +9,8 @@
 ##### ServerInfo ################################################################
 
 S/W Profile : AMI Server System
-S/W Version : ${Ansi.BLUE}0.1
-Release Date : 2021-02-08
+S/W Version : ${Ansi.BLUE}1.0
+Release Date : 2021-04-30
 ${Ansi.RED}Spring-boot Version : ${spring-boot.version}${Ansi.WHITE}
 
 ############################################### Copyright © CNU GLOBAL 2021 #####
