@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class ServerListVO {
 
-	private int serverSeq;
+	private long serverSeq;
 	private String serverName;
 	private String model;
 	private String ip;

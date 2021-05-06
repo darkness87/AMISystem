@@ -16,7 +16,7 @@ public class ServerEntity {
 
 	@Id
 	@Column(name = "SSEQ")
-	private int SSEQ;
+	private long SSEQ;
 
 	@Column(name = "SNAME")
 	private String SNAME;
