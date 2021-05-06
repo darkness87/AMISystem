@@ -247,8 +247,8 @@ public class DashBoardController {
 		responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
 		responseArrayVO.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
 		responseArrayVO.setFailureStatus(dashBoardService.getElectricFailureDayHourAll());
-		responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
-		responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
+//		responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
+//		responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
 //		responseArrayVO.setMap(dashBoardService.getLocationFailureMapInfo());
 //		responseArrayVO.setServer(dashBoardService.getServerManagementInfo());
 		responseArrayVO.setDevice(dashBoardService.getElectricRegistrationDevice());
@@ -279,8 +279,8 @@ public class DashBoardController {
 		responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
 		responseArrayVO.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
 		responseArrayVO.setFailureStatus(dashBoardService.getElectricFailureDayHourAll());
-		responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
-		responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
+//		responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
+//		responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
 //		responseArrayVO.setMap(dashBoardService.getLocationFailureMapInfo());
 //		responseArrayVO.setServer(dashBoardService.getServerManagementInfo());
 		responseArrayVO.setDevice(dashBoardService.getElectricRegistrationDevice());
