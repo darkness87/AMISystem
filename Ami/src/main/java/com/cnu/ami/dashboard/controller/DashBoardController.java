@@ -67,7 +67,7 @@ public class DashBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("메인현황판 : 전국전력사용량");
 		}
 
 	}
@@ -86,7 +86,7 @@ public class DashBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("메인현황판 : 검침률");
 		}
 
 	}
@@ -108,7 +108,7 @@ public class DashBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("메인현황판 : 상태(장애)정보");
 		}
 
 	}
@@ -130,7 +130,7 @@ public class DashBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("메인현황판 : 오늘의날씨");
 		}
 	}
 
@@ -148,7 +148,7 @@ public class DashBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("메인현황판 : 데이터날씨");
 		}
 	}
 
@@ -169,7 +169,7 @@ public class DashBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("메인현황판 : 지도정보");
 		}
 	}
 
@@ -189,7 +189,7 @@ public class DashBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			});
 
 		}
 
@@ -213,7 +213,7 @@ public class DashBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("메인현황판 : 등록설비");
 		}
 	}
 
@@ -232,7 +232,7 @@ public class DashBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("메인현황판 : 지역별사용량");
 		}
 	}
 
@@ -264,7 +264,7 @@ public class DashBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log("현황판 전체 데이터");
+			}).log("메인현황판 : 전체데이터 API");
 		}
 
 	}
@@ -287,7 +287,7 @@ public class DashBoardController {
 		responseArrayVO.setRegionData(dashBoardService.getLocationUseList());
 		responseArrayVO.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
 
-		return Mono.just(responseArrayVO).log("현환판 처음 데이터");
+		return Mono.just(responseArrayVO).log("메인현황판 : First 데이터");
 
 	}
 

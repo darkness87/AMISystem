@@ -61,7 +61,7 @@ public class FBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("장애현황판 : 상태(장애)정보");
 		}
 	}
 
@@ -80,7 +80,7 @@ public class FBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("장애현황판 : 지도정보");
 		}
 	}
 
@@ -99,7 +99,7 @@ public class FBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("장애현황판 : 상태코드비교율");
 		}
 	}
 
@@ -118,7 +118,7 @@ public class FBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("장애현황판 : 지역별집계");
 		}
 	}
 
@@ -134,7 +134,7 @@ public class FBoardController {
 		responseFailureArrayVO.setFailureCompare(fBoardService.getFailureCompare());
 		responseFailureArrayVO.setFailureRegion(fBoardService.getFailureRegionAggr());
 
-		return Mono.just(responseFailureArrayVO).log();
+		return Mono.just(responseFailureArrayVO).log("장애현황판 : First 데이터");
 
 	}
 

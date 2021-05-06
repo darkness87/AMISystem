@@ -61,7 +61,7 @@ public class MBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("검침현황판 : 데이터수집수");
 		}
 	}
 
@@ -80,7 +80,7 @@ public class MBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("검침현황판 : 지도정보");
 		}
 	}
 
@@ -98,7 +98,7 @@ public class MBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("검침현황판 : 검침율");
 		}
 
 	}
@@ -118,7 +118,7 @@ public class MBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("검침현황판 : 지역별집계");
 		}
 	}
 
@@ -134,7 +134,7 @@ public class MBoardController {
 		responseReadingArrayVO.setMap(mBoardService.getLocationMapInfo());
 		responseReadingArrayVO.setRegion(mBoardService.getReadingRegionAggr());
 
-		return Mono.just(responseReadingArrayVO).log();
+		return Mono.just(responseReadingArrayVO).log("검침현황판 : First 데이터");
 
 	}
 

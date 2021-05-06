@@ -305,7 +305,7 @@ public class EquipmentController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log();
+			}).log("설비 : 장비관리 : DCU : 실시간 상태정보");
 		}
 
 	}
