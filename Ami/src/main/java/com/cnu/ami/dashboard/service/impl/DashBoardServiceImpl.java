@@ -267,7 +267,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Override
 	public WeatherVO getWeatherRealtimeAll() throws Exception {
 
-//		ServerRegionIneterfaceVO region = serverDAO.findFirstBySSEQ(1); // WAS/WEB 서버 SSEQ : 1
+		ServerRegionIneterfaceVO region = serverDAO.findFirstBySSEQ(1); // WAS/WEB 서버 SSEQ : 1
 
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -275,12 +275,9 @@ public class DashBoardServiceImpl implements DashBoardService {
 		cal.setTime(date);
 		String today = dateFormat.format(cal.getTime());
 
-//		WeatherEntity data = weatherDAO.findFirstByRSEQAndFCSTDATEOrderByFCSTTIMEDesc(region.getRSEQ(), today);
-//		RegionNameIneterfaceVO regionName = searchRegionDAO.findFirstByrSeq(region.getRSEQ());
+		WeatherEntity data = weatherDAO.findFirstByRSEQAndFCSTDATEOrderByFCSTTIMEDesc(region.getRSEQ(), today);
+		RegionNameIneterfaceVO regionName = searchRegionDAO.findFirstByrSeq(region.getRSEQ());
 
-		WeatherEntity data = weatherDAO.findFirstByRSEQAndFCSTDATEOrderByFCSTTIMEDesc(1, today);
-		RegionNameIneterfaceVO regionName = searchRegionDAO.findFirstByrSeq(1);
-		
 		WeatherVO weatherVO = new WeatherVO();
 
 		weatherVO.setTemperature(data.getT1H());
@@ -302,9 +299,8 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Override
 	public WeatherDataVO getWeatherDataWeatherAll() throws Exception {
 
-//		ServerRegionIneterfaceVO region = serverDAO.findFirstBySSEQ(1); // WAS/WEB 서버 SSEQ : 1
-//		RegionNameIneterfaceVO regionName = searchRegionDAO.findFirstByrSeq(region.getRSEQ());
-		RegionNameIneterfaceVO regionName = searchRegionDAO.findFirstByrSeq(1);
+		ServerRegionIneterfaceVO region = serverDAO.findFirstBySSEQ(1); // WAS/WEB 서버 SSEQ : 1
+		RegionNameIneterfaceVO regionName = searchRegionDAO.findFirstByrSeq(region.getRSEQ());
 
 		Date date = new Date();
 		Calendar cal = Calendar.getInstance();

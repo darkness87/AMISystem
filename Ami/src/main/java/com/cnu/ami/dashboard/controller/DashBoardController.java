@@ -242,25 +242,39 @@ public class DashBoardController {
 	public Flux<ResponseArrayVO> getDashBoardAllData(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 
-		ResponseArrayVO responseArrayVO = new ResponseArrayVO(request);
-
-		responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
-		responseArrayVO.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
-		responseArrayVO.setFailureStatus(dashBoardService.getElectricFailureDayHourAll());
-//		responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
-//		responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
-//		responseArrayVO.setMap(dashBoardService.getLocationFailureMapInfo());
-//		responseArrayVO.setServer(dashBoardService.getServerManagementInfo());
-		responseArrayVO.setDevice(dashBoardService.getElectricRegistrationDevice());
-		responseArrayVO.setRegionData(dashBoardService.getLocationUseList());
-		responseArrayVO.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
-
 		if (duration == 0) { // 0일 경우 1회 전달
+			ResponseArrayVO responseArrayVO = new ResponseArrayVO(request);
+			
+			responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
+			responseArrayVO.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
+			responseArrayVO.setFailureStatus(dashBoardService.getElectricFailureDayHourAll());
+			responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
+			responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
+//			responseArrayVO.setMap(dashBoardService.getLocationFailureMapInfo());
+//			responseArrayVO.setServer(dashBoardService.getServerManagementInfo());
+			responseArrayVO.setDevice(dashBoardService.getElectricRegistrationDevice());
+			responseArrayVO.setRegionData(dashBoardService.getLocationUseList());
+			responseArrayVO.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
+			
 			return Flux.just(responseArrayVO);
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
-					return responseArrayVO;
+					
+					ResponseArrayVO responseArray = new ResponseArrayVO(request);
+					
+					responseArray.setUseData(dashBoardService.getElectricUseDayHourAll());
+					responseArray.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
+					responseArray.setFailureStatus(dashBoardService.getElectricFailureDayHourAll());
+					responseArray.setWeather(dashBoardService.getWeatherRealtimeAll());
+					responseArray.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
+//					responseArray.setMap(dashBoardService.getLocationFailureMapInfo());
+//					responseArray.setServer(dashBoardService.getServerManagementInfo());
+					responseArray.setDevice(dashBoardService.getElectricRegistrationDevice());
+					responseArray.setRegionData(dashBoardService.getLocationUseList());
+					responseArray.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
+					
+					return responseArray;
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
@@ -279,8 +293,8 @@ public class DashBoardController {
 		responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
 		responseArrayVO.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
 		responseArrayVO.setFailureStatus(dashBoardService.getElectricFailureDayHourAll());
-//		responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
-//		responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
+		responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
+		responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
 //		responseArrayVO.setMap(dashBoardService.getLocationFailureMapInfo());
 //		responseArrayVO.setServer(dashBoardService.getServerManagementInfo());
 		responseArrayVO.setDevice(dashBoardService.getElectricRegistrationDevice());
