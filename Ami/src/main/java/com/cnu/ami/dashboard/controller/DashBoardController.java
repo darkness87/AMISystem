@@ -189,7 +189,7 @@ public class DashBoardController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			});
+			}).log("메인현황판 : 서버정보");
 
 		}
 
