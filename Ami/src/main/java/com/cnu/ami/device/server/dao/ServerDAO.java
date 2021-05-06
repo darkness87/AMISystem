@@ -7,6 +7,6 @@ import com.cnu.ami.device.server.dao.entity.ServerRegionIneterfaceVO;
 
 public interface ServerDAO extends JpaRepository<ServerEntity, Long> {
 
-	ServerRegionIneterfaceVO findFirstBySSEQ(int sseq);
+	ServerRegionIneterfaceVO findFirstBySSEQ(long sseq);
 
 }
