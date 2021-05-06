@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.cnu.ami.failure.reading.dao.entity.LpSnapCountInterfaceVO;
 import com.cnu.ami.metering.info.dao.entity.RealTimeEntity;
 import com.cnu.ami.metering.info.dao.entity.RealTimeInterfaceVO;
 
@@ -27,6 +26,6 @@ public interface FailureReadingDAO extends JpaRepository<RealTimeEntity, String>
 	List<RealTimeInterfaceVO> getFailureReadingData(@Param("gseq") int gseq, @Param("date") long date);
 	
 	@Query(value = "SELECT COUNT(*) AS COUNT FROM GAUGE_LP_SNAPSHOT WHERE MTIME < :date", nativeQuery = true)
-	public LpSnapCountInterfaceVO getAllCount(@Param("date") long date);
+	public int getAllCount(@Param("date") long date);
 	
 }

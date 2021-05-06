@@ -40,15 +40,11 @@ import com.cnu.ami.device.equipment.dao.ModemInfoDAO;
 import com.cnu.ami.device.server.dao.ServerDAO;
 import com.cnu.ami.device.server.dao.entity.ServerRegionIneterfaceVO;
 import com.cnu.ami.failure.reading.dao.FailureReadingDAO;
-import com.cnu.ami.failure.reading.dao.entity.LpSnapCountInterfaceVO;
 import com.cnu.ami.scheduler.dao.WeatherDAO;
 import com.cnu.ami.scheduler.dao.entity.WeatherEntity;
 import com.cnu.ami.search.dao.SearchRegionDAO;
 import com.sun.management.OperatingSystemMXBean;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 public class DashBoardServiceImpl implements DashBoardService {
 
@@ -89,8 +85,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 		cal.add(Calendar.DATE, -1);
 
 		String yesterday = dateFormat.format(cal.getTime());
-
-		log.info("{},{}", today, yesterday);
 
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 		String collectionName = collectionNameFormat.formatDcu(today);
@@ -183,8 +177,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		String yesterday = dateFormat.format(cal.getTime());
 
-		log.info("{},{}", today, yesterday);
-
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 		String collectionName = collectionNameFormat.formatDcu(today);
 
@@ -275,9 +267,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Override
 	public WeatherVO getWeatherRealtimeAll() throws Exception {
 
-		ServerRegionIneterfaceVO region = serverDAO.findBySSEQ(1); // WAS/WEB 서버 SSEQ : 1
-
-		log.info("{}", region.getRSEQ());
+		ServerRegionIneterfaceVO region = serverDAO.findFirstBySSEQ(1); // WAS/WEB 서버 SSEQ : 1
 
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -287,7 +277,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		WeatherEntity data = weatherDAO.findFirstByRSEQAndFCSTDATEOrderByFCSTTIMEDesc(region.getRSEQ(), today);
 
-		RegionNameIneterfaceVO regionName = searchRegionDAO.findByrSeq(region.getRSEQ());
+		RegionNameIneterfaceVO regionName = searchRegionDAO.findFirstByrSeq(region.getRSEQ());
 
 		WeatherVO weatherVO = new WeatherVO();
 
@@ -310,8 +300,8 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Override
 	public WeatherDataVO getWeatherDataWeatherAll() throws Exception {
 
-		ServerRegionIneterfaceVO region = serverDAO.findBySSEQ(1); // WAS/WEB 서버 SSEQ : 1
-		RegionNameIneterfaceVO regionName = searchRegionDAO.findByrSeq(region.getRSEQ());
+		ServerRegionIneterfaceVO region = serverDAO.findFirstBySSEQ(1); // WAS/WEB 서버 SSEQ : 1
+		RegionNameIneterfaceVO regionName = searchRegionDAO.findFirstByrSeq(region.getRSEQ());
 
 		Date date = new Date();
 		Calendar cal = Calendar.getInstance();
@@ -319,16 +309,16 @@ public class DashBoardServiceImpl implements DashBoardService {
 		cal.add(Calendar.HOUR_OF_DAY, -12); // 12시간전 미검침 장애정보 // TEST시 +1
 		date = new Date(cal.getTimeInMillis());
 
-		LpSnapCountInterfaceVO count = failureReadingDAO.getAllCount(date.getTime() / 1000);
+		int count = failureReadingDAO.getAllCount(date.getTime() / 1000);
 
 		WeatherDataVO weatherDataVO = new WeatherDataVO();
 
 		weatherDataVO.setLocation(regionName.getrName());
-		if (count.getCount() <= 10) {
+		if (count <= 10) {
 			weatherDataVO.setCodeValue(0); // 0:좋음, 1:보통, 2:나쁨 => 재확인후 결정
-		} else if (count.getCount() > 10 && count.getCount() <= 50) {
+		} else if (count > 10 && count <= 50) {
 			weatherDataVO.setCodeValue(1); // 0:좋음, 1:보통, 2:나쁨 => 재확인후 결정
-		} else if (count.getCount() > 50) {
+		} else if (count > 50) {
 			weatherDataVO.setCodeValue(2); // 0:좋음, 1:보통, 2:나쁨 => 재확인후 결정
 		}
 		weatherDataVO.setDate(new Date());

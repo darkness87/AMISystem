@@ -9,5 +9,5 @@ import com.cnu.ami.search.dao.entity.RegionEntity;
 @Repository
 public interface SearchRegionDAO extends JpaRepository<RegionEntity, Long> {
 
-	public RegionNameIneterfaceVO findByrSeq(int rseq);
+	public RegionNameIneterfaceVO findFirstByrSeq(int rseq);
 }
