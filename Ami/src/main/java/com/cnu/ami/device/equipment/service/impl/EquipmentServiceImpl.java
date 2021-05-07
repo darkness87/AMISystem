@@ -36,6 +36,9 @@ import com.cnu.ami.metering.info.dao.RealTimeDAO;
 import com.cnu.ami.metering.info.dao.entity.RealTimeEntity;
 import com.cnu.network.client.fep.CnuComm;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class EquipmentServiceImpl implements EquipmentService {
 
@@ -511,6 +514,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		try {
 			long data[] = comm.getDcuStatus(); // 0 - DCU 동작 상태, 1 – DCU 평균 업로드, 2 – DCU 평균 다운로드, 3 – CPU 사용률, 4 – 메모리
 												// 사용률, 5 – 설비 온도, 6 - DCU 커버상태
+			log.info("Status Data : {}",data);
 
 			dcuRealtimeStatusVO.setSysState(data[0]);
 			dcuRealtimeStatusVO.setSysUpBps(data[1]);

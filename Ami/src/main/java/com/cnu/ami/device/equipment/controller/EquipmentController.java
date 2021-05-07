@@ -300,8 +300,7 @@ public class EquipmentController {
 
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
-					return new ResponseVO<DcuRealtimeStatusVO>(request,
-							equipmentService.getDcuRealTimeStatus(dcuId, dcuIp));
+					return new ResponseVO<DcuRealtimeStatusVO>(request, equipmentService.getDcuRealTimeStatus(dcuId, dcuIp));
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
