@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import com.cnu.ami.common.PropertyData;
-import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.login.models.LoginResponseVO;
 import com.cnu.ami.login.models.TokenVO;
@@ -166,30 +165,6 @@ public class LoginController {
 		}
 
 		return Mono.just(result);
-	}
-
-	@RequestMapping(value = "/login/test/object", method = RequestMethod.GET)
-	@ResponseStatus(value = HttpStatus.OK)
-	public Mono<ResponseVO<UserLoginVO>> getTestData(HttpServletRequest request) throws Exception {
-
-		UserLoginVO userLoginVO = new UserLoginVO();
-		userLoginVO.setUserid("user12345");
-
-		return Mono.just(new ResponseVO<UserLoginVO>(request, userLoginVO));
-	}
-
-	@RequestMapping(value = "/login/test/list", method = RequestMethod.GET)
-	@ResponseStatus(value = HttpStatus.OK)
-	public Mono<ResponseListVO<UserLoginVO>> getTestDataList(HttpServletRequest request) throws Exception {
-
-		UserLoginVO userLoginVO = new UserLoginVO();
-		userLoginVO.setUserid("user12345");
-
-		List<UserLoginVO> user = new ArrayList<UserLoginVO>();
-		user.add(userLoginVO);
-		user.add(userLoginVO);
-
-		return Mono.just(new ResponseListVO<UserLoginVO>(request, user));
 	}
 
 }

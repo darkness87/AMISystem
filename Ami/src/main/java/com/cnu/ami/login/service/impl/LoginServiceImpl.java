@@ -115,11 +115,8 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public UserLoginVO getTokenUserid(String userid) throws UsernameNotFoundException {
-		log.info("Token Userid : {}", userid);
 
 		UserLoginVO userLoginVO = loginDAO.findByUserid(userid);
-
-		log.info("userLoginVO : {}", userLoginVO);
 		
 		List<String> roles = new ArrayList<String>();
 

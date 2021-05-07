@@ -22,9 +22,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider { // JWT토큰 생성 및 유효성을 검증하는 컴포넌트
@@ -46,7 +44,6 @@ public class JwtTokenProvider { // JWT토큰 생성 및 유효성을 검증하�
 	public String createToken(String userPk, List<String> roles) { // List<String> roles
 		Claims claims = Jwts.claims().setSubject(userPk);
 		claims.put("roles", roles);
-		log.info("claims : {}", claims);
 
 		Date now = new Date();
 		return Jwts.builder().setClaims(claims) // 데이터

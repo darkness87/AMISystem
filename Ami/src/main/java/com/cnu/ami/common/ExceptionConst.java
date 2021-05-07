@@ -38,6 +38,9 @@ public class ExceptionConst {
 	public static final int PROPERTIES_READ_FAIL = 305;
 	public static final int PROPERTIES_WRITE_FAIL = 306;
 
+	// TOKEN (4xx)
+	public static final int VALIDATION_TOKEN = 400;
+	
 	// NETWORK (5xx)
 	public static final int UNKNOWN_HOST = 501;
 
