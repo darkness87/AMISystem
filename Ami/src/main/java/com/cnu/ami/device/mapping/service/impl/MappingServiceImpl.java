@@ -20,6 +20,7 @@ import com.cnu.ami.device.mapping.dao.MappingDAO;
 import com.cnu.ami.device.mapping.dao.document.MappingHistoryTemp;
 import com.cnu.ami.device.mapping.dao.document.MappingTemp;
 import com.cnu.ami.device.mapping.dao.entity.MappingInterfaceVO;
+import com.cnu.ami.device.mapping.models.EstateMappingVO;
 import com.cnu.ami.device.mapping.models.MappingHistroyVO;
 import com.cnu.ami.device.mapping.models.MappingListVO;
 import com.cnu.ami.device.mapping.models.MappingVO;
@@ -115,8 +116,11 @@ public class MappingServiceImpl implements MappingService {
 	}
 
 	@Override
-	public List<MappingHistroyVO> getEstateMappHistory(int gseq) throws Exception {
+	public EstateMappingVO getEstateMappHistory(int gseq) throws Exception {
 
+		// TODO
+		EstateEntity estate = estateDAO.findBygSeq(gseq);
+		
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 		String collectionName = collectionNameFormat.formatMapp();
 
@@ -133,7 +137,15 @@ public class MappingServiceImpl implements MappingService {
 				MappingHistoryTemp.class);
 
 		List<MappingHistoryTemp> data = result.getMappedResults();
-
+		
+		EstateMappingVO estateMappingVO = new EstateMappingVO();
+		
+		estateMappingVO.setEstateSeq(estate.getGSeq());
+		estateMappingVO.setEstateId(estate.getGId());
+		estateMappingVO.setEstateName(estate.getGName());
+		estateMappingVO.setHouseCount(estate.getCntHouse());
+		estateMappingVO.setReadingDay(estate.getDayPower());
+		
 		List<MappingHistroyVO> list = new ArrayList<MappingHistroyVO>();
 		MappingHistroyVO mappingHistroyVO = new MappingHistroyVO();
 
@@ -147,8 +159,10 @@ public class MappingServiceImpl implements MappingService {
 
 			list.add(mappingHistroyVO);
 		}
+		
+		estateMappingVO.setMappingHistory(list);
 
-		return list;
+		return estateMappingVO;
 	}
 
 	@Override

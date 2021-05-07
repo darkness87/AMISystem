@@ -1,7 +1,5 @@
 package com.cnu.ami.device.mapping.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +13,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.PropertyData;
-import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.device.mapping.dao.document.MappingTemp;
-import com.cnu.ami.device.mapping.models.MappingHistroyVO;
+import com.cnu.ami.device.mapping.models.EstateMappingVO;
 import com.cnu.ami.device.mapping.models.MappingVO;
 import com.cnu.ami.device.mapping.service.MappingService;
 
@@ -78,13 +75,13 @@ public class MappingController {
 	@RequestMapping(value = "/history/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:매핑관리 : 이력 리스트정보")
-	public Mono<ResponseListVO<MappingHistroyVO>> getEstateMappHistory(HttpServletRequest request,
+	public Mono<ResponseVO<EstateMappingVO>> getEstateMappHistory(HttpServletRequest request,
 			@RequestParam int estateSeq) throws Exception {
 
-		List<MappingHistroyVO> data = mappingService.getEstateMappHistory(estateSeq);
+		EstateMappingVO data = mappingService.getEstateMappHistory(estateSeq);
 		// 1. 해당 단지의 이력정보를 출력 - MongoDB
 
-		return Mono.just(new ResponseListVO<MappingHistroyVO>(request, data));
+		return Mono.just(new ResponseVO<EstateMappingVO>(request, data));
 	}
 
 	@RequestMapping(value = "/history/detail", method = RequestMethod.GET)
