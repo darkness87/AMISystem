@@ -66,7 +66,7 @@ public class ServerController {
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
-			}).log("설비 : 서버현황 : 서버정보");
+			});
 		}
 
 	}
