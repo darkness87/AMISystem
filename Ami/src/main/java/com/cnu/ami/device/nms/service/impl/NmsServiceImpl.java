@@ -17,8 +17,8 @@ import com.cnu.ami.device.equipment.dao.entity.DcuNmsInterfaceVO;
 import com.cnu.ami.device.nms.dao.ModemDAO;
 import com.cnu.ami.device.nms.dao.entity.ModemTreeInterfaceVO;
 import com.cnu.ami.device.nms.models.MasterModemListVO;
+import com.cnu.ami.device.nms.models.NmsDcuCheckListVO;
 import com.cnu.ami.device.nms.models.NmsDcuListVO;
-import com.cnu.ami.device.nms.models.NmsDcuRebootListVO;
 import com.cnu.ami.device.nms.models.StepMeterListVO;
 import com.cnu.ami.device.nms.models.StepModemListVO;
 import com.cnu.ami.device.nms.service.NmsService;
@@ -66,9 +66,9 @@ public class NmsServiceImpl implements NmsService {
 			nmsDcuListVO.setDcuIp(dcu.getDCU_IP());
 			nmsDcuListVO.setDcuPort(dcu.getDCU_PORT());
 			nmsDcuListVO.setFirmwareVersion(dcu.getFWV());
-			
+
 			String[] nmsVer = dcu.getS_SYS_DESCR().split("Ver:");
-			
+
 			nmsDcuListVO.setNmsVersion(nmsVer[1].replace(")", ""));
 			nmsDcuListVO.setSysState(dcu.getS_SYS_STATE());
 			nmsDcuListVO.setDcuStatus(dcu.getDSTATUS());
@@ -80,12 +80,12 @@ public class NmsServiceImpl implements NmsService {
 	}
 
 	@Override
-	public boolean setDCURebootList(List<NmsDcuRebootListVO> nmsDcuRebootListVO) throws Exception {
+	public boolean setDCURebootList(List<NmsDcuCheckListVO> nmsDcuCheckListVO) throws Exception {
 		// TODO 성공 DCU 수, 실패 DCU 수로 세분화 하여야 할듯
 
 		boolean bool = false;
 
-		for (NmsDcuRebootListVO list : nmsDcuRebootListVO) {
+		for (NmsDcuCheckListVO list : nmsDcuCheckListVO) {
 
 			CnuComm comm = new CnuComm(list.getDcuId(), list.getDcuId()); // DCU ID, DCU IP
 
@@ -131,9 +131,10 @@ public class NmsServiceImpl implements NmsService {
 
 		for (ModemTreeInterfaceVO modem : data) {
 			stepModemListVO = new StepModemListVO();
-			
+
 			stepModemListVO.setModemMac(modem.getMAC_STEP1());
-			stepModemListVO.setModemStatus(modem.getREGI_STAT()); // 1:default(초기상태값), 2:Active(정상 동작중), 3:Suspend(통신금지), 4:RegAction(등록 중), 5:Fault(통신실패)
+			stepModemListVO.setModemStatus(modem.getREGI_STAT()); // 1:default(초기상태값), 2:Active(정상 동작중),
+																	// 3:Suspend(통신금지), 4:RegAction(등록 중), 5:Fault(통신실패)
 			stepModemListVO.setHardwareVersion(modem.getHWV_H());
 			stepModemListVO.setProgramVersion(modem.getAPMV_H());
 			String[] meterList = modem.getMETER_STEP1().split(";");
@@ -141,9 +142,9 @@ public class NmsServiceImpl implements NmsService {
 			stepModemListVO.setStepCount(meterList.length);
 
 			meter = new ArrayList<StepMeterListVO>(); // 미터 리스트 초기화 필수
-			
+
 			for (RealTimeDcuInterfaceVO datalist : meterInfo) {
-				
+
 				for (int i = 0; i < meterList.length; i++) {
 
 					if (datalist.getMETER_ID().equals(meterList[i])) {
@@ -182,6 +183,56 @@ public class NmsServiceImpl implements NmsService {
 		master.add(masterModemListVO);
 
 		return master;
+	}
+
+	@Override
+	public boolean setDCUFirmwareList(List<NmsDcuCheckListVO> nmsDcuCheckListVO) throws Exception {
+
+		boolean bool = false;
+
+		for (NmsDcuCheckListVO list : nmsDcuCheckListVO) {
+
+			CnuComm comm = new CnuComm(list.getDcuId(), list.getDcuId()); // DCU ID, DCU IP
+
+			try {
+				AMICipher jni = new AMICipher();
+				log.info("AMICipher VERSION = {}", jni.amiGetVersion());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			bool = comm.execFirmwareUpgradeDcu("fileName");
+
+		}
+
+		return bool;
+	}
+
+	@Override
+	public boolean setMODEMFirmwareList(List<NmsDcuCheckListVO> nmsDcuCheckListVO) throws Exception {
+
+		boolean bool = false;
+
+		for (NmsDcuCheckListVO list : nmsDcuCheckListVO) {
+
+			CnuComm comm = new CnuComm(list.getDcuId(), list.getDcuId()); // DCU ID, DCU IP
+
+			try {
+				AMICipher jni = new AMICipher();
+				log.info("AMICipher VERSION = {}", jni.amiGetVersion());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			List<String> meterMacs = new ArrayList<String>();
+			meterMacs.add("AC5E8C226E36");
+			meterMacs.add("AC5E8CA07C5C");
+
+			bool = comm.execFirmwareUpgradeModem("fileName", meterMacs);
+
+		}
+
+		return bool;
 	}
 
 }
