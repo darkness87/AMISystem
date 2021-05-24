@@ -125,9 +125,9 @@
 		<dependency>
 			<groupId>com.cnu.dcu.comm</groupId>
 			<artifactId>cnu-dcu-api</artifactId>
-			<version>1.0</version>
+			<version>0.0.6</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/CnuComm.jar</systemPath>
+			<systemPath>${basedir}/lib/CnuComm_v.0.0.6.jar</systemPath>
 		</dependency>
 		
 		<dependency>

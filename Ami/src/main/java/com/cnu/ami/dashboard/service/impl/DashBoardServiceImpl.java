@@ -280,18 +280,23 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		WeatherVO weatherVO = new WeatherVO();
 
-		weatherVO.setTemperature(data.getT1H());
-		weatherVO.setLocation(regionName.getrName());
-		weatherVO.setCodeSky(data.getSKY()); // 1:맑음, 3:약간흐림, 4:흐림
-		weatherVO.setCodeRain(data.getPTY()); // 0:없음, 1:비, 2:비/눈(진눈개비), 3:눈, 4:소나기, 5:빗방울, 6:빗방울/눈날림, 7:눈날림
+		if (data == null) {
+			
+		} else {
 
-		cal.set(Integer.valueOf(data.getFCSTDATE().substring(0, 4)),
-				Integer.valueOf(data.getFCSTDATE().substring(4, 6)) - 1,
-				Integer.valueOf(data.getFCSTDATE().substring(6, 8)),
-				Integer.valueOf(data.getFCSTTIME().substring(0, 2)),
-				Integer.valueOf(data.getFCSTTIME().substring(2, 4)), 0);
+			weatherVO.setTemperature(data.getT1H());
+			weatherVO.setLocation(regionName.getrName());
+			weatherVO.setCodeSky(data.getSKY()); // 1:맑음, 3:약간흐림, 4:흐림
+			weatherVO.setCodeRain(data.getPTY()); // 0:없음, 1:비, 2:비/눈(진눈개비), 3:눈, 4:소나기, 5:빗방울, 6:빗방울/눈날림, 7:눈날림
 
-		weatherVO.setDate(cal.getTime());
+			cal.set(Integer.valueOf(data.getFCSTDATE().substring(0, 4)),
+					Integer.valueOf(data.getFCSTDATE().substring(4, 6)) - 1,
+					Integer.valueOf(data.getFCSTDATE().substring(6, 8)),
+					Integer.valueOf(data.getFCSTTIME().substring(0, 2)),
+					Integer.valueOf(data.getFCSTTIME().substring(2, 4)), 0);
+
+			weatherVO.setDate(cal.getTime());
+		}
 
 		return weatherVO;
 	}

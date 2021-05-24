@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NmsDcuRebootListVO {
+public class NmsDcuCheckListVO {
 
 	private String dcuId;
 	private String dcuIp;
