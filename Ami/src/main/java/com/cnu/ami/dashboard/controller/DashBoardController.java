@@ -152,20 +152,21 @@ public class DashBoardController {
 		}
 	}
 
+	// TODO URI 주소 rate로 바꿔야함
 	@RequestMapping(value = "/location/failure/mapinfo", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 지도 정보")
-	public Flux<ResponseListVO<DashBoardMapVO>> getLocationFailureMapInfo(HttpServletRequest request,
+	public Flux<ResponseListVO<DashBoardMapVO>> getLocationRateMapInfo(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 //		List<DashBoardMapVO> data = dashBoardService.getLocationFailureMapInfo();
 //		return Mono.just(new ResponseListVO<DashBoardMapVO>(request, data));
 
 		if (duration == 0) { // 0일 경우 1회 전달
-			return Flux.just(new ResponseListVO<DashBoardMapVO>(request, dashBoardService.getLocationFailureMapInfo()));
+			return Flux.just(new ResponseListVO<DashBoardMapVO>(request, dashBoardService.getLocationRateMapInfo()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
-					return new ResponseListVO<DashBoardMapVO>(request, dashBoardService.getLocationFailureMapInfo());
+					return new ResponseListVO<DashBoardMapVO>(request, dashBoardService.getLocationRateMapInfo());
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}

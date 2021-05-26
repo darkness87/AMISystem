@@ -34,5 +34,7 @@ public interface DashBoardService {
 	public List<UseLocationVO> getLocationUseList() throws Exception;
 	
 	public DeviceErrorCountVO getDeviceErrorCount() throws Exception;
+	
+	public List<DashBoardMapVO> getLocationRateMapInfo() throws Exception;
 
 }

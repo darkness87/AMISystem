@@ -8,6 +8,6 @@ import lombok.Setter;
 public class DashBoardMapVO {
 
 	private String hckey;
-	private int value;
+	private float value;
 
 }
