@@ -46,7 +46,6 @@ import com.cnu.ami.metering.info.models.EstateListReadingCountVO;
 import com.cnu.ami.metering.mboard.dao.MBoardDAO;
 import com.cnu.ami.metering.mboard.dao.document.EstateCountTemp;
 import com.cnu.ami.metering.mboard.dao.entity.MBoardCountInterfaceVO;
-import com.cnu.ami.metering.mboard.models.DashReadingMapVO;
 import com.cnu.ami.scheduler.dao.WeatherDAO;
 import com.cnu.ami.scheduler.dao.entity.WeatherEntity;
 import com.cnu.ami.search.dao.SearchRegionDAO;
@@ -75,7 +74,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 	@Autowired
 	private FailureReadingDAO failureReadingDAO;
-	
+
 	@Autowired
 	private MBoardDAO mBoardDAO;
 
@@ -102,8 +101,8 @@ public class DashBoardServiceImpl implements DashBoardService {
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 		String collectionName = collectionNameFormat.formatDcu(today);
 
-		String[] jsonRawString = { String.format("{ $match: { '$or':[{'day':'%s'},{'day':'%s'}] } }", today, yesterday)
-				, String.format("{ $unwind: { path: '$mids' } }"),
+		String[] jsonRawString = { String.format("{ $match: { '$or':[{'day':'%s'},{'day':'%s'}] } }", today, yesterday),
+				String.format("{ $unwind: { path: '$mids' } }"),
 				String.format("{ $unwind: { path: '$mids.v',includeArrayIndex:'hour' } }"),
 				"{ $group: { _id: {'day':'$day','hour':'$hour'} ,sum:{ '$sum':'$mids.v' } } }",
 				"{ $project: { day: '$_id.day', hour: '$_id.hour', sum: '$sum' } }",
@@ -153,7 +152,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 					useDayHourAllListVO.setUse(0);
 				} else if (data.get(i + 1).getSum() < data.get(1).getSum()) {
 					useDayHourAllListVO.setUse(0);
-				}  else {
+				} else {
 					useDayHourAllListVO.setUse(data.get(i + 1).getSum() - data.get(i).getSum());
 				}
 
@@ -294,7 +293,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 		WeatherVO weatherVO = new WeatherVO();
 
 		if (data == null) {
-			
+
 		} else {
 
 			weatherVO.setTemperature(data.getT1H());
@@ -499,34 +498,34 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 	@Override
 	public DeviceErrorCountVO getDeviceErrorCount() throws Exception {
-		
+
 		DeviceErrorCountVO deviceErrorCountVO = new DeviceErrorCountVO();
-		
+
 		int dcuCount = dcuInfoDAO.getDcuCount();
 		int dcuErrorCount = dcuInfoDAO.getDcuErrorCount();
-		
+
 		int meterCount = meterInfoDAO.getMeterCount();
-		
+
 		Date date = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.HOUR_OF_DAY, -12);
-		
-		int meterErrorCount = meterInfoDAO.getMeterErrorCount(cal.getTimeInMillis()/1000);
-		
+
+		int meterErrorCount = meterInfoDAO.getMeterErrorCount(cal.getTimeInMillis() / 1000);
+
 		deviceErrorCountVO.setDcuOperationCount(dcuCount);
 		deviceErrorCountVO.setDcuErrorCount(dcuErrorCount);
-		
+
 		deviceErrorCountVO.setMeterOperationCount(meterCount);
 		deviceErrorCountVO.setMeterErrorCount(meterErrorCount);
-		
+
 		return deviceErrorCountVO;
 	}
 
 	@Override
 	public List<DashBoardMapVO> getLocationRateMapInfo() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 		Date date = new Date();
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -608,6 +607,11 @@ public class DashBoardServiceImpl implements DashBoardService {
 			float val = 0.0f;
 			try {
 				val = 100f - (((house.get(i).getCOUNT() * hour) - count) / (house.get(i).getCOUNT() * hour) * 100f);
+
+				if (Float.isNaN(val) || Float.isInfinite(val)) {
+					val = 0.0f;
+				}
+
 			} catch (Exception e) {
 				val = 0.0f;
 			}
@@ -641,8 +645,13 @@ public class DashBoardServiceImpl implements DashBoardService {
 					}
 				}
 				try {
-					val = 100f - ( (((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) - (count + etcCount))
-							/ ((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) * 100f );
+					val = 100f - ((((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) - (count + etcCount))
+							/ ((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) * 100f);
+
+					if (Float.isNaN(val) || Float.isInfinite(val)) {
+						val = 0.0f;
+					}
+
 				} catch (Exception e) {
 					val = 0.0f;
 				}
@@ -682,7 +691,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 			dashmap.add(dashReadingMapVO);
 
 		}
-		
+
 		return dashmap;
 	}
 

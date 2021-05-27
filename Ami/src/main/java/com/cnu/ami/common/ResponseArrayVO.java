@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.DeviceErrorCountVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
@@ -34,7 +35,7 @@ public class ResponseArrayVO {
 	private FailureAllVO failureStatus;
 	private WeatherVO weather;
 	private WeatherDataVO weatherData;
-//	private List<DashBoardMapVO> map;
+	private List<DashBoardMapVO> map;
 //	private ServerManagementVO server;
 	private List<DeviceRegVO> device;
 	private List<UseLocationVO> regionData;

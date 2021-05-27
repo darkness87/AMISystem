@@ -204,6 +204,11 @@ public class MBoardServiceImpl implements MBoardService {
 			float val = 0.0f;
 			try {
 				val = 100f - (((house.get(i).getCOUNT() * hour) - count) / (house.get(i).getCOUNT() * hour) * 100f);
+
+				if (Float.isNaN(val) || Float.isInfinite(val)) {
+					val = 0.0f;
+				}
+
 			} catch (Exception e) {
 				val = 0.0f;
 			}
@@ -237,8 +242,13 @@ public class MBoardServiceImpl implements MBoardService {
 					}
 				}
 				try {
-					val = 100f - ( (((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) - (count + etcCount))
-							/ ((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) * 100f );
+					val = 100f - ((((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) - (count + etcCount))
+							/ ((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) * 100f);
+
+					if (Float.isNaN(val) || Float.isInfinite(val)) {
+						val = 0.0f;
+					}
+
 				} catch (Exception e) {
 					val = 0.0f;
 				}
