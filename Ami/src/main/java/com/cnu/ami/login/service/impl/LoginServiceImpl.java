@@ -154,11 +154,17 @@ public class LoginServiceImpl implements LoginService {
 			userInfoVO.setEstateName("단지 운영관리자");
 		} else {
 			UserEstateVO userEstateVO = loginDAO.getUserEstate(userLoginVO.getUserid());
-			userInfoVO.setEstateSeq(userEstateVO.getGseq());
-			userInfoVO.setEstateName(userEstateVO.getGname());
-			userInfoVO.setEstateId(userEstateVO.getGid());
-			userInfoVO.setRegionSeq(userEstateVO.getRseq());
-			userInfoVO.setRegionName(userEstateVO.getRname());
+			
+			if(userEstateVO == null) {
+				userInfoVO.setEstateName("단지 미지정");
+				userInfoVO.setRegionName("지역 없음");
+			} else {
+				userInfoVO.setEstateSeq(userEstateVO.getGseq());
+				userInfoVO.setEstateName(userEstateVO.getGname());
+				userInfoVO.setEstateId(userEstateVO.getGid());
+				userInfoVO.setRegionSeq(userEstateVO.getRseq());
+				userInfoVO.setRegionName(userEstateVO.getRname());
+			}
 		}
 
 		userInfoVO.setRegDate(new Date(userLoginVO.getRegDate() * 1000));
