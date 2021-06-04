@@ -268,7 +268,13 @@ public class BuildingServiceImpl implements BuildingService {
 
 			if (mappData == null) {
 				dcuStatusVO.setDcuId(data.getDID());
-				dcuStatusVO.setStatusCode(Integer.valueOf(data.getS_SYS_STATE()));
+				
+				if(data.getS_SYS_STATE()==null) {
+					dcuStatusVO.setStatusCode(0);
+				} else {
+					dcuStatusVO.setStatusCode(Integer.valueOf(data.getS_SYS_STATE()));
+				}
+				
 			} else {
 				dcuStatusVO.setDcuId(dcuId);
 				dcuStatusVO.setStatusCode(3); // 매핑정보가 있음
@@ -293,7 +299,13 @@ public class BuildingServiceImpl implements BuildingService {
 
 			if (mappData == null) {
 				dcuStatusVO.setDcuId(data.getDID());
-				dcuStatusVO.setStatusCode(Integer.valueOf(data.getS_SYS_STATE()));
+				
+				if(data.getS_SYS_STATE()==null) {
+					dcuStatusVO.setStatusCode(0);
+				} else {
+					dcuStatusVO.setStatusCode(Integer.valueOf(data.getS_SYS_STATE()));
+				}
+				
 			} else if (mappData.getBSEQ() == bseq) {
 				dcuStatusVO.setDcuId(dcuId);
 				dcuStatusVO.setStatusCode(1); // 정상 처리

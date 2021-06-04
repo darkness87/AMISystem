@@ -5,12 +5,15 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@DynamicInsert
 @Table(name = "DCU_INFO")
 public class DcuInfoEntity {
 
