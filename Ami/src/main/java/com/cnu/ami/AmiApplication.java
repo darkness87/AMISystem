@@ -3,12 +3,17 @@ package com.cnu.ami;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.cnu.ami.init.AmiBeanNameGenerator;
 
 @SpringBootApplication
-@PropertySource("classpath:application.properties")
+//@PropertySource("classpath:application.properties")
+@PropertySources({
+	@PropertySource("classpath:application.properties"),
+	@PropertySource(value="file:application.properties", ignoreResourceNotFound=true)
+})
 @EnableScheduling // 스케줄
 //@EnableWebFlux // 웹플럭스
 public class AmiApplication {

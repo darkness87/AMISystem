@@ -231,7 +231,7 @@
 				</executions>
 			</plugin>
 
-			<plugin>
+<!-- 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
@@ -239,7 +239,7 @@
 						-Xms1024m -Xmx2048m
 					</jvmarguments>
 				</configuration>
-			</plugin>
+			</plugin> -->
 
 		</plugins>
 	</build>

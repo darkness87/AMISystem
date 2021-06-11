@@ -1,2 +1,2 @@
 echo "AMI-Server System is start!!"
-java -jar /javaApp/AmiWas/ami-1.0.jar &
+java -Xmx4096m -jar /app/AmiWas/ami-1.0.jar &
