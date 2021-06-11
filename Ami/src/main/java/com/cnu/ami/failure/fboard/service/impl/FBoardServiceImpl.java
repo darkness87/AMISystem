@@ -184,8 +184,9 @@ public class FBoardServiceImpl implements FBoardService {
 
 		FailureCompareVO failureCompareVO = new FailureCompareVO();
 
-		failureCompareVO.setComparePersent(
-				((todayCount.getSum() - yesterdayCount.getSum()) / (float) yesterdayCount.getSum()) * 100f);
+		float comparePersent = (todayCount.getSum() - yesterdayCount.getSum()) / (float) yesterdayCount.getSum() * 100f; // TODO try 구문으로 변경?
+		
+		failureCompareVO.setComparePersent(comparePersent);
 		failureCompareVO.setRestorePersent(0);
 
 		return failureCompareVO;

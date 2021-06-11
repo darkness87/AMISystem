@@ -160,7 +160,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 			}
 		}
 
-		int sumUse = 0;
+		long sumUse = 0;
 		for (UseDayHourAllListVO sum : todaylist) {
 			sumUse = sum.getUse() + sumUse;
 		}

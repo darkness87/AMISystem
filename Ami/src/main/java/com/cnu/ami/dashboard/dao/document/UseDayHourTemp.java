@@ -9,6 +9,6 @@ public class UseDayHourTemp {
 
 	private String day;
 	private int hour;
-	private int sum;
+	private long sum;
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 public class UseDayHourAllVO {
 
 	private String day;
-	private int todayUseAll;
+	private long todayUseAll;
 	private String type;
 	private List<UseDayHourAllListVO> todayData;
 	private List<UseDayHourAllListVO> yesterdayData;
