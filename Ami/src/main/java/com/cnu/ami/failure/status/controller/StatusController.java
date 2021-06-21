@@ -65,7 +65,7 @@ public class StatusController {
 
 		String pingResult = "";
 		ProcessBuilder processBuilder = new ProcessBuilder();
-		processBuilder.command("bash", "-c", "ping -c 5 " + ip);
+		processBuilder.command("bash", "-c", "ping -c 3 " + ip);
 		try {
 			Process process = processBuilder.start();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));

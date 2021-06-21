@@ -49,7 +49,7 @@ public class StatusServiceImpl implements StatusService {
 			dcuFailureStatusVO.setSysState(dcu.getS_SYS_STATE());
 			dcuFailureStatusVO.setDcuStatus(dcu.getDSTATUS());
 
-			String[] pingResult = pingResult(dcu.getDCU_IP());
+			String[] pingResult = pingResult(dcu.getDCU_IP(),1);
 
 			if (pingResult == null) {
 				dcuFailureStatusVO.setDcuPingCode(1);
@@ -64,7 +64,7 @@ public class StatusServiceImpl implements StatusService {
 				dcuFailureStatusVO.setRouterPingCode(1);
 			} else {
 				
-				String[] routerResult = pingResult(dcu.getDCU_IP());
+				String[] routerResult = pingResult(dcu.getDCU_IP(),1);
 				
 				if (routerResult == null) {
 					dcuFailureStatusVO.setRouterPingCode(1);
@@ -82,11 +82,11 @@ public class StatusServiceImpl implements StatusService {
 		return list;
 	}
 
-	public String[] pingResult(String ip) throws Exception {
+	public String[] pingResult(String ip, int c) throws Exception {
 
 		String[] resultArr = null;
 		ProcessBuilder processBuilder = new ProcessBuilder();
-		processBuilder.command("bash", "-c", "ping -c 5 " + ip);
+		processBuilder.command("bash", "-c", "ping -c "+c+" " + ip);
 		try {
 			Process process = processBuilder.start();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
