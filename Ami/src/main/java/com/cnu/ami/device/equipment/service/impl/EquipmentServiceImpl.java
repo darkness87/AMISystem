@@ -90,12 +90,13 @@ public class EquipmentServiceImpl implements EquipmentService {
 			dcuInfoListVO.setBuildingName(data.get(i).getBNAME());
 			dcuInfoListVO.setEstateId(data.get(i).getGID());
 			dcuInfoListVO.setEstateName(data.get(i).getGNAME());
-			dcuInfoListVO.setMeterCount(data.get(i).getCNT_METER());
-			dcuInfoListVO.setModemCount(data.get(i).getCNT_MODEM());
+			// TODO DCU별 count
+			//dcuInfoListVO.setMeterCount(data.get(i).getCNT_METER());
+			//dcuInfoListVO.setModemCount(data.get(i).getCNT_MODEM());
 			dcuInfoListVO.setRegionName(data.get(i).getRNAME());
 			dcuInfoListVO.setDcuId(data.get(i).getDID());
 			dcuInfoListVO.setDcuIp(data.get(i).getDCU_IP());
-			dcuInfoListVO.setFepIp(data.get(i).getFEP_IP());
+			dcuInfoListVO.setRouterIp(data.get(i).getROUTER_IP());
 			dcuInfoListVO.setFirmwareVersion(data.get(i).getFWV());
 			dcuInfoListVO.setSystemState(data.get(i).getS_SYS_STATE());
 

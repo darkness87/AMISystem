@@ -22,7 +22,7 @@ public interface DcuInfoInterfaceVO {
 
 	String getDCU_IP();
 	
-	String getFEP_IP();
+	String getROUTER_IP();
 	
 	String getFWV();
 	

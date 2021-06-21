@@ -17,7 +17,7 @@ public class DcuInfoListVO {
 	private String regionName; // 지역명
 	private String dcuId; // DCU ID
 	private String dcuIp; // DCU IP
-	private String fepIp; // FEP ID
+	private String routerIp; // FEP ID
 	private String firmwareVersion; // 펌웨어 버전
 	private String systemState; // 시스템 상태
 
