@@ -46,24 +46,23 @@ public class InfoServiceImpl implements InfoService {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
+
 	@Override
 	public List<RealTimeVO> getRealTimeData(int gseq) throws Exception {
 
 		List<RealTimeInterfaceVO> data = realTimeDAO.getRealTimeData(gseq);
 
-		if(data==null) {
+		if (data == null) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "검침 정보가 없습니다.");
 		}
 
-		
 		List<RealTimeVO> list = new ArrayList<RealTimeVO>();
 		RealTimeVO realTimeVO = new RealTimeVO();
 
 		for (RealTimeInterfaceVO real : data) {
 			realTimeVO = new RealTimeVO();
-			
-			if(real.getMETER_ID()==null) {
+
+			if (real.getMETER_ID() == null) {
 				continue; // 해당 DCU에 속한 계량기 정보가 없을 경우
 			}
 
@@ -74,7 +73,13 @@ public class InfoServiceImpl implements InfoService {
 			realTimeVO.setEstateId(real.getGID());
 			realTimeVO.setEstateName(real.getGNAME());
 			realTimeVO.setBuildingName(real.getBNAME());
-			realTimeVO.setHouseName(real.getHO());
+
+			if (real.getHO() == null) {
+				realTimeVO.setHouseName("");
+			} else {
+				realTimeVO.setHouseName(real.getHO());
+			}
+
 			realTimeVO.setDcuId(real.getDID());
 			realTimeVO.setMeterId(real.getMETER_ID());
 			realTimeVO.setMac(real.getMAC());
@@ -105,7 +110,7 @@ public class InfoServiceImpl implements InfoService {
 
 		for (int i = 0; data.size() > i; i++) {
 			collectDcuVO = new CollectDcuVO();
-			
+
 			collectDcuVO.setRegionSeq(data.get(i).getRSEQ());
 			collectDcuVO.setEstateSeq(data.get(i).getGSEQ());
 			collectDcuVO.setBuildingSeq(data.get(i).getBSEQ());
@@ -128,10 +133,10 @@ public class InfoServiceImpl implements InfoService {
 
 		Query query = new Query().addCriteria(Criteria.where("day").is(day))
 				.addCriteria(Criteria.where("did").is(dcuId));
-		
+
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 		String collectName = collectionNameFormat.formatDay(gseq, day);
-		
+
 		List<LpDataTemp> lpdata = mongoTemplate.find(query, LpDataTemp.class, collectName);
 
 		List<CollectMeterVO> list = new ArrayList<CollectMeterVO>();
@@ -192,75 +197,75 @@ public class InfoServiceImpl implements InfoService {
 	}
 
 	@Override
-	public List<CollectMeterVO> getMeterAggrData(int gseq, String day, String dcuId) throws Exception { // Aggregation 을 통한 카운트 수
-		
+	public List<CollectMeterVO> getMeterAggrData(int gseq, String day, String dcuId) throws Exception { // Aggregation 을
+																										// 통한 카운트 수
+
 		List<MeterInterfaceVO> meterdata = meterDAO.getMeterData(dcuId);
-		
+
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		
+
 		String today = dateFormat.format(date);
 		String _lpOrOn = "cntLp";
-		
+
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 		String collectionName = collectionNameFormat.formatMonth(gseq, day.substring(0, 4));
-		
-		String[] jsonRawString = {
-			  String.format("{ $match: { day: '%s' , did: '%s' } }", day, dcuId)
-			, String.format("{ $unwind: { path: '$%s', includeArrayIndex: 'cntOn_idx' } }", _lpOrOn)
-			, "{ $match: { 'cntOn_idx': { $ne: 96 } } }"
-			, String.format("{ $group: { _id: { did: '$did', mid: '$mid', day: '$day', is: '$idxStart', ie: { '$cond':[ {'$eq':['$idxEnd', 96]}, 95, {'$cond':[ {'$eq':['%s','%s']}, '$idxEnd', 95]}]}}, sum: { $sum: '$%s' } } }", today, day, _lpOrOn)
-			, "{ $project: { _id: '$_id', ontimeSum: { $subtract: [ '$sum', 0 ] }, cnt: { $add: [ 1, { $subtract: [ '$_id.ie', '$_id.is' ] } ] } } }"
-			, "{ $group: { _id: { did: '$_id.did', day: '$_id.day', mid: '$_id.mid' }, lpcnt: { $sum: '$cnt' }, result: { $sum: '$ontimeSum' } } }"
-			, "{ $project: { did: '$_id.did', day: '$_id.day', mid: '$_id.mid', lpcnt: '$lpcnt', count:'$result', rate: { $divide: [ '$result', '$lpcnt' ] } } }"
-			, "{ $sort: { did:1, mid:1 } }"
-		};
-		
+
+		String[] jsonRawString = { String.format("{ $match: { day: '%s' , did: '%s' } }", day, dcuId),
+				String.format("{ $unwind: { path: '$%s', includeArrayIndex: 'cntOn_idx' } }", _lpOrOn),
+				"{ $match: { 'cntOn_idx': { $ne: 96 } } }",
+				String.format(
+						"{ $group: { _id: { did: '$did', mid: '$mid', day: '$day', is: '$idxStart', ie: { '$cond':[ {'$eq':['$idxEnd', 96]}, 95, {'$cond':[ {'$eq':['%s','%s']}, '$idxEnd', 95]}]}}, sum: { $sum: '$%s' } } }",
+						today, day, _lpOrOn),
+				"{ $project: { _id: '$_id', ontimeSum: { $subtract: [ '$sum', 0 ] }, cnt: { $add: [ 1, { $subtract: [ '$_id.ie', '$_id.is' ] } ] } } }",
+				"{ $group: { _id: { did: '$_id.did', day: '$_id.day', mid: '$_id.mid' }, lpcnt: { $sum: '$cnt' }, result: { $sum: '$ontimeSum' } } }",
+				"{ $project: { did: '$_id.did', day: '$_id.day', mid: '$_id.mid', lpcnt: '$lpcnt', count:'$result', rate: { $divide: [ '$result', '$lpcnt' ] } } }",
+				"{ $sort: { did:1, mid:1 } }" };
+
 		Aggregation aggregation = Aggregation.newAggregation(
-				new CnuAggregationOperation(Document.parse(jsonRawString[0]))
-				, new CnuAggregationOperation(Document.parse(jsonRawString[1]))
-				, new CnuAggregationOperation(Document.parse(jsonRawString[2]))
-				, new CnuAggregationOperation(Document.parse(jsonRawString[3]))
-				, new CnuAggregationOperation(Document.parse(jsonRawString[4]))
-				, new CnuAggregationOperation(Document.parse(jsonRawString[5]))
-				, new CnuAggregationOperation(Document.parse(jsonRawString[6]))
-				, new CnuAggregationOperation(Document.parse(jsonRawString[7]))
-			);
-		
-		AggregationResults<OnTimeLpRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName, OnTimeLpRateTemp.class);
-		
+				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[3])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[4])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[5])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[6])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[7])));
+
+		AggregationResults<OnTimeLpRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+				OnTimeLpRateTemp.class);
+
 		List<OnTimeLpRateTemp> dataList = result.getMappedResults();
 		/////
-		
+
 		_lpOrOn = "cntOn";
-		
-		String[] jsonRawStringOn = {
-				  String.format("{ $match: { day: '%s' , did: '%s' } }", day, dcuId)
-				, String.format("{ $unwind: { path: '$%s', includeArrayIndex: 'cntOn_idx' } }", _lpOrOn)
-				, "{ $match: { 'cntOn_idx': { $ne: 96 } } }"
-				, String.format("{ $group: { _id: { did: '$did', mid: '$mid', day: '$day', is: '$idxStart', ie: { '$cond':[ {'$eq':['$idxEnd', 96]}, 95, {'$cond':[ {'$eq':['%s','%s']}, '$idxEnd', 95]}]}}, sum: { $sum: '$%s' } } }", today, day, _lpOrOn)
-				, "{ $project: { _id: '$_id', ontimeSum: { $subtract: [ '$sum', 0 ] }, cnt: { $add: [ 1, { $subtract: [ '$_id.ie', '$_id.is' ] } ] } } }"
-				, "{ $group: { _id: { did: '$_id.did', day: '$_id.day', mid: '$_id.mid' }, lpcnt: { $sum: '$cnt' }, result: { $sum: '$ontimeSum' } } }"
-				, "{ $project: { did: '$_id.did', day: '$_id.day', mid: '$_id.mid', lpcnt: '$lpcnt', count:'$result', rate: { $divide: [ '$result', '$lpcnt' ] } } }"
-				, "{ $sort: { did:1, mid:1 } }"
-			};
-			
-			Aggregation aggregationOn = Aggregation.newAggregation(
-					new CnuAggregationOperation(Document.parse(jsonRawStringOn[0]))
-					, new CnuAggregationOperation(Document.parse(jsonRawStringOn[1]))
-					, new CnuAggregationOperation(Document.parse(jsonRawStringOn[2]))
-					, new CnuAggregationOperation(Document.parse(jsonRawStringOn[3]))
-					, new CnuAggregationOperation(Document.parse(jsonRawStringOn[4]))
-					, new CnuAggregationOperation(Document.parse(jsonRawStringOn[5]))
-					, new CnuAggregationOperation(Document.parse(jsonRawStringOn[6]))
-					, new CnuAggregationOperation(Document.parse(jsonRawStringOn[7]))
-				);
-			
-			AggregationResults<OnTimeLpRateTemp> resultOn = mongoTemplate.aggregate(aggregationOn, collectionName, OnTimeLpRateTemp.class);
-			
-			List<OnTimeLpRateTemp> dataListOn = resultOn.getMappedResults();
-		
-		
+
+		String[] jsonRawStringOn = { String.format("{ $match: { day: '%s' , did: '%s' } }", day, dcuId),
+				String.format("{ $unwind: { path: '$%s', includeArrayIndex: 'cntOn_idx' } }", _lpOrOn),
+				"{ $match: { 'cntOn_idx': { $ne: 96 } } }",
+				String.format(
+						"{ $group: { _id: { did: '$did', mid: '$mid', day: '$day', is: '$idxStart', ie: { '$cond':[ {'$eq':['$idxEnd', 96]}, 95, {'$cond':[ {'$eq':['%s','%s']}, '$idxEnd', 95]}]}}, sum: { $sum: '$%s' } } }",
+						today, day, _lpOrOn),
+				"{ $project: { _id: '$_id', ontimeSum: { $subtract: [ '$sum', 0 ] }, cnt: { $add: [ 1, { $subtract: [ '$_id.ie', '$_id.is' ] } ] } } }",
+				"{ $group: { _id: { did: '$_id.did', day: '$_id.day', mid: '$_id.mid' }, lpcnt: { $sum: '$cnt' }, result: { $sum: '$ontimeSum' } } }",
+				"{ $project: { did: '$_id.did', day: '$_id.day', mid: '$_id.mid', lpcnt: '$lpcnt', count:'$result', rate: { $divide: [ '$result', '$lpcnt' ] } } }",
+				"{ $sort: { did:1, mid:1 } }" };
+
+		Aggregation aggregationOn = Aggregation.newAggregation(
+				new CnuAggregationOperation(Document.parse(jsonRawStringOn[0])),
+				new CnuAggregationOperation(Document.parse(jsonRawStringOn[1])),
+				new CnuAggregationOperation(Document.parse(jsonRawStringOn[2])),
+				new CnuAggregationOperation(Document.parse(jsonRawStringOn[3])),
+				new CnuAggregationOperation(Document.parse(jsonRawStringOn[4])),
+				new CnuAggregationOperation(Document.parse(jsonRawStringOn[5])),
+				new CnuAggregationOperation(Document.parse(jsonRawStringOn[6])),
+				new CnuAggregationOperation(Document.parse(jsonRawStringOn[7])));
+
+		AggregationResults<OnTimeLpRateTemp> resultOn = mongoTemplate.aggregate(aggregationOn, collectionName,
+				OnTimeLpRateTemp.class);
+
+		List<OnTimeLpRateTemp> dataListOn = resultOn.getMappedResults();
+
 		List<CollectMeterVO> list = new ArrayList<CollectMeterVO>();
 		CollectMeterVO collectMeterVO = new CollectMeterVO();
 
@@ -281,14 +286,13 @@ public class InfoServiceImpl implements InfoService {
 
 					collectMeterVO.setCountLp(ontime.getCount());
 					collectMeterVO.setTotalLp(ontime.getLpcnt());
-					collectMeterVO.setRateLp(ontime.getRate()*100);
-					
-					
+					collectMeterVO.setRateLp(ontime.getRate() * 100);
+
 					for (OnTimeLpRateTemp ontimeOn : dataListOn) {
 						if (meter.getMETER_ID().equals(ontimeOn.getMid())) {
 							collectMeterVO.setCountOn(ontimeOn.getCount());
 							collectMeterVO.setTotalOn(ontimeOn.getLpcnt());
-							collectMeterVO.setRateOn(ontimeOn.getRate()*100);
+							collectMeterVO.setRateOn(ontimeOn.getRate() * 100);
 						}
 					}
 
