@@ -48,7 +48,7 @@ public class FailureReadingServiceImpl implements FailureReadingService {
 
 			failureReadingVO.setEstateId(real.getGID());
 			failureReadingVO.setEstateName(real.getGNAME());
-			failureReadingVO.setBuildName(real.getBNAME());
+			failureReadingVO.setBuildingName(real.getBNAME());
 			failureReadingVO.setHouseName(real.getHO());
 			failureReadingVO.setMeterId(real.getMETER_ID());
 			failureReadingVO.setMeterTime(new Date(real.getMTIME() * 1000));

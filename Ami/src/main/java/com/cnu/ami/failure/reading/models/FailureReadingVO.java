@@ -11,7 +11,7 @@ public class FailureReadingVO {
 
 	private String estateId;
 	private String estateName;
-	private String buildName;
+	private String buildingName;
 	private String houseName;
 	private String meterId;
 	private Date meterTime;
