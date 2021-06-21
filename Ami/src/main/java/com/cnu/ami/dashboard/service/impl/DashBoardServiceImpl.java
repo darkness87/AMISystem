@@ -139,7 +139,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 				useDayHourAllListVO.setTime(data.get(i).getHour());
 				if (data.get(i + 1).getSum() == 0) {
 					useDayHourAllListVO.setUse(0);
-				} else if (data.get(i + 1).getSum() < data.get(1).getSum()) {
+				} else if (data.get(i + 1).getSum() < data.get(i).getSum()) {
 					useDayHourAllListVO.setUse(0);
 				} else {
 					useDayHourAllListVO.setUse(data.get(i + 1).getSum() - data.get(i).getSum());
@@ -150,7 +150,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 				useDayHourAllListVO.setTime(data.get(i).getHour());
 				if (data.get(i + 1).getSum() == 0) {
 					useDayHourAllListVO.setUse(0);
-				} else if (data.get(i + 1).getSum() < data.get(1).getSum()) {
+				} else if (data.get(i + 1).getSum() < data.get(i).getSum()) {
 					useDayHourAllListVO.setUse(0);
 				} else {
 					useDayHourAllListVO.setUse(data.get(i + 1).getSum() - data.get(i).getSum());
