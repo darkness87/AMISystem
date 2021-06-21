@@ -21,7 +21,7 @@ public interface HouseDAO extends JpaRepository<HouseEntity, Long> { // 키 값�
 	public String getHouseHoInfo(@Param("meterid") String meterid);
 
 	@Query(value = "SELECT METER_ID,HO FROM (SELECT HSEQ,HO FROM HOUSEHOLD WHERE BSEQ = :bseq) AS T1\r\n"
-			+ "JOIN HOUSE_METER_MAP AS T2 ON T1.HSEQ=T2.HSEQ", nativeQuery = true)
+			+ "LEFT JOIN HOUSE_METER_MAP AS T2 ON T1.HSEQ=T2.HSEQ", nativeQuery = true)
 	public List<HouseInterfaceVO> getHouseHoList(@Param("bseq") int bseq);
 
 }

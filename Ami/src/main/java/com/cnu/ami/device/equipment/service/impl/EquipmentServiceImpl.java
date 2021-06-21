@@ -346,8 +346,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		for (MeterInfoInterfaceVO data : meter) {
 			meterInfoListVO = new MeterInfoListVO();
-			
-			if(data.getMeter_Id()==null) {
+
+			if (data.getMeter_Id() == null) {
 				continue; // 등록된 DCU에 연동된 계량기가 없을경우
 			}
 
@@ -392,13 +392,19 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		MeterInfoVO meterInfoVO = new MeterInfoVO();
 
-		meterInfoVO.setRegionSeq(data.getRSeq());
-		meterInfoVO.setEstateSeq(data.getGSeq());
-		meterInfoVO.setRegionName(data.getRName());
-		meterInfoVO.setEstateId(data.getGId());
-		meterInfoVO.setEstateName(data.getGName());
-		meterInfoVO.setBuildingName(data.getBName());
-		meterInfoVO.setHouseName(data.getHo());
+		if (data == null) {
+
+		} else {
+
+			meterInfoVO.setRegionSeq(data.getRSeq());
+			meterInfoVO.setEstateSeq(data.getGSeq());
+			meterInfoVO.setRegionName(data.getRName());
+			meterInfoVO.setEstateId(data.getGId());
+			meterInfoVO.setEstateName(data.getGName());
+			meterInfoVO.setBuildingName(data.getBName());
+			meterInfoVO.setHouseName(data.getHo());
+
+		}
 
 		meterInfoVO.setLpTime(new Date(lp.getMTIME() * 1000));
 		meterInfoVO.setLp(Float.valueOf(lp.getFAP()) / 1000);

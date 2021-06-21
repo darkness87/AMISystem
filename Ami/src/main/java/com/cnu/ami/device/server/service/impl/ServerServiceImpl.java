@@ -75,9 +75,9 @@ public class ServerServiceImpl implements ServerService {
 		
 		serverRegistrationVO.setDate(new Date());
 		serverRegistrationVO.setServerCount(serverDAO.count());
-		serverRegistrationVO.setDcuCount(dcuInfoDAO.count());
+		serverRegistrationVO.setDcuCount(dcuInfoDAO.getDcuCount());
 		serverRegistrationVO.setModemCount(modemInfoDAO.count());
-		serverRegistrationVO.setMeterCount(meterInfoDAO.count());
+		serverRegistrationVO.setMeterCount(meterInfoDAO.getMeterCount());
 		
 		return serverRegistrationVO;
 	}

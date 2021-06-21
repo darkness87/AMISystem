@@ -57,6 +57,8 @@ public class LookupServiceImpl implements LookupService {
 	@Override
 	public List<RawLpCycleVO> getLpCycle(int gseq, int bseq, String dcuId, String day) {
 
+		// TODO 속도 개선 필요
+
 		EstateEntity estate = estateDAO.findBygSeq(gseq);
 
 		BuildingEntity building = buildingDAO.findByBSEQ(bseq); // => DCU ID까지 표기
@@ -97,9 +99,12 @@ public class LookupServiceImpl implements LookupService {
 			rawLpCycleVO.setBuildingName(building.getBNAME());
 
 			for (HouseInterfaceVO ho : house) {
-				if (ho.getMETER_ID().equals(lp.getMid())) {
+				rawLpCycleVO.setHouseName("");
+				if (lp.getMid().equals(ho.getMETER_ID())) {
 					rawLpCycleVO.setHouseName(ho.getHO());
 					break;
+				} else if (ho.getMETER_ID() == null) {
+					continue;
 				}
 			}
 
@@ -166,9 +171,12 @@ public class LookupServiceImpl implements LookupService {
 				rawLpHourVO.setBuildingName(building.getBNAME());
 
 				for (HouseInterfaceVO ho : house) {
-					if (ho.getMETER_ID().equals(lp.getMid())) {
+					rawLpHourVO.setHouseName("");
+					if (lp.getMid().equals(ho.getMETER_ID())) {
 						rawLpHourVO.setHouseName(ho.getHO());
 						break;
+					} else if (ho.getMETER_ID() == null) {
+						continue;
 					}
 				}
 
@@ -181,6 +189,8 @@ public class LookupServiceImpl implements LookupService {
 				rawLpHourVO.setRfap(lp.getRv().get(i));
 
 				if (lp.getV().get(i + 1) == 0) {
+					rawLpHourVO.setUse(0);
+				} else if (lp.getV().get(i + 1) < lp.getV().get(i)) {
 					rawLpHourVO.setUse(0);
 				} else {
 					rawLpHourVO.setUse(
@@ -238,9 +248,12 @@ public class LookupServiceImpl implements LookupService {
 			rawLpDurationVO.setBuildingName(building.getBNAME());
 
 			for (HouseInterfaceVO ho : house) {
-				if (ho.getMETER_ID().equals(lp.getMid())) {
+				rawLpDurationVO.setHouseName("");
+				if (lp.getMid().equals(ho.getMETER_ID())) {
 					rawLpDurationVO.setHouseName(ho.getHO());
 					break;
+				} else if (ho.getMETER_ID() == null) {
+					continue;
 				}
 			}
 
@@ -280,6 +293,11 @@ public class LookupServiceImpl implements LookupService {
 		public int compare(Object o1, Object o2) {
 			String string1 = ((RawLpDurationVO) o1).getHouseName();
 			String string2 = ((RawLpDurationVO) o2).getHouseName();
+
+			if (string1 == null || string2 == null) {
+				return 0;
+			}
+
 			return string1.compareTo(string2);
 		}
 	}
@@ -302,6 +320,11 @@ public class LookupServiceImpl implements LookupService {
 		public int compare(Object o1, Object o2) {
 			String string1 = ((RawLpCycleVO) o1).getHouseName();
 			String string2 = ((RawLpCycleVO) o2).getHouseName();
+
+			if (string1 == null || string2 == null) {
+				return 0;
+			}
+
 			return string1.compareTo(string2);
 		}
 	}
@@ -331,6 +354,11 @@ public class LookupServiceImpl implements LookupService {
 		public int compare(Object o1, Object o2) {
 			String string1 = ((RawLpHourVO) o1).getHouseName();
 			String string2 = ((RawLpHourVO) o2).getHouseName();
+
+			if (string1 == null || string2 == null) {
+				return 0;
+			}
+
 			return string1.compareTo(string2);
 		}
 	}
@@ -366,7 +394,7 @@ public class LookupServiceImpl implements LookupService {
 
 		List<RawLpHourChartVO> list = new ArrayList<RawLpHourChartVO>();
 		RawLpHourChartVO rawLpHourChartVO = new RawLpHourChartVO();
-		
+
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
@@ -385,8 +413,12 @@ public class LookupServiceImpl implements LookupService {
 			}
 
 			rawLpHourChartVO.setHour(data.get(i).getHour());
-			
-			if(today.equals(day) && i >= Integer.valueOf(hour)) {
+
+			if (today.equals(day) && i >= Integer.valueOf(hour)) {
+				rawLpHourChartVO.setUse(0);
+			} else if (data.get(i + 1).getV() == 0) {
+				rawLpHourChartVO.setUse(0);
+			} else if (data.get(i + 1).getV() < data.get(i).getV()) {
 				rawLpHourChartVO.setUse(0);
 			} else {
 				rawLpHourChartVO.setUse((data.get(i + 1).getV() - data.get(i).getV()));
@@ -399,7 +431,8 @@ public class LookupServiceImpl implements LookupService {
 	}
 
 	@Override
-	public List<RawLpDurationChartVO> getLpDurationChart(int gseq, int bseq, String dcuId, String fromDate, String toDate) {
+	public List<RawLpDurationChartVO> getLpDurationChart(int gseq, int bseq, String dcuId, String fromDate,
+			String toDate) {
 
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 
