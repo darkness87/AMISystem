@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.cnu.ami.device.equipment.dao.entity.EstateMeterInfoInterfaceVO;
 import com.cnu.ami.device.equipment.dao.entity.MeterInfoEntity;
 import com.cnu.ami.device.equipment.dao.entity.MeterInfoInterfaceVO;
+import com.cnu.ami.failure.code.dao.entity.MeterTypeFailInterfaceVO;
 import com.cnu.ami.failure.code.dao.entity.MeterTypeInterfaceVO;
 
 @Repository
@@ -96,5 +97,24 @@ public interface MeterInfoDAO extends JpaRepository<MeterInfoEntity, String> { /
 			"JOIN (SELECT METER_ID FROM GAUGE_LP_SNAPSHOT WHERE MTIME <= :time) AS T2\r\n" + 
 			"ON T1.METER_ID=T2.METER_ID", nativeQuery = true)
 	public int getMeterErrorCount(@Param("time") long time);
+	
+	@Query(value = "SELECT MTIME,E.RNAME,A.GNAME,B.BNAME,F.HO,C.DID,D.METER_ID,G.MTYPE FROM (SELECT GSEQ,GNAME,RSEQ FROM GROUPSET WHERE GSEQ=:gseq) A\r\n" + 
+			"JOIN BUILDING B\r\n" + 
+			"ON A.GSEQ = B.GSEQ\r\n" + 
+			"JOIN (SELECT A.DID,B.BSEQ FROM (SELECT DID FROM DCU_INFO WHERE IS_DELETE='N') A JOIN BUILDING_DCU_MAP B\r\n" + 
+			"ON A.DID=B.DID) C\r\n" + 
+			"ON B.BSEQ=C.BSEQ\r\n" + 
+			"JOIN (SELECT DID,METER_ID FROM METER_INFO WHERE IS_DELETE='N') D\r\n" + 
+			"ON C.DID=D.DID\r\n" + 
+			"JOIN REGION E\r\n" + 
+			"ON A.RSEQ=E.RSEQ\r\n" + 
+			"LEFT JOIN (SELECT METER_ID,HO FROM HOUSEHOLD A\r\n" + 
+			"JOIN HOUSE_METER_MAP B\r\n" + 
+			"ON A.HSEQ=B.HSEQ) F\r\n" + 
+			"ON D.METER_ID=F.METER_ID\r\n" + 
+			"JOIN (SELECT * FROM GAUGE_LP_SNAPSHOT\r\n" + 
+			"WHERE STATUS>0 AND STATUS & :code ) G\r\n" + 
+			"ON D.METER_ID=G.METER_ID", nativeQuery = true)
+	List<MeterTypeFailInterfaceVO> getMeterTypeFail(@Param("gseq") int gseq, @Param("code") long code);
 
 }

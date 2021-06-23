@@ -49,8 +49,19 @@ public class CodeController {
 		// 1:과전류,2:정기검침,3:계절변경,4:모뎀 커버,5:터미널 커버,6:Latch ON,7:Latch OFF,8:Latch ERROR,9:Sag / Swell,10:오결선,11:온도,12:DST,
 		// 13:자계 감지,14:부하제한 차단,15:현재 Tariff,16:현재 Tariff,17:SR,18:정전,19:시각 변경,20:수동검침,21:DR,22:배터리 없음,23:전압 결상,24:프로그램 변경,
 		// 25:과전압,26:저전압,27:비설정 LP 기록주기,28:비정기검침
-
+		
 		List<CodeValueVO> data = codeService.getDataList(estateSeq, dcuId, fromDate, toDate, statusCode);
+
+		return Mono.just(new ResponseListVO<CodeValueVO>(request, data));
+	}
+
+	@RequestMapping(value = "/status/list", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "장애:상태관리 : 리스트정보")
+	public Mono<ResponseListVO<CodeValueVO>> getStatusListData(HttpServletRequest request, @RequestParam int estateSeq,
+			@RequestParam long statusCode) throws Exception {
+
+		List<CodeValueVO> data = codeService.getStatusDataList(estateSeq, statusCode);
 
 		return Mono.just(new ResponseListVO<CodeValueVO>(request, data));
 	}

@@ -295,4 +295,158 @@ public class MeterStatusCode {
 		return value;
 	}
 
+	public static String meterCheckCode(String type, long code) {
+
+		String value = null;
+
+		if (type.equals("EA")) {
+
+			if (code == 0x800000) {
+				value = MeterCodeConst.AEType.f1;
+			} else if (code == 0x100000) {
+				value = MeterCodeConst.AEType.f4;
+			} else if (code == 0x080000) {
+				value = MeterCodeConst.AEType.f5;
+			} else if (code == 0x040000) {
+				value = MeterCodeConst.AEType.f6;
+			} else if (code == 0x020000) {
+				value = MeterCodeConst.AEType.f7;
+			} else if (code == 0x010000) {
+				value = MeterCodeConst.AEType.f8;
+			} else if (code == 0x008000) {
+				value = MeterCodeConst.AEType.f9;
+			} else if (code == 0x004000) {
+				value = MeterCodeConst.AEType.f10;
+			} else if (code == 0x002000) {
+				value = MeterCodeConst.AEType.f11;
+			} else if (code == 0x001000) {
+				value = MeterCodeConst.AEType.f12;
+			} else if (code == 0x000800) {
+				value = MeterCodeConst.AEType.f13;
+			} else if (code == 0x000400) {
+				value = MeterCodeConst.AEType.f14;
+			} else if (code == 0x000200) {
+				value = MeterCodeConst.AEType.f15;
+			} else if (code == 0x000100) {
+				value = MeterCodeConst.AEType.f16;
+			} else if (code == 0x000080) {
+				value = MeterCodeConst.AEType.f17;
+			} else if (code == 0x000040) {
+				value = MeterCodeConst.AEType.f18;
+			} else if (code == 0x000020) {
+				value = MeterCodeConst.AEType.f19;
+			} else if (code == 0x000010) {
+				value = MeterCodeConst.AEType.f20;
+			} else if (code == 0x000008) {
+				value = MeterCodeConst.AEType.f21;
+			} else if (code == 0x000004) {
+				value = MeterCodeConst.AEType.f22;
+			} else if (code == 0x000001) {
+				value = MeterCodeConst.AEType.f24;
+			}
+
+		} else if (type.equals("G")) {
+
+			if (code == 0x800000) {
+				value = MeterCodeConst.GType.f1;
+			} else if (code == 0x100000) {
+				value = MeterCodeConst.GType.f4;
+			} else if (code == 0x080000) {
+				value = MeterCodeConst.GType.f5;
+			} else if (code == 0x040000) {
+				value = MeterCodeConst.GType.f6;
+			} else if (code == 0x020000) {
+				value = MeterCodeConst.GType.f7;
+			} else if (code == 0x010000) {
+				value = MeterCodeConst.GType.f8;
+			} else if (code == 0x008000) {
+				value = MeterCodeConst.GType.f9;
+			} else if (code == 0x004000) {
+				value = MeterCodeConst.GType.f10;
+			} else if (code == 0x002000) {
+				value = MeterCodeConst.GType.f11;
+			} else if (code == 0x001000) {
+				value = MeterCodeConst.GType.f12;
+			} else if (code == 0x000800) {
+				value = MeterCodeConst.GType.f13;
+			} else if (code == 0x000400) {
+				value = MeterCodeConst.GType.f14;
+			} else if (code == 0x000200) {
+				value = MeterCodeConst.GType.f15;
+			} else if (code == 0x000100) {
+				value = MeterCodeConst.GType.f16;
+			} else if (code == 0x000080) {
+				value = MeterCodeConst.GType.f17;
+			} else if (code == 0x000040) {
+				value = MeterCodeConst.GType.f18;
+			} else if (code == 0x000020) {
+				value = MeterCodeConst.GType.f19;
+			} else if (code == 0x000010) {
+				value = MeterCodeConst.GType.f20;
+			} else if (code == 0x000008) {
+				value = MeterCodeConst.GType.f21;
+			} else if (code == 0x000004) {
+				value = MeterCodeConst.GType.f22;
+			} else if (code == 0x000002) {
+				value = MeterCodeConst.GType.f23;
+			} else if (code == 0x000001) {
+				value = MeterCodeConst.GType.f24;
+			}
+
+		} else if (type.equals("AMIGO")) {
+
+			if (code == 0x800000) {
+				value = MeterCodeConst.AmigoType.f1;
+			} else if (code == 0x400000) {
+				value = MeterCodeConst.AmigoType.f2;
+			} else if (code == 0x200000) {
+				value = MeterCodeConst.AmigoType.f3;
+			} else if (code == 0x100000) {
+				value = MeterCodeConst.AmigoType.f4;
+			} else if (code == 0x080000) {
+				value = MeterCodeConst.AmigoType.f5;
+			} else if (code == 0x040000) {
+				value = MeterCodeConst.AmigoType.f6;
+			} else if (code == 0x020000) {
+				value = MeterCodeConst.AmigoType.f7;
+			} else if (code == 0x010000) {
+				value = MeterCodeConst.AmigoType.f8;
+			} else if (code == 0x008000) {
+				value = MeterCodeConst.AmigoType.f9;
+			} else if (code == 0x004000) {
+				value = MeterCodeConst.AmigoType.f10;
+			} else if (code == 0x002000) {
+				value = MeterCodeConst.AmigoType.f11;
+			} else if (code == 0x001000) {
+				value = MeterCodeConst.AmigoType.f12;
+			} else if (code == 0x000800) {
+				value = MeterCodeConst.AmigoType.f13;
+			} else if (code == 0x000400) {
+				value = MeterCodeConst.AmigoType.f14;
+			} else if (code == 0x000200) {
+				value = MeterCodeConst.AmigoType.f15;
+			} else if (code == 0x000100) {
+				value = MeterCodeConst.AmigoType.f16;
+			} else if (code == 0x000080) {
+				value = MeterCodeConst.AmigoType.f17;
+			} else if (code == 0x000040) {
+				value = MeterCodeConst.AmigoType.f18;
+			} else if (code == 0x000020) {
+				value = MeterCodeConst.AmigoType.f19;
+			} else if (code == 0x000010) {
+				value = MeterCodeConst.AmigoType.f20;
+			} else if (code == 0x000004) {
+				value = MeterCodeConst.AmigoType.f22;
+			} else if (code == 0x000001) {
+				value = MeterCodeConst.AmigoType.f24;
+			}
+
+		} else if (type.equals("E")) {
+		} else if (type.equals("S")) {
+		} else {
+		}
+
+		return value;
+	}
+
 }

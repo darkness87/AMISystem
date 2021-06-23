@@ -1,6 +1,7 @@
 package com.cnu.ami.failure.code.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.cnu.ami.common.MeterStatusCode;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
 import com.cnu.ami.failure.code.dao.document.LpFaultTemp;
+import com.cnu.ami.failure.code.dao.entity.MeterTypeFailInterfaceVO;
 import com.cnu.ami.failure.code.dao.entity.MeterTypeInterfaceVO;
 import com.cnu.ami.failure.code.models.CodeValueVO;
 import com.cnu.ami.failure.code.service.CodeService;
@@ -82,7 +84,7 @@ public class CodeServiceImpl implements CodeService {
 					}
 
 					codeValueVO.setRegionName(mlist.getRname());
-					codeValueVO.setEstateId(mlist.getGid());
+					// codeValueVO.setEstateId(mlist.getGid());
 					codeValueVO.setEstateName(mlist.getGname());
 					codeValueVO.setBuildingName(mlist.getBname());
 					codeValueVO.setDcuId(mlist.getDid());
@@ -95,6 +97,37 @@ public class CodeServiceImpl implements CodeService {
 				}
 
 			}
+
+		}
+
+		return list;
+	}
+
+	@Override
+	public List<CodeValueVO> getStatusDataList(int gseq, long statusCode) throws Exception {
+
+		List<CodeValueVO> list = new ArrayList<CodeValueVO>();
+		CodeValueVO codeValueVO = new CodeValueVO();
+
+		List<MeterTypeFailInterfaceVO> data = meterInfoDAO.getMeterTypeFail(gseq, statusCode);
+
+		for (MeterTypeFailInterfaceVO flist : data) {
+			codeValueVO = new CodeValueVO();
+
+			codeValueVO.setRegionName(flist.getRname());
+			codeValueVO.setEstateName(flist.getGname());
+			codeValueVO.setBuildingName(flist.getBname());
+			codeValueVO.setHouseName(flist.getHo());
+			codeValueVO.setDcuId(flist.getDid());
+			codeValueVO.setMeterId(flist.getMeter_id());
+			codeValueVO.setMeterType(flist.getMtype());
+			codeValueVO.setMeterDate(new Date(flist.getMtime() * 1000));
+
+			String value = MeterStatusCode.meterCheckCode(flist.getMtype(), statusCode);
+
+			codeValueVO.setCodeValue(value);
+
+			list.add(codeValueVO);
 
 		}
 
