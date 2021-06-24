@@ -248,14 +248,11 @@ public class DashBoardController {
 			
 			responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
 			responseArrayVO.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
-			responseArrayVO.setFailureStatus(dashBoardService.getElectricFailureDayHourAll());
 			responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
 			responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
 			responseArrayVO.setMap(dashBoardService.getLocationRateMapInfo());
-//			responseArrayVO.setServer(dashBoardService.getServerManagementInfo());
-			responseArrayVO.setDevice(dashBoardService.getElectricRegistrationDevice());
-			responseArrayVO.setRegionData(dashBoardService.getLocationUseList());
 			responseArrayVO.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
+			responseArrayVO.setReadingDayInfo(dashBoardService.getReadingDayInfo());
 			
 			return Flux.just(responseArrayVO);
 		} else {
@@ -266,14 +263,11 @@ public class DashBoardController {
 					
 					responseArray.setUseData(dashBoardService.getElectricUseDayHourAll());
 					responseArray.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
-					responseArray.setFailureStatus(dashBoardService.getElectricFailureDayHourAll());
 					responseArray.setWeather(dashBoardService.getWeatherRealtimeAll());
 					responseArray.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
 					responseArray.setMap(dashBoardService.getLocationRateMapInfo());
-//					responseArray.setServer(dashBoardService.getServerManagementInfo());
-					responseArray.setDevice(dashBoardService.getElectricRegistrationDevice());
-					responseArray.setRegionData(dashBoardService.getLocationUseList());
 					responseArray.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
+					responseArray.setReadingDayInfo(dashBoardService.getReadingDayInfo());
 					
 					return responseArray;
 				} catch (Exception e) {
@@ -293,14 +287,11 @@ public class DashBoardController {
 
 		responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
 		responseArrayVO.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
-		responseArrayVO.setFailureStatus(dashBoardService.getElectricFailureDayHourAll());
 		responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
 		responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
 		responseArrayVO.setMap(dashBoardService.getLocationRateMapInfo());
-//		responseArrayVO.setServer(dashBoardService.getServerManagementInfo());
-		responseArrayVO.setDevice(dashBoardService.getElectricRegistrationDevice());
-		responseArrayVO.setRegionData(dashBoardService.getLocationUseList());
 		responseArrayVO.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
+		responseArrayVO.setReadingDayInfo(dashBoardService.getReadingDayInfo());
 
 		return Mono.just(responseArrayVO).log("메인현황판 : First 데이터");
 

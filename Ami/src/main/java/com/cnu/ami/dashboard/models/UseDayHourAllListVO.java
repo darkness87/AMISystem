@@ -9,5 +9,6 @@ public class UseDayHourAllListVO {
 
 	private int time;
 	private long use;
+	private long lp;
 
 }

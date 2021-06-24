@@ -101,8 +101,15 @@ public class FBoardServiceImpl implements FBoardService {
 		List<DashBoardMapVO> dashmap = new ArrayList<DashBoardMapVO>();
 		DashBoardMapVO dashBoardMapVO = new DashBoardMapVO();
 
+		float val = 0.0f;
+		
 		for (FBoardCountInterfaceVO map : meter) {
 			dashBoardMapVO = new DashBoardMapVO();
+			
+			if (Float.isNaN(map.getCOUNT()) || Float.isInfinite(map.getCOUNT())) {
+				// TODO NaN
+				val = Float.NaN;
+			}
 
 			if (map.getRSEQ() == 2) {
 				dashBoardMapVO.setHckey("kr-so"); // 서울특별시
@@ -184,7 +191,13 @@ public class FBoardServiceImpl implements FBoardService {
 
 		FailureCompareVO failureCompareVO = new FailureCompareVO();
 
-		float comparePersent = (todayCount.getSum() - yesterdayCount.getSum()) / (float) yesterdayCount.getSum() * 100f; // TODO try 구문으로 변경?
+		float comparePersent = 0.0f;
+		
+		try {
+			comparePersent = (todayCount.getSum() - yesterdayCount.getSum()) / (float) yesterdayCount.getSum() * 100f;
+		}catch(Exception e) {
+			comparePersent = 0.0f;
+		}
 		
 		failureCompareVO.setComparePersent(comparePersent);
 		failureCompareVO.setRestorePersent(0);

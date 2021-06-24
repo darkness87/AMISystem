@@ -7,6 +7,7 @@ import com.cnu.ami.dashboard.models.DeviceErrorCountVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
 import com.cnu.ami.dashboard.models.RateVO;
+import com.cnu.ami.dashboard.models.ReadingDayInfoVO;
 import com.cnu.ami.dashboard.models.ServerManagementVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllVO;
 import com.cnu.ami.dashboard.models.UseLocationVO;
@@ -36,5 +37,7 @@ public interface DashBoardService {
 	public DeviceErrorCountVO getDeviceErrorCount() throws Exception;
 	
 	public List<DashBoardMapVO> getLocationRateMapInfo() throws Exception;
+	
+	public ReadingDayInfoVO getReadingDayInfo() throws Exception;
 
 }

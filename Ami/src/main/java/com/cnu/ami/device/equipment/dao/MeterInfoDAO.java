@@ -90,12 +90,16 @@ public interface MeterInfoDAO extends JpaRepository<MeterInfoEntity, String> { /
 	@Query(value = "SELECT COUNT(*) AS COUNT FROM METER_INFO WHERE DID=:did AND IS_DELETE='N'", nativeQuery = true)
 	public int getDcuMeterCount(@Param("did") String did);
 	
-	@Query(value = "SELECT COUNT(*) AS COUNT FROM METER_INFO WHERE IS_DELETE='N'", nativeQuery = true)
+	@Query(value = "SELECT COUNT(*) AS COUNT FROM (SELECT DID,METER_ID FROM METER_INFO WHERE IS_DELETE='N') A\r\n" + 
+			"JOIN (SELECT DID FROM DCU_INFO WHERE IS_DELETE='N') B\r\n" + 
+			"ON A.DID=B.DID", nativeQuery = true)
 	public int getMeterCount();
 	
-	@Query(value = "SELECT COUNT(*) AS COUNT FROM(SELECT METER_ID FROM METER_INFO WHERE IS_DELETE='N') AS T1\r\n" + 
-			"JOIN (SELECT METER_ID FROM GAUGE_LP_SNAPSHOT WHERE MTIME <= :time) AS T2\r\n" + 
-			"ON T1.METER_ID=T2.METER_ID", nativeQuery = true)
+	@Query(value = "SELECT COUNT(*) AS COUNT FROM (SELECT DID,METER_ID FROM METER_INFO WHERE IS_DELETE='N') A\r\n" + 
+			"JOIN (SELECT DID FROM DCU_INFO WHERE IS_DELETE='N') B\r\n" + 
+			"ON A.DID=B.DID\r\n" + 
+			"JOIN (SELECT METER_ID FROM GAUGE_LP_SNAPSHOT WHERE MTIME <= :time) AS C\r\n" + 
+			"ON A.METER_ID=C.METER_ID;", nativeQuery = true)
 	public int getMeterErrorCount(@Param("time") long time);
 	
 	@Query(value = "SELECT MTIME,E.RNAME,A.GNAME,B.BNAME,F.HO,C.DID,D.METER_ID,G.MTYPE FROM (SELECT GSEQ,GNAME,RSEQ FROM GROUPSET WHERE GSEQ=:gseq) A\r\n" + 

@@ -27,6 +27,7 @@ import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
 import com.cnu.ami.dashboard.models.RateVO;
+import com.cnu.ami.dashboard.models.ReadingDayInfoVO;
 import com.cnu.ami.dashboard.models.ServerManagementVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllListVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllVO;
@@ -39,6 +40,7 @@ import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
 import com.cnu.ami.device.equipment.dao.ModemInfoDAO;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
+import com.cnu.ami.device.estate.dao.entity.EstateReadingFirstInterfaceVO;
 import com.cnu.ami.device.server.dao.ServerDAO;
 import com.cnu.ami.device.server.dao.entity.ServerRegionIneterfaceVO;
 import com.cnu.ami.failure.reading.dao.FailureReadingDAO;
@@ -142,8 +144,10 @@ public class DashBoardServiceImpl implements DashBoardService {
 				} else if (data.get(i + 1).getSum() < data.get(i).getSum()) {
 					useDayHourAllListVO.setUse(0);
 				} else {
-					useDayHourAllListVO.setUse(data.get(i + 1).getSum() - data.get(i).getSum());
+					useDayHourAllListVO.setUse((data.get(i + 1).getSum() - data.get(i).getSum()));
 				}
+
+				useDayHourAllListVO.setLp(data.get(i).getSum());
 
 				todaylist.add(useDayHourAllListVO);
 			} else if (data.get(i).getDay().equals(yesterday)) {
@@ -153,8 +157,10 @@ public class DashBoardServiceImpl implements DashBoardService {
 				} else if (data.get(i + 1).getSum() < data.get(i).getSum()) {
 					useDayHourAllListVO.setUse(0);
 				} else {
-					useDayHourAllListVO.setUse(data.get(i + 1).getSum() - data.get(i).getSum());
+					useDayHourAllListVO.setUse((data.get(i + 1).getSum() - data.get(i).getSum()));
 				}
+
+				useDayHourAllListVO.setLp(data.get(i).getSum());
 
 				yesterdaylist.add(useDayHourAllListVO);
 			}
@@ -346,8 +352,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Override
 	public List<DashBoardMapVO> getLocationFailureMapInfo() throws Exception {
 
-		// TODO key,value 형식 해결 , 장애 데이터 넘기기 - 장애 현황판과 동일
-
 		List<DashBoardMapVO> dashmap = new ArrayList<DashBoardMapVO>();
 		DashBoardMapVO dashBoardMapVO = new DashBoardMapVO();
 
@@ -499,32 +503,45 @@ public class DashBoardServiceImpl implements DashBoardService {
 	@Override
 	public DeviceErrorCountVO getDeviceErrorCount() throws Exception {
 
-		DeviceErrorCountVO deviceErrorCountVO = new DeviceErrorCountVO();
-
-		int dcuCount = dcuInfoDAO.getDcuCount();
-		int dcuErrorCount = dcuInfoDAO.getDcuErrorCount();
-
-		int meterCount = meterInfoDAO.getMeterCount();
-
 		Date date = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.HOUR_OF_DAY, -12);
 
+		DeviceErrorCountVO deviceErrorCountVO = new DeviceErrorCountVO();
+
+		int meterCount = meterInfoDAO.getMeterCount();
+		int serverCount = serverDAO.getServerCount();
+		int dcuCount = dcuInfoDAO.getDcuCount();
+		int modemCount = modemInfoDAO.getModemCount();
+		int lteCount = dcuInfoDAO.getLteCount();
+
 		int meterErrorCount = meterInfoDAO.getMeterErrorCount(cal.getTimeInMillis() / 1000);
+		int serverErrorCount = serverDAO.getServerErrorCount();
+		int dcuErrorCount = dcuInfoDAO.getDcuErrorCount();
+		int modemErrorCount = 0;
+		int lteErrorCount = dcuInfoDAO.getLteErrorCount();
+
+		deviceErrorCountVO.setMeterOperationCount(meterCount);
+		deviceErrorCountVO.setMeterErrorCount(meterErrorCount);
+
+		deviceErrorCountVO.setServerOperationCount(serverCount);
+		deviceErrorCountVO.setServerErrorCount(serverErrorCount);
 
 		deviceErrorCountVO.setDcuOperationCount(dcuCount);
 		deviceErrorCountVO.setDcuErrorCount(dcuErrorCount);
 
-		deviceErrorCountVO.setMeterOperationCount(meterCount);
-		deviceErrorCountVO.setMeterErrorCount(meterErrorCount);
+		deviceErrorCountVO.setModemOperationCount(modemCount);
+		deviceErrorCountVO.setModemErrorCount(modemErrorCount);
+
+		deviceErrorCountVO.setLteOperationCount(lteCount);
+		deviceErrorCountVO.setLteErrorCount(lteErrorCount);
 
 		return deviceErrorCountVO;
 	}
 
 	@Override
 	public List<DashBoardMapVO> getLocationRateMapInfo() throws Exception {
-		// TODO Auto-generated method stub
 
 		Date date = new Date();
 
@@ -609,7 +626,9 @@ public class DashBoardServiceImpl implements DashBoardService {
 				val = 100f - (((house.get(i).getCOUNT() * hour) - count) / (house.get(i).getCOUNT() * hour) * 100f);
 
 				if (Float.isNaN(val) || Float.isInfinite(val)) {
-					val = 0.0f;
+					// TODO NaN
+					// val = 0.0f;
+					val = Float.NaN;
 				}
 
 			} catch (Exception e) {
@@ -693,6 +712,41 @@ public class DashBoardServiceImpl implements DashBoardService {
 		}
 
 		return dashmap;
+	}
+
+	@Override
+	public ReadingDayInfoVO getReadingDayInfo() throws Exception {
+
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월");
+		SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+		
+		String yearMonth = dateFormat.format(date);
+		int day = Integer.valueOf(dayFormat.format(date));
+
+		EstateReadingFirstInterfaceVO reading = estateDAO.getEstateReadingFirst(day);
+		
+		ReadingDayInfoVO readingDayInfoVO = new ReadingDayInfoVO();
+
+		// TODO
+		readingDayInfoVO.setReadingDay(yearMonth+" "+reading.getREADINGDAY()+"일");
+		readingDayInfoVO.setHouseCount(reading.getHOUSECOUNT());
+		
+		SimpleDateFormat readingFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.YEAR, Integer.valueOf(yearMonth.substring(0, 4)));
+		cal.set(Calendar.MONTH, Integer.valueOf(yearMonth.substring(6, 8)) - 1);
+		cal.set(Calendar.DATE, reading.getREADINGDAY());
+		
+		date = new Date(cal.getTimeInMillis());
+		String toDate = readingFormat.format(date);
+		
+		int sucessCount = estateDAO.getEstateReadingSucess(reading.getREADINGDAY(),toDate);
+		
+		readingDayInfoVO.setHouseErrorCount(reading.getHOUSECOUNT()-sucessCount);
+		readingDayInfoVO.setReadingRate((sucessCount/reading.getHOUSECOUNT())*100.0f);
+
+		return readingDayInfoVO;
 	}
 
 }

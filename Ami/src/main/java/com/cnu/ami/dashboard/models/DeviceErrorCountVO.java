@@ -7,10 +7,16 @@ import lombok.Setter;
 @Setter
 public class DeviceErrorCountVO {
 
-	public int dcuOperationCount;
 	public int meterOperationCount;
+	public int serverOperationCount;
+	public int dcuOperationCount;
+	public int modemOperationCount;
+	public int lteOperationCount;
 
-	public int dcuErrorCount;
 	public int meterErrorCount;
+	public int serverErrorCount;
+	public int dcuErrorCount;
+	public int modemErrorCount;
+	public int lteErrorCount;
 
 }

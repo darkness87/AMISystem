@@ -129,6 +129,7 @@ public class FBoardController {
 
 		ResponseFailureArrayVO responseFailureArrayVO = new ResponseFailureArrayVO(request);
 
+		// TODO 장애발생 건수 수정 필요
 		responseFailureArrayVO.setFailureStatus(fBoardService.getElectricFailureDayHourAll());
 		responseFailureArrayVO.setMap(fBoardService.getLocationFailureMapInfo());
 		responseFailureArrayVO.setFailureCompare(fBoardService.getFailureCompare());

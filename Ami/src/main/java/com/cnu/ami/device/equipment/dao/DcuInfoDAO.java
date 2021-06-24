@@ -92,5 +92,11 @@ public interface DcuInfoDAO extends JpaRepository<DcuInfoEntity, String> { // í‚
 	
 	@Query(value = "SELECT COUNT(*) AS COUNT FROM DCU_INFO WHERE IS_DELETE='N' AND DSTATUS !='RET_SUCCESS'", nativeQuery = true)
 	public int getDcuErrorCount();
+	
+	@Query(value = "SELECT COUNT(*) AS COUNT FROM DCU_INFO WHERE IS_DELETE='N' AND ROUTER_IP IS NOT NULL AND ROUTER_IP !=''", nativeQuery = true)
+	public int getLteCount();
+	
+	@Query(value = "SELECT COUNT(*) AS COUNT FROM DCU_INFO WHERE IS_DELETE='N' AND ROUTER_IP IS NOT NULL AND ROUTER_IP !='' AND DSTATUS ='RET_FAIL_CONNECTION'", nativeQuery = true)
+	public int getLteErrorCount();
 
 }

@@ -56,10 +56,10 @@
     </logger>
 
 	<logger name="com.cnu.ami" level="DEBUG"/>
-<!-- 	<logger name="org.hibernate.type.descriptor.sql" level="TRACE"/> -->
-	<logger name="org.springframework.http" level="DEBUG"/>
+<!-- 	<logger name="org.hibernate.type.descriptor.sql" level="TRACE"/>
+	<logger name="org.springframework.http" level="DEBUG"/> -->
 	
-	<!-- <logger name="com.zaxxer.hikari.HikariConfig" level="DEBUG"/>
-	<logger name="com.zaxxer.hikari" level="TRACE"/> -->
+	<!-- <logger name="com.zaxxer.hikari.HikariConfig" level="DEBUG"/> -->
+	<!-- <logger name="com.zaxxer.hikari" level="TRACE"/> -->
 
 </configuration>

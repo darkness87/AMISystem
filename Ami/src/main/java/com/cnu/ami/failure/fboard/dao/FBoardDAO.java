@@ -48,7 +48,7 @@ public interface FBoardDAO extends JpaRepository<RealTimeEntity, Long> { // 키 
 			"ON T1.BSEQ=T2.BSEQ\r\n" + 
 			"JOIN (SELECT DID FROM DCU_INFO WHERE IS_DELETE = 'N') AS T3\r\n" + 
 			"ON T2.DID=T3.DID\r\n" + 
-			"JOIN (SELECT METER_ID,DID FROM METER_INFO WHERE IS_DELETE) AS T4\r\n" + 
+			"JOIN (SELECT METER_ID,DID FROM METER_INFO WHERE IS_DELETE = 'N') AS T4\r\n" + 
 			"ON T3.DID=T4.DID\r\n" + 
 			"JOIN (SELECT METER_ID FROM GAUGE_LP_SNAPSHOT WHERE MTIME <= :mtime) AS T5\r\n" + 
 			"ON T4.METER_ID=T5.METER_ID\r\n" + 

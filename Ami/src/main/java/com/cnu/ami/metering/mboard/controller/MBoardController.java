@@ -128,7 +128,8 @@ public class MBoardController {
 	public Mono<ResponseReadingArrayVO> getDashBoardAllDataFirst(HttpServletRequest request) throws Exception {
 
 		ResponseReadingArrayVO responseReadingArrayVO = new ResponseReadingArrayVO(request);
-
+		
+		// TODO 데이터 수집 수 수정 필요
 		responseReadingArrayVO.setLp(mBoardService.getElectricLPDataCount());
 		responseReadingArrayVO.setRate(mBoardService.getElectricMeterReadingRateDayAll());
 		responseReadingArrayVO.setMap(mBoardService.getLocationMapInfo());

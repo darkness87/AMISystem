@@ -45,6 +45,8 @@ public class MBoardServiceImpl implements MBoardService {
 	@Override
 	public List<LpCountVO> getElectricLPDataCount() throws Exception {
 
+		// TODO for문 Count 더하기 오류
+		
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		Calendar cal = Calendar.getInstance();

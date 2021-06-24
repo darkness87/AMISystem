@@ -62,6 +62,11 @@ public class MappingController {
 		int data = mappingService.setEstateMapp(mappingTemp);
 		// 1. mongoDB에 이력 저장 - 이력 저장시 기존과 비교하여 바뀐 수 set 필요
 		// 2. sql에 선택,삭제,저장 등을 사용하여 매핑정보 저장 TODO 추후 예정
+		
+		// TODO  매핑 SQL 저장 및 업데이트
+		// 1. 전달 받은 리스트 정보에서 동 정보를 그룹화하여 insert 또는 Update
+		// 2. 
+		
 
 		if (data == 0) { // 0: Success , 1: Fail
 			resultVO.setResult(true);
