@@ -247,7 +247,7 @@ public class DashBoardController {
 			ResponseArrayVO responseArrayVO = new ResponseArrayVO(request);
 			
 			responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
-			responseArrayVO.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
+			responseArrayVO.setRate(dashBoardService.getReadingRateDayHourAll());
 			responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
 			responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
 			responseArrayVO.setMap(dashBoardService.getLocationRateMapInfo());
@@ -262,7 +262,7 @@ public class DashBoardController {
 					ResponseArrayVO responseArray = new ResponseArrayVO(request);
 					
 					responseArray.setUseData(dashBoardService.getElectricUseDayHourAll());
-					responseArray.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
+					responseArray.setRate(dashBoardService.getReadingRateDayHourAll());
 					responseArray.setWeather(dashBoardService.getWeatherRealtimeAll());
 					responseArray.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
 					responseArray.setMap(dashBoardService.getLocationRateMapInfo());
@@ -286,7 +286,7 @@ public class DashBoardController {
 		ResponseArrayVO responseArrayVO = new ResponseArrayVO(request);
 
 		responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
-		responseArrayVO.setRate(dashBoardService.getElectricMeterReadingRateDayAll());
+		responseArrayVO.setRate(dashBoardService.getReadingRateDayHourAll());
 		responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
 		responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
 		responseArrayVO.setMap(dashBoardService.getLocationRateMapInfo());

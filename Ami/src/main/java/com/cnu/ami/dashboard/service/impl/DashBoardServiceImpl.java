@@ -26,6 +26,8 @@ import com.cnu.ami.dashboard.models.DeviceErrorCountVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
+import com.cnu.ami.dashboard.models.RateHourVO;
+import com.cnu.ami.dashboard.models.RateRealVO;
 import com.cnu.ami.dashboard.models.RateVO;
 import com.cnu.ami.dashboard.models.ReadingDayInfoVO;
 import com.cnu.ami.dashboard.models.ServerManagementVO;
@@ -728,7 +730,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 		
 		ReadingDayInfoVO readingDayInfoVO = new ReadingDayInfoVO();
 
-		// TODO
 		readingDayInfoVO.setReadingDay(yearMonth+" "+reading.getREADINGDAY()+"일");
 		readingDayInfoVO.setHouseCount(reading.getHOUSECOUNT());
 		
@@ -747,6 +748,58 @@ public class DashBoardServiceImpl implements DashBoardService {
 		readingDayInfoVO.setReadingRate((sucessCount/reading.getHOUSECOUNT())*100.0f);
 
 		return readingDayInfoVO;
+	}
+
+	@Override
+	public RateRealVO getReadingRateDayHourAll() throws Exception {
+
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		String today = dateFormat.format(cal.getTime());
+
+		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
+		String collectionName = collectionNameFormat.formatDcu(today);
+
+		String[] jsonRawString = { String.format("{$match: { $or: [ { day: '%s' } ] }}", today),
+				"{$group: { _id: '$day', on: { $sum: '$cntOn' }, lp: { $sum: '$cntLp' }, total: { $sum: '$cntTotal' } }}" };
+
+		Aggregation aggregation = Aggregation.newAggregation(
+				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
+				new CnuAggregationOperation(Document.parse(jsonRawString[1])));
+
+		AggregationResults<DayRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+				DayRateTemp.class);
+
+		DayRateTemp rate = result.getUniqueMappedResult();
+
+		RateRealVO rateRealVO = new RateRealVO();
+
+		if (rate.get_id().equals(today)) {
+			rateRealVO.setRealMeterReadingRate((Float.valueOf(rate.getLp()) / rate.getTotal()) * 100f);
+			rateRealVO.setRealTimelyRate((Float.valueOf(rate.getOn()) / rate.getTotal()) * 100f);
+		}
+
+		List<RateHourVO> hour = new ArrayList<RateHourVO>();
+
+		RateHourVO rateHourVO = new RateHourVO();
+
+		// TODO 임시 데이터
+		for (int i = 0; i < 24; i++) {
+			rateHourVO = new RateHourVO();
+
+			rateHourVO.setHour(i);
+			rateHourVO.setReadingRate(100f);
+			rateHourVO.setTimelyRate(99f);
+
+			hour.add(rateHourVO);
+		}
+
+		rateRealVO.setHourRate(hour);
+
+		return rateRealVO;
 	}
 
 }
