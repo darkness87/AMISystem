@@ -157,7 +157,7 @@ public class MBoardServiceImpl implements MBoardService {
 			estateListReadingCountVO = new EstateListReadingCountVO();
 
 			CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
-			String collectionName = collectionNameFormat.formatMonth(est.getGSeq(), year);
+			String collectionName = collectionNameFormat.formatYear(est.getGSeq(), year);
 
 			String[] jsonRawString = { String.format("{$match: { day: '%s' } }", dateFormat.format(date)),
 					"{ $project: { did: '$did', day: '$day', idxStart: '$idxStart', idxEnd: '$idxEnd', idx: { $subtract: ['$idxEnd', '$idxStart'] } } }",
@@ -366,7 +366,7 @@ public class MBoardServiceImpl implements MBoardService {
 			estateListReadingCountVO = new EstateListReadingCountVO();
 
 			CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
-			String collectionName = collectionNameFormat.formatMonth(est.getGSeq(), year);
+			String collectionName = collectionNameFormat.formatYear(est.getGSeq(), year);
 
 			String[] jsonRawString = { String.format("{$match: { day: '%s' } }", dateFormat.format(date)),
 					"{ $project: { did: '$did', day: '$day', idxStart: '$idxStart', idxEnd: '$idxEnd', idx: { $subtract: ['$idxEnd', '$idxStart'] } } }",

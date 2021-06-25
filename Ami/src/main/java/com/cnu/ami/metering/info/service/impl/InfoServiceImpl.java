@@ -209,7 +209,7 @@ public class InfoServiceImpl implements InfoService {
 		String _lpOrOn = "cntLp";
 
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
-		String collectionName = collectionNameFormat.formatMonth(gseq, day.substring(0, 4));
+		String collectionName = collectionNameFormat.formatYear(gseq, day.substring(0, 4));
 
 		String[] jsonRawString = { String.format("{ $match: { day: '%s' , did: '%s' } }", day, dcuId),
 				String.format("{ $unwind: { path: '$%s', includeArrayIndex: 'cntOn_idx' } }", _lpOrOn),

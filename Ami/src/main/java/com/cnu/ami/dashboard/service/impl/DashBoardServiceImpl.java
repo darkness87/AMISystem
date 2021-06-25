@@ -19,6 +19,7 @@ import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
 import com.cnu.ami.dashboard.dao.document.DayLpFailureTemp;
 import com.cnu.ami.dashboard.dao.document.DayRateTemp;
+import com.cnu.ami.dashboard.dao.document.HourRateTemp;
 import com.cnu.ami.dashboard.dao.document.UseDayHourTemp;
 import com.cnu.ami.dashboard.dao.entity.RegionNameIneterfaceVO;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
@@ -27,6 +28,7 @@ import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
 import com.cnu.ami.dashboard.models.RateHourVO;
+import com.cnu.ami.dashboard.models.RateListCountVO;
 import com.cnu.ami.dashboard.models.RateRealVO;
 import com.cnu.ami.dashboard.models.RateVO;
 import com.cnu.ami.dashboard.models.ReadingDayInfoVO;
@@ -55,6 +57,9 @@ import com.cnu.ami.scheduler.dao.entity.WeatherEntity;
 import com.cnu.ami.search.dao.SearchRegionDAO;
 import com.sun.management.OperatingSystemMXBean;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class DashBoardServiceImpl implements DashBoardService {
 
@@ -568,7 +573,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 			hour = hour * 4;
 		}
 
-		List<EstateEntity> estate = estateDAO.findAll();
+		List<EstateEntity> estate = estateDAO.getEstate();
 
 		List<EstateListReadingCountVO> estateListCount = new ArrayList<EstateListReadingCountVO>();
 		EstateListReadingCountVO estateListReadingCountVO = new EstateListReadingCountVO();
@@ -577,7 +582,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 			estateListReadingCountVO = new EstateListReadingCountVO();
 
 			CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
-			String collectionName = collectionNameFormat.formatMonth(est.getGSeq(), year);
+			String collectionName = collectionNameFormat.formatYear(est.getGSeq(), year);
 
 			String[] jsonRawString = { String.format("{$match: { day: '%s' } }", dateFormat.format(date)),
 					"{ $project: { did: '$did', day: '$day', idxStart: '$idxStart', idxEnd: '$idxEnd', idx: { $subtract: ['$idxEnd', '$idxStart'] } } }",
@@ -625,10 +630,9 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 			float val = 0.0f;
 			try {
-				val = 100f - (((house.get(i).getCOUNT() * hour) - count) / (house.get(i).getCOUNT() * hour) * 100f);
+				val = 100.0f - (((house.get(i).getCOUNT() * hour) - count) / (house.get(i).getCOUNT() * hour) * 100.0f);
 
 				if (Float.isNaN(val) || Float.isInfinite(val)) {
-					// TODO NaN
 					// val = 0.0f;
 					val = Float.NaN;
 				}
@@ -666,8 +670,8 @@ public class DashBoardServiceImpl implements DashBoardService {
 					}
 				}
 				try {
-					val = 100f - ((((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) - (count + etcCount))
-							/ ((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) * 100f);
+					val = 100.0f - ((((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) - (count + etcCount))
+							/ ((house.get(i).getCOUNT() + house.get(0).getCOUNT()) * hour) * 100.0f);
 
 					if (Float.isNaN(val) || Float.isInfinite(val)) {
 						val = 0.0f;
@@ -742,10 +746,10 @@ public class DashBoardServiceImpl implements DashBoardService {
 		date = new Date(cal.getTimeInMillis());
 		String toDate = readingFormat.format(date);
 		
-		int sucessCount = estateDAO.getEstateReadingSucess(reading.getREADINGDAY(),toDate);
+		int successCount = estateDAO.getEstateReadingSucess(reading.getREADINGDAY(),toDate);
 		
-		readingDayInfoVO.setHouseErrorCount(reading.getHOUSECOUNT()-sucessCount);
-		readingDayInfoVO.setReadingRate((sucessCount/reading.getHOUSECOUNT())*100.0f);
+		readingDayInfoVO.setHouseErrorCount(reading.getHOUSECOUNT()-successCount);
+		readingDayInfoVO.setReadingRate((successCount/(reading.getHOUSECOUNT()*1.0f))*100.0f);
 
 		return readingDayInfoVO;
 	}
@@ -763,7 +767,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 		String collectionName = collectionNameFormat.formatDcu(today);
 
-		String[] jsonRawString = { String.format("{$match: { $or: [ { day: '%s' } ] }}", today),
+		String[] jsonRawString = { String.format("{$match: { day: '%s' }}", today),
 				"{$group: { _id: '$day', on: { $sum: '$cntOn' }, lp: { $sum: '$cntLp' }, total: { $sum: '$cntTotal' } }}" };
 
 		Aggregation aggregation = Aggregation.newAggregation(
@@ -778,22 +782,247 @@ public class DashBoardServiceImpl implements DashBoardService {
 		RateRealVO rateRealVO = new RateRealVO();
 
 		if (rate.get_id().equals(today)) {
-			rateRealVO.setRealMeterReadingRate((Float.valueOf(rate.getLp()) / rate.getTotal()) * 100f);
-			rateRealVO.setRealTimelyRate((Float.valueOf(rate.getOn()) / rate.getTotal()) * 100f);
+			rateRealVO.setRealMeterReadingRate((Float.valueOf(rate.getLp()) / (rate.getTotal()*1.0f)) * 100.0f);
+			rateRealVO.setRealTimelyRate((Float.valueOf(rate.getOn()) / (rate.getTotal()*1.0f)) * 100.0f);
 		}
 
 		List<RateHourVO> hour = new ArrayList<RateHourVO>();
 
 		RateHourVO rateHourVO = new RateHourVO();
+		
+		List<EstateEntity> estate = estateDAO.getEstate(); // 단지 목록
+		
+		int houseCount=0;
+		int lp0=0;
+		int lp1=0;
+		int lp2=0;
+		int lp3=0;
+		int lp4=0;
+		int lp5=0;
+		int lp6=0;
+		int lp7=0;
+		int lp8=0;
+		int lp9=0;
+		int lp10=0;
+		int lp11=0;
+		int lp12=0;
+		int lp13=0;
+		int lp14=0;
+		int lp15=0;
+		int lp16=0;
+		int lp17=0;
+		int lp18=0;
+		int lp19=0;
+		int lp20=0;
+		int lp21=0;
+		int lp22=0;
+		int lp23=0;
+		int on0=0;
+		int on1=0;
+		int on2=0;
+		int on3=0;
+		int on4=0;
+		int on5=0;
+		int on6=0;
+		int on7=0;
+		int on8=0;
+		int on9=0;
+		int on10=0;
+		int on11=0;
+		int on12=0;
+		int on13=0;
+		int on14=0;
+		int on15=0;
+		int on16=0;
+		int on17=0;
+		int on18=0;
+		int on19=0;
+		int on20=0;
+		int on21=0;
+		int on22=0;
+		int on23=0;
+		
+		for (EstateEntity data : estate) {
+			
+			String collectionEstateName = collectionNameFormat.formatDay(data.getGSeq(),today);
+			
+			String[] jsonRawStringEstateLp = { String.format("{$match: {day: '%s' }}", today),
+			"{$unwind: {path: '$cntLp',includeArrayIndex: 'idx'}}",
+			"{$group: {_id: {day: '$day',idx: '$idx'},sum: {$sum: '$cntLp'}}}",
+			"{$project: {day: '$_id.day',idx: '$_id.idx',count: '$sum'}}",
+			"{$sort: {idx: 1}}" };
 
-		// TODO 임시 데이터
+			aggregation = Aggregation.newAggregation(
+					new CnuAggregationOperation(Document.parse(jsonRawStringEstateLp[0])),
+					new CnuAggregationOperation(Document.parse(jsonRawStringEstateLp[1])),
+					new CnuAggregationOperation(Document.parse(jsonRawStringEstateLp[2])),
+					new CnuAggregationOperation(Document.parse(jsonRawStringEstateLp[3])),
+					new CnuAggregationOperation(Document.parse(jsonRawStringEstateLp[4])));
+			
+			AggregationResults<HourRateTemp> estateLpResult = mongoTemplate.aggregate(aggregation, collectionEstateName, HourRateTemp.class);
+			
+			String[] jsonRawStringEstateOn = { String.format("{$match: {day: '%s' }}", today),
+			"{$unwind: {path: '$cntOn',includeArrayIndex: 'idx'}}",
+			"{$group: {_id: {day: '$day',idx: '$idx'},sum: {$sum: '$cntOn'}}}",
+			"{$project: {day: '$_id.day',idx: '$_id.idx',count: '$sum'}}",
+			"{$sort: {idx: 1}}" };
+			
+			aggregation = Aggregation.newAggregation(
+					new CnuAggregationOperation(Document.parse(jsonRawStringEstateOn[0])),
+					new CnuAggregationOperation(Document.parse(jsonRawStringEstateOn[1])),
+					new CnuAggregationOperation(Document.parse(jsonRawStringEstateOn[2])),
+					new CnuAggregationOperation(Document.parse(jsonRawStringEstateOn[3])),
+					new CnuAggregationOperation(Document.parse(jsonRawStringEstateOn[4])));
+			
+			AggregationResults<HourRateTemp> estateOnResult = mongoTemplate.aggregate(aggregation, collectionEstateName, HourRateTemp.class);
+			
+			List<HourRateTemp> hourLpRate = estateLpResult.getMappedResults(); // 96개
+			List<HourRateTemp> hourOnRate = estateOnResult.getMappedResults(); // 96개
+			
+			if(hourLpRate==null && hourOnRate==null) {
+				continue;
+			}
+			
+			if(hourLpRate.size()==0 && hourLpRate.size()==0) {
+				continue;
+			}
+			
+			List<RateListCountVO> lpRate = getHourRateCount(hourLpRate);
+			List<RateListCountVO> onRate = getHourRateCount(hourOnRate);
+			
+			houseCount=houseCount+data.getCntHouse();
+			lp0=lp0+lpRate.get(0).getCount();
+			lp1=lp1+lpRate.get(1).getCount();
+			lp2=lp2+lpRate.get(2).getCount();
+			lp3=lp3+lpRate.get(3).getCount();
+			lp4=lp4+lpRate.get(4).getCount();
+			lp5=lp5+lpRate.get(5).getCount();
+			lp6=lp6+lpRate.get(6).getCount();
+			lp7=lp7+lpRate.get(7).getCount();
+			lp8=lp8+lpRate.get(8).getCount();
+			lp9=lp9+lpRate.get(9).getCount();
+			lp10=lp10+lpRate.get(10).getCount();
+			lp11=lp11+lpRate.get(11).getCount();
+			lp12=lp12+lpRate.get(12).getCount();
+			lp13=lp13+lpRate.get(13).getCount();
+			lp14=lp14+lpRate.get(14).getCount();
+			lp15=lp15+lpRate.get(15).getCount();
+			lp16=lp16+lpRate.get(16).getCount();
+			lp17=lp17+lpRate.get(17).getCount();
+			lp18=lp18+lpRate.get(18).getCount();
+			lp19=lp19+lpRate.get(19).getCount();
+			lp20=lp20+lpRate.get(20).getCount();
+			lp21=lp21+lpRate.get(21).getCount();
+			lp22=lp22+lpRate.get(22).getCount();
+			lp23=lp23+lpRate.get(23).getCount();
+			on0=on0+onRate.get(0).getCount();
+			on1=on1+onRate.get(1).getCount();
+			on2=on2+onRate.get(2).getCount();
+			on3=on3+onRate.get(3).getCount();
+			on4=on4+onRate.get(4).getCount();
+			on5=on5+onRate.get(5).getCount();
+			on6=on6+onRate.get(6).getCount();
+			on7=on7+onRate.get(7).getCount();
+			on8=on8+onRate.get(8).getCount();
+			on9=on9+onRate.get(9).getCount();
+			on10=on10+onRate.get(10).getCount();
+			on11=on11+onRate.get(11).getCount();
+			on12=on12+onRate.get(12).getCount();
+			on13=on13+onRate.get(13).getCount();
+			on14=on14+onRate.get(14).getCount();
+			on15=on15+onRate.get(15).getCount();
+			on16=on16+onRate.get(16).getCount();
+			on17=on17+onRate.get(17).getCount();
+			on18=on18+onRate.get(18).getCount();
+			on19=on19+onRate.get(19).getCount();
+			on20=on20+onRate.get(20).getCount();
+			on21=on21+onRate.get(21).getCount();
+			on22=on22+onRate.get(22).getCount();
+			on23=on23+onRate.get(23).getCount();
+			
+		}
+				
+		log.info("{}",houseCount);
+		
 		for (int i = 0; i < 24; i++) {
 			rateHourVO = new RateHourVO();
-
+			
 			rateHourVO.setHour(i);
-			rateHourVO.setReadingRate(100f);
-			rateHourVO.setTimelyRate(99f);
 
+			if(i==0) {
+				rateHourVO.setReadingRate((lp0/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on0/(houseCount*4.0f))*100.00f);
+			} else if(i==1) {
+				rateHourVO.setReadingRate((lp1/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on1/(houseCount*4.0f))*100.00f);
+			} else if(i==2) {
+				rateHourVO.setReadingRate((lp2/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on2/(houseCount*4.0f))*100.00f);
+			} else if(i==3) {
+				rateHourVO.setReadingRate((lp3/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on3/(houseCount*4.0f))*100.00f);
+			} else if(i==4) {
+				rateHourVO.setReadingRate((lp4/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on4/(houseCount*4.0f))*100.00f);
+			} else if(i==5) {
+				rateHourVO.setReadingRate((lp5/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on5/(houseCount*4.0f))*100.00f);
+			} else if(i==6) {
+				rateHourVO.setReadingRate((lp6/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on6/(houseCount*4.0f))*100.00f);
+			} else if(i==7) {
+				rateHourVO.setReadingRate((lp7/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on7/(houseCount*4.0f))*100.00f);
+			} else if(i==8) {
+				rateHourVO.setReadingRate((lp8/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on8/(houseCount*4.0f))*100.00f);
+			} else if(i==9) {
+				rateHourVO.setReadingRate((lp9/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on9/(houseCount*4.0f))*100.00f);
+			} else if(i==10) {
+				rateHourVO.setReadingRate((lp10/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on10/(houseCount*4.0f))*100.00f);
+			} else if(i==11) {
+				rateHourVO.setReadingRate((lp11/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on11/(houseCount*4.0f))*100.00f);
+			} else if(i==12) {
+				rateHourVO.setReadingRate((lp12/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on12/(houseCount*4.0f))*100.00f);
+			} else if(i==13) {
+				rateHourVO.setReadingRate((lp13/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on13/(houseCount*4.0f))*100.00f);
+			} else if(i==14) {
+				rateHourVO.setReadingRate((lp14/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on14/(houseCount*4.0f))*100.00f);
+			} else if(i==15) {
+				rateHourVO.setReadingRate((lp15/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on15/(houseCount*4.0f))*100.00f);
+			} else if(i==16) {
+				rateHourVO.setReadingRate((lp16/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on16/(houseCount*4.0f))*100.00f);
+			} else if(i==17) {
+				rateHourVO.setReadingRate((lp17/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on17/(houseCount*4.0f))*100.00f);
+			} else if(i==18) {
+				rateHourVO.setReadingRate((lp18/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on18/(houseCount*4.0f))*100.00f);
+			} else if(i==19) {
+				rateHourVO.setReadingRate((lp19/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on19/(houseCount*4.0f))*100.00f);
+			} else if(i==20) {
+				rateHourVO.setReadingRate((lp20/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on20/(houseCount*4.0f))*100.00f);
+			} else if(i==21) {
+				rateHourVO.setReadingRate((lp21/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on21/(houseCount*4.0f))*100.00f);
+			} else if(i==22) {
+				rateHourVO.setReadingRate((lp22/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on22/(houseCount*4.0f))*100.00f);
+			} else if(i==23) {
+				rateHourVO.setReadingRate((lp23/(houseCount*4.0f))*100.00f);
+				rateHourVO.setTimelyRate((on23/(houseCount*4.0f))*100.00f);
+			}
+			
 			hour.add(rateHourVO);
 		}
 
@@ -801,5 +1030,73 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		return rateRealVO;
 	}
+	
+	public List<RateListCountVO> getHourRateCount(List<HourRateTemp> data) throws Exception{
+		
+		List<RateListCountVO> rateListCount = new ArrayList<RateListCountVO>();
+		RateListCountVO rateListCountVO = new RateListCountVO();
+		
+		for (int i = 0; i < 24; i++) {
+		
+			rateListCountVO = new RateListCountVO();
+			
+			rateListCountVO.setHour(i);
+			
+			if(i==0) {
+				rateListCountVO.setCount(data.get(0).getCount()+ data.get(1).getCount()+ data.get(2).getCount()+ data.get(3).getCount());
+			} else if(i==1) {
+				rateListCountVO.setCount(data.get(4).getCount()+ data.get(5).getCount()+ data.get(6).getCount()+ data.get(7).getCount());
+			} else if(i==2) {
+				rateListCountVO.setCount(data.get(8).getCount()+ data.get(9).getCount()+ data.get(10).getCount()+ data.get(11).getCount());
+			} else if(i==3) {
+				rateListCountVO.setCount(data.get(12).getCount()+ data.get(13).getCount()+ data.get(14).getCount()+ data.get(15).getCount());
+			} else if(i==4) {
+				rateListCountVO.setCount(data.get(16).getCount()+ data.get(17).getCount()+ data.get(18).getCount()+ data.get(19).getCount());
+			} else if(i==5) {
+				rateListCountVO.setCount(data.get(20).getCount()+ data.get(21).getCount()+ data.get(22).getCount()+ data.get(23).getCount());
+			} else if(i==6) {
+				rateListCountVO.setCount(data.get(24).getCount()+ data.get(25).getCount()+ data.get(26).getCount()+ data.get(27).getCount());
+			} else if(i==7) {
+				rateListCountVO.setCount(data.get(28).getCount()+ data.get(29).getCount()+ data.get(30).getCount()+ data.get(31).getCount());
+			} else if(i==8) {
+				rateListCountVO.setCount(data.get(32).getCount()+ data.get(33).getCount()+ data.get(34).getCount()+ data.get(35).getCount());
+			} else if(i==9) {
+				rateListCountVO.setCount(data.get(36).getCount()+ data.get(37).getCount()+ data.get(38).getCount()+ data.get(39).getCount());
+			} else if(i==10) {
+				rateListCountVO.setCount(data.get(40).getCount()+ data.get(41).getCount()+ data.get(42).getCount()+ data.get(43).getCount());
+			} else if(i==11) {
+				rateListCountVO.setCount(data.get(44).getCount()+ data.get(45).getCount()+ data.get(46).getCount()+ data.get(47).getCount());
+			} else if(i==12) {
+				rateListCountVO.setCount(data.get(48).getCount()+ data.get(49).getCount()+ data.get(50).getCount()+ data.get(51).getCount());
+			} else if(i==13) {
+				rateListCountVO.setCount(data.get(52).getCount()+ data.get(53).getCount()+ data.get(54).getCount()+ data.get(55).getCount());
+			} else if(i==14) {
+				rateListCountVO.setCount(data.get(56).getCount()+ data.get(57).getCount()+ data.get(58).getCount()+ data.get(59).getCount());
+			} else if(i==15) {
+				rateListCountVO.setCount(data.get(60).getCount()+ data.get(61).getCount()+ data.get(62).getCount()+ data.get(63).getCount());
+			} else if(i==16) {
+				rateListCountVO.setCount(data.get(64).getCount()+ data.get(65).getCount()+ data.get(66).getCount()+ data.get(67).getCount());
+			} else if(i==17) {
+				rateListCountVO.setCount(data.get(68).getCount()+ data.get(69).getCount()+ data.get(70).getCount()+ data.get(71).getCount());
+			} else if(i==18) {
+				rateListCountVO.setCount(data.get(72).getCount()+ data.get(73).getCount()+ data.get(74).getCount()+ data.get(75).getCount());
+			} else if(i==19) {
+				rateListCountVO.setCount(data.get(76).getCount()+ data.get(77).getCount()+ data.get(78).getCount()+ data.get(79).getCount());
+			} else if(i==20) {
+				rateListCountVO.setCount(data.get(80).getCount()+ data.get(81).getCount()+ data.get(82).getCount()+ data.get(83).getCount());
+			} else if(i==21) {
+				rateListCountVO.setCount(data.get(84).getCount()+ data.get(85).getCount()+ data.get(86).getCount()+ data.get(87).getCount());
+			} else if(i==22) {
+				rateListCountVO.setCount(data.get(88).getCount()+ data.get(89).getCount()+ data.get(90).getCount()+ data.get(91).getCount());
+			} else if(i==23) {
+				rateListCountVO.setCount(data.get(92).getCount()+ data.get(93).getCount()+ data.get(94).getCount()+ data.get(95).getCount());
+			}
+			
+			rateListCount.add(rateListCountVO);
+			
+		}
+		
+		return rateListCount;
+	};
 
 }

@@ -2,9 +2,9 @@ package com.cnu.ami.common;
 
 public class CollectionNameFormat {
 
-	public String formatMonth(int gseq, String month) {
+	public String formatYear(int gseq, String year) {
 
-		String collectionName = "CASS" + "_" + gseq + "_" + month + "_" + "RAW" + "_" + "LP";
+		String collectionName = "CASS" + "_" + gseq + "_" + year + "_" + "RAW" + "_" + "LP";
 
 		return collectionName;
 	}

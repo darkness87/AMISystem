@@ -23,6 +23,7 @@ import com.cnu.ami.common.SystemException;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.DeviceRegVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
+import com.cnu.ami.dashboard.models.RateRealVO;
 import com.cnu.ami.dashboard.models.RateVO;
 import com.cnu.ami.dashboard.models.ServerManagementVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllVO;
@@ -294,6 +295,25 @@ public class DashBoardController {
 		responseArrayVO.setReadingDayInfo(dashBoardService.getReadingDayInfo());
 
 		return Mono.just(responseArrayVO).log("메인현황판 : First 데이터");
+
+	}
+	
+	@RequestMapping(value = "/readingrateAll/dayHour", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "현황판 : 시간별 검침률")
+	public Flux<ResponseVO<RateRealVO>> getReadingRateDayHourAll(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
+		if (duration == 0) { // 0일 경우 1회 전달
+			return Flux.just(new ResponseVO<RateRealVO>(request, dashBoardService.getReadingRateDayHourAll()));
+		} else {
+			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
+				try {
+					return new ResponseVO<RateRealVO>(request, dashBoardService.getReadingRateDayHourAll());
+				} catch (Exception e) {
+					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
+				}
+			}).log("메인현황판 : 시간별 검침률");
+		}
 
 	}
 

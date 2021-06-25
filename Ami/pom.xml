@@ -127,7 +127,7 @@
 			<artifactId>cnu-dcu-api</artifactId>
 			<version>0.0.6</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/CnuComm_v.0.0.6.jar</systemPath>
+			<systemPath>${basedir}/lib/CnuComm.jar</systemPath>
 		</dependency>
 
 		<dependency>
