@@ -16,7 +16,7 @@ public interface FailureReadingDAO extends JpaRepository<RealTimeEntity, String>
 	@Query(value = "SELECT T2.RSEQ,T1.GSEQ,T1.BSEQ,T2.RNAME,T2.GID,T2.GNAME,T1.BNAME,T4.HO,T1.DID,T3.METER_ID,T3.MAC,T5.MTIME,T5.FAP,T5.RFAP,T5.MTYPE,T5.UDATE\r\n" + 
 			"FROM(SELECT A.BSEQ,A.GSEQ,A.BNAME,B.DID FROM BUILDING AS A JOIN BUILDING_DCU_MAP AS B\r\n" + 
 			"ON A.BSEQ=B.BSEQ) T1 JOIN\r\n" + 
-			"(SELECT A.GSEQ,A.RSEQ,A.GID,A.GNAME,B.RNAME FROM GROUPSET AS A JOIN REGION AS B\r\n" + 
+			"(SELECT A.GSEQ,A.RSEQ,A.GID,A.GNAME,B.RNAME FROM (SELECT * FROM GROUPSET WHERE IS_DELETE = 'N') AS A JOIN REGION AS B\r\n" + 
 			"ON A.RSEQ=B.RSEQ WHERE GSEQ = :gseq) T2 ON T1.GSEQ=T2.GSEQ\r\n" + 
 			"JOIN (SELECT METER_ID,DID,MAC FROM METER_INFO WHERE IS_DELETE='N') AS T3 ON T1.DID=T3.DID\r\n" + 
 			"LEFT JOIN (SELECT A.GSEQ,A.BSEQ,A.HSEQ,A.HO,B.METER_ID FROM HOUSEHOLD AS A\r\n" + 
@@ -25,7 +25,17 @@ public interface FailureReadingDAO extends JpaRepository<RealTimeEntity, String>
 			"ON T3.METER_ID=T5.METER_ID ORDER BY T1.BNAME ASC, T1.DID ASC, T4.HO ASC, T3.MAC ASC", nativeQuery = true)
 	List<RealTimeInterfaceVO> getFailureReadingData(@Param("gseq") int gseq, @Param("date") long date);
 	
-	@Query(value = "SELECT COUNT(*) AS COUNT FROM GAUGE_LP_SNAPSHOT WHERE MTIME < :date", nativeQuery = true)
+	@Query(value = "SELECT COUNT(*) AS COUNT FROM (SELECT * FROM GROUPSET WHERE IS_DELETE='N') A\r\n" + 
+			"JOIN BUILDING B\r\n" + 
+			"ON A.GSEQ=B.GSEQ\r\n" + 
+			"JOIN BUILDING_DCU_MAP C\r\n" + 
+			"ON B.BSEQ=C.BSEQ\r\n" + 
+			"JOIN (SELECT * FROM DCU_INFO WHERE IS_DELETE='N') D\r\n" + 
+			"ON C.DID=D.DID\r\n" + 
+			"JOIN (SELECT * FROM METER_INFO WHERE IS_DELETE='N') E\r\n" + 
+			"ON D.DID=E.DID\r\n" + 
+			"JOIN (SELECT * FROM GAUGE_LP_SNAPSHOT WHERE MTIME < :date) F\r\n" + 
+			"ON E.METER_ID=F.METER_ID", nativeQuery = true)
 	public int getAllCount(@Param("date") long date);
 	
 }

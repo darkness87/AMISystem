@@ -40,4 +40,7 @@ public interface EstateDAO extends JpaRepository<EstateEntity, String> { // 키 
 	@Query(value = "SELECT * FROM GROUPSET WHERE IS_DELETE = 'N'", nativeQuery = true)
 	public List<EstateEntity> getEstate();
 	
+	@Query(value = "SELECT SUM(CNT_HOUSE) AS COUNT FROM GROUPSET WHERE CHK_POWER = 'Y' AND IS_DELETE='N'", nativeQuery = true)
+	public int getEstateHouseCount();
+	
 }

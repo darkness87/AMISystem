@@ -338,16 +338,20 @@ public class DashBoardServiceImpl implements DashBoardService {
 		cal.add(Calendar.HOUR_OF_DAY, -12); // 12시간전 미검침 장애정보 // TEST시 +1
 		date = new Date(cal.getTimeInMillis());
 
-		int count = failureReadingDAO.getAllCount(date.getTime() / 1000);
+		int houseCount = estateDAO.getEstateHouseCount();
+
+		int failCount = failureReadingDAO.getAllCount(date.getTime() / 1000);
 
 		WeatherDataVO weatherDataVO = new WeatherDataVO();
 
+		float count = (failCount / houseCount) * 100;
+
 		weatherDataVO.setLocation(regionName.getrName());
-		if (count <= 10) {
+		if (count <= 5) {
 			weatherDataVO.setCodeValue(0); // 0:좋음, 1:보통, 2:나쁨 => 재확인후 결정
-		} else if (count > 10 && count <= 50) {
+		} else if (count > 5 && count <= 15) {
 			weatherDataVO.setCodeValue(1); // 0:좋음, 1:보통, 2:나쁨 => 재확인후 결정
-		} else if (count > 50) {
+		} else if (count > 15) {
 			weatherDataVO.setCodeValue(2); // 0:좋음, 1:보통, 2:나쁨 => 재확인후 결정
 		}
 		weatherDataVO.setDate(new Date());
