@@ -98,10 +98,12 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 
 		String today = dateFormat.format(cal.getTime());
+		int hour = Integer.valueOf(hourFormat.format(cal.getTime()));
 
 		cal.add(Calendar.DATE, -1);
 
@@ -155,7 +157,11 @@ public class DashBoardServiceImpl implements DashBoardService {
 				}
 
 				useDayHourAllListVO.setLp(data.get(i).getSum());
-
+				
+				if(data.get(i).getHour() >= hour) {
+					useDayHourAllListVO.setUse(Double.NaN);
+				}
+				
 				todaylist.add(useDayHourAllListVO);
 			} else if (data.get(i).getDay().equals(yesterday)) {
 				useDayHourAllListVO.setTime(data.get(i).getHour());
@@ -173,9 +179,15 @@ public class DashBoardServiceImpl implements DashBoardService {
 			}
 		}
 
-		long sumUse = 0;
+		double sumUse = 0;
 		for (UseDayHourAllListVO sum : todaylist) {
-			sumUse = sum.getUse() + sumUse;
+			
+			if(sum.getTime() >= hour) {
+				sumUse = 0 + sumUse;
+			} else {
+				sumUse = sum.getUse() + sumUse;
+			}
+			
 		}
 
 		useDayHourAllVO.setTodayUseAll(sumUse);
@@ -1047,6 +1059,11 @@ public class DashBoardServiceImpl implements DashBoardService {
 			} else if(i==23) {
 				rateHourVO.setReadingRate((lp23/(toCount))*100.00f);
 				rateHourVO.setTimelyRate((on23/(toCount))*100.00f);
+			}
+			
+			if(i > hour) {
+				rateHourVO.setReadingRate(Float.NaN);
+				rateHourVO.setTimelyRate(Float.NaN);
 			}
 			
 			hourRate.add(rateHourVO);
