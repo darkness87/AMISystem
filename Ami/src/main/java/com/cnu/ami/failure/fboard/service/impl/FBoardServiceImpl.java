@@ -101,15 +101,14 @@ public class FBoardServiceImpl implements FBoardService {
 		List<DashBoardMapVO> dashmap = new ArrayList<DashBoardMapVO>();
 		DashBoardMapVO dashBoardMapVO = new DashBoardMapVO();
 
-		float val = 0.0f;
+//		float val = 0.0f;
 		
 		for (FBoardCountInterfaceVO map : meter) {
 			dashBoardMapVO = new DashBoardMapVO();
 			
-			if (Float.isNaN(map.getCOUNT()) || Float.isInfinite(map.getCOUNT())) {
-				// TODO NaN
-				val = Float.NaN;
-			}
+//			if (Float.isNaN(map.getCOUNT()) || Float.isInfinite(map.getCOUNT())) {
+//				val = Float.NaN;
+//			}
 
 			if (map.getRSEQ() == 2) {
 				dashBoardMapVO.setHckey("kr-so"); // 서울특별시

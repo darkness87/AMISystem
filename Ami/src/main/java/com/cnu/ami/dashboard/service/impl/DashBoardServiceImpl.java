@@ -767,6 +767,22 @@ public class DashBoardServiceImpl implements DashBoardService {
 		cal.setTime(date);
 
 		String today = dateFormat.format(cal.getTime());
+		
+		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
+		SimpleDateFormat minFormat = new SimpleDateFormat("mm");
+		int hour = Integer.valueOf(hourFormat.format(cal.getTime()));
+		int min = Integer.valueOf(minFormat.format(cal.getTime()));
+
+		int minCount = 0;
+		if (min >= 0 && min < 15) {
+			minCount = 1;
+		} else if (min >= 15 && min < 30) {
+			minCount = 2;
+		} else if (min >= 30 && min < 45) {
+			minCount = 3;
+		} else if (min >= 45 && min <= 59) {
+			minCount = 4;
+		}
 
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 		String collectionName = collectionNameFormat.formatDcu(today);
@@ -790,7 +806,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 			rateRealVO.setRealTimelyRate((Float.valueOf(rate.getOn()) / (rate.getTotal()*1.0f)) * 100.0f);
 		}
 
-		List<RateHourVO> hour = new ArrayList<RateHourVO>();
+		List<RateHourVO> hourRate = new ArrayList<RateHourVO>();
 
 		RateHourVO rateHourVO = new RateHourVO();
 		
@@ -952,85 +968,91 @@ public class DashBoardServiceImpl implements DashBoardService {
 			rateHourVO = new RateHourVO();
 			
 			rateHourVO.setHour(i);
+			
+			float toCount = houseCount * 4.0f;
+			
+			if(i == hour) {
+				toCount = houseCount * minCount * 1.0f;
+			}
 
 			if(i==0) {
-				rateHourVO.setReadingRate((lp0/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on0/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp0/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on0/(toCount))*100.00f);
 			} else if(i==1) {
-				rateHourVO.setReadingRate((lp1/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on1/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp1/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on1/(toCount))*100.00f);
 			} else if(i==2) {
-				rateHourVO.setReadingRate((lp2/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on2/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp2/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on2/(toCount))*100.00f);
 			} else if(i==3) {
-				rateHourVO.setReadingRate((lp3/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on3/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp3/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on3/(toCount))*100.00f);
 			} else if(i==4) {
-				rateHourVO.setReadingRate((lp4/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on4/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp4/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on4/(toCount))*100.00f);
 			} else if(i==5) {
-				rateHourVO.setReadingRate((lp5/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on5/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp5/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on5/(toCount))*100.00f);
 			} else if(i==6) {
-				rateHourVO.setReadingRate((lp6/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on6/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp6/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on6/(toCount))*100.00f);
 			} else if(i==7) {
-				rateHourVO.setReadingRate((lp7/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on7/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp7/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on7/(toCount))*100.00f);
 			} else if(i==8) {
-				rateHourVO.setReadingRate((lp8/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on8/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp8/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on8/(toCount))*100.00f);
 			} else if(i==9) {
-				rateHourVO.setReadingRate((lp9/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on9/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp9/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on9/(toCount))*100.00f);
 			} else if(i==10) {
-				rateHourVO.setReadingRate((lp10/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on10/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp10/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on10/(toCount))*100.00f);
 			} else if(i==11) {
-				rateHourVO.setReadingRate((lp11/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on11/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp11/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on11/(toCount))*100.00f);
 			} else if(i==12) {
-				rateHourVO.setReadingRate((lp12/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on12/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp12/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on12/(toCount))*100.00f);
 			} else if(i==13) {
-				rateHourVO.setReadingRate((lp13/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on13/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp13/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on13/(toCount))*100.00f);
 			} else if(i==14) {
-				rateHourVO.setReadingRate((lp14/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on14/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp14/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on14/(toCount))*100.00f);
 			} else if(i==15) {
-				rateHourVO.setReadingRate((lp15/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on15/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp15/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on15/(toCount))*100.00f);
 			} else if(i==16) {
-				rateHourVO.setReadingRate((lp16/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on16/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp16/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on16/(toCount))*100.00f);
 			} else if(i==17) {
-				rateHourVO.setReadingRate((lp17/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on17/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp17/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on17/(toCount))*100.00f);
 			} else if(i==18) {
-				rateHourVO.setReadingRate((lp18/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on18/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp18/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on18/(toCount))*100.00f);
 			} else if(i==19) {
-				rateHourVO.setReadingRate((lp19/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on19/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp19/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on19/(toCount))*100.00f);
 			} else if(i==20) {
-				rateHourVO.setReadingRate((lp20/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on20/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp20/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on20/(toCount))*100.00f);
 			} else if(i==21) {
-				rateHourVO.setReadingRate((lp21/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on21/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp21/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on21/(toCount))*100.00f);
 			} else if(i==22) {
-				rateHourVO.setReadingRate((lp22/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on22/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp22/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on22/(toCount))*100.00f);
 			} else if(i==23) {
-				rateHourVO.setReadingRate((lp23/(houseCount*4.0f))*100.00f);
-				rateHourVO.setTimelyRate((on23/(houseCount*4.0f))*100.00f);
+				rateHourVO.setReadingRate((lp23/(toCount))*100.00f);
+				rateHourVO.setTimelyRate((on23/(toCount))*100.00f);
 			}
 			
-			hour.add(rateHourVO);
+			hourRate.add(rateHourVO);
 		}
 
-		rateRealVO.setHourRate(hour);
+		rateRealVO.setHourRate(hourRate);
 
 		return rateRealVO;
 	}

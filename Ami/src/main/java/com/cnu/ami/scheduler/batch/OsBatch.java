@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OsBatch {
 
 	@SuppressWarnings("restriction")
-	@Scheduled(fixedDelay = 1000 * 60 * 60) // TODO
+	@Scheduled(fixedDelay = 1000 * 60 * 60)
 	public void task() {
 		log.info("===================================================================================");
 		// JVM memory

@@ -29,7 +29,13 @@ public class StatusServiceImpl implements StatusService {
 	@Override
 	public List<DcuFailureStatusVO> getDcuStatus(int gseq) throws Exception {
 
-		List<DcuFailureStatusInterfaceVO> data = dcuFailureStatusDAO.getDcuFailureStatus(gseq);
+		List<DcuFailureStatusInterfaceVO> data = null;
+
+		if (gseq == 0) {
+			data = dcuFailureStatusDAO.getDcuFailureStatusAll(); // TODO 전체 DCU Ping 정보
+		} else {
+			data = dcuFailureStatusDAO.getDcuFailureStatus(gseq);
+		}
 
 		if (data == null) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "조회된 결과가 없습니다.");
@@ -69,9 +75,9 @@ public class StatusServiceImpl implements StatusService {
 				if (routerResult == null) {
 					dcuFailureStatusVO.setRouterPingCode(1);
 				} else {
-					dcuFailureStatusVO.setRouterPingMin(pingResult[0]);
-					dcuFailureStatusVO.setRouterPingAvg(pingResult[1]);
-					dcuFailureStatusVO.setRouterPingMax(pingResult[2]);
+					dcuFailureStatusVO.setRouterPingMin(routerResult[0]);
+					dcuFailureStatusVO.setRouterPingAvg(routerResult[1]);
+					dcuFailureStatusVO.setRouterPingMax(routerResult[2]);
 					dcuFailureStatusVO.setRouterPingCode(0);
 				}
 			}
