@@ -13,9 +13,9 @@ import com.cnu.ami.metering.mboard.dao.entity.MBoardCountInterfaceVO;
 @Repository
 public interface MBoardDAO extends JpaRepository<RealTimeEntity, Long> { // 키 값이 숫자 일경우 Long, 문자열 String
 
-	@Query(value = "SELECT T1.RSEQ,T1.RNAME,IFNULL(T2.HOUSECOUNT,0) AS COUNT\r\n" + 
+	@Query(value = "SELECT T1.RSEQ,T1.RNAME,IFNULL(T2.HOUSECOUNT,0) AS COUNT, IFNULL(T2.GCOUNT,0) AS GCOUNT\r\n" + 
 			"FROM (SELECT RSEQ,RNAME FROM REGION) AS T1\r\n" + 
-			"LEFT JOIN (SELECT RSEQ,SUM(CNT_HOUSE) AS HOUSECOUNT FROM GROUPSET WHERE IS_DELETE = 'N' GROUP BY RSEQ) AS T2\r\n" + 
+			"LEFT JOIN (SELECT RSEQ,SUM(CNT_HOUSE) AS HOUSECOUNT, COUNT(GSEQ) AS GCOUNT FROM GROUPSET WHERE IS_DELETE = 'N' GROUP BY RSEQ) AS T2\r\n" + 
 			"ON T1.RSEQ=T2.RSEQ;", nativeQuery = true)
 	List<MBoardCountInterfaceVO> getHouseCount();
 	

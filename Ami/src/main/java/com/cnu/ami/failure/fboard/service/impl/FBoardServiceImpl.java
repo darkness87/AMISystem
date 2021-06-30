@@ -19,8 +19,10 @@ import com.cnu.ami.dashboard.dao.document.DayLpFailureTemp;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
+import com.cnu.ami.failure.fboard.dao.DcuInfoStatusDAO;
 import com.cnu.ami.failure.fboard.dao.FBoardDAO;
 import com.cnu.ami.failure.fboard.dao.Document.FailureDayCountTemp;
+import com.cnu.ami.failure.fboard.dao.entity.DcuInfoStatusEntity;
 import com.cnu.ami.failure.fboard.dao.entity.FBoardCountInterfaceVO;
 import com.cnu.ami.failure.fboard.models.FailureCompareVO;
 import com.cnu.ami.failure.fboard.models.FailureRegionAggrVO;
@@ -31,6 +33,9 @@ public class FBoardServiceImpl implements FBoardService {
 
 	@Autowired
 	FBoardDAO fBoardDAO;
+	
+	@Autowired
+	DcuInfoStatusDAO dcuInfoStatusDAO;
 
 	@Autowired
 	MongoTemplate mongoTemplate;
@@ -256,6 +261,57 @@ public class FBoardServiceImpl implements FBoardService {
 		}
 
 		return list;
+	}
+
+	@Override
+	public FailureAllVO getElectricFailureDayHourDcu() throws Exception {
+		
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		String today = dateFormat.format(cal.getTime());
+		
+		FailureAllVO failureAllVO = new FailureAllVO();
+
+		List<FailureAllListVO> list = new ArrayList<FailureAllListVO>();
+		FailureAllListVO failureAllListVO = new FailureAllListVO();
+		
+		List<DcuInfoStatusEntity> error = dcuInfoStatusDAO.getDcuFailure(today);
+		
+		int totalCount = 0;
+		
+		for(int i =0; i < 24; i++) {
+			failureAllListVO = new FailureAllListVO();
+			
+			failureAllListVO.setTime(i);
+
+			int count = 0;
+			for(DcuInfoStatusEntity dcuError : error) {
+				
+				if(i==Integer.valueOf(dcuError.getH())) {
+					count = count + dcuError.getCnt();
+				} else {
+					count = count + 0;
+				}
+				
+			}
+			
+			failureAllListVO.setCount(count);
+			
+			totalCount = totalCount + count;
+			
+			list.add(failureAllListVO);
+		}
+		
+		failureAllVO.setFailureTodayCount(totalCount);
+		failureAllVO.setDate(new Date());
+		failureAllVO.setType("electric");
+
+		failureAllVO.setArrayData(list);
+
+		return failureAllVO;
 	}
 
 }

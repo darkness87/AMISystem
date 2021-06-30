@@ -8,7 +8,7 @@ import lombok.Setter;
 public class UseDayHourAllListVO {
 
 	private int time;
-	private double use;
+	private float use;
 	private long lp;
 
 }

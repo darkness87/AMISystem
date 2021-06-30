@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class LpCountVO {
 
-	private String time;
+	private int time;
 	private int count;
 }

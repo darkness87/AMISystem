@@ -8,9 +8,12 @@ import lombok.Setter;
 public class ReadingRegionAggrVO {
 
 	private String region;
-	private int allCount;
-	private int readingCount;
-	private int errorCount;
-	private int networkCount;
+	private int estateCount;
+	private int houseCount;
+	private float reading;
+
+	private int lvevl1Count;
+	private int lvevl2Count;
+	private int lvevl3Count;
 
 }

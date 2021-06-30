@@ -41,6 +41,10 @@ public interface DashBoardService {
 
 	public ReadingDayInfoVO getReadingDayInfo() throws Exception;
 
+	public RateRealVO getReadingRateDayTime() throws Exception;
+	
 	public RateRealVO getReadingRateDayHourAll() throws Exception;
+	
+	public RateRealVO getReadingRateDayPeriod() throws Exception;
 
 }

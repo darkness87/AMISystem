@@ -7,5 +7,7 @@ public interface MBoardCountInterfaceVO {
 	String getRNAME();
 
 	int getCOUNT();
+	
+	int getGCOUNT();
 
 }

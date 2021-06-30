@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.device.estate.dao.entity.EstateReadingFirstInterfaceVO;
+import com.cnu.ami.device.estate.dao.entity.EstateSeqInterfaceVO;
 
 @Repository
 public interface EstateDAO extends JpaRepository<EstateEntity, String> { // 키 값이 숫자 일경우 Long, 문자열 String
@@ -37,8 +38,8 @@ public interface EstateDAO extends JpaRepository<EstateEntity, String> { // 키 
 			"ON E.METER_ID=F.METER_ID", nativeQuery = true)
 	public int getEstateReadingSucess(@Param("day") int day, @Param("toDate") String toDate);
 	
-	@Query(value = "SELECT * FROM GROUPSET WHERE IS_DELETE = 'N'", nativeQuery = true)
-	public List<EstateEntity> getEstate();
+	@Query(value = "SELECT GSEQ,RSEQ,CNT_HOUSE FROM GROUPSET WHERE IS_DELETE = 'N'", nativeQuery = true)
+	public List<EstateSeqInterfaceVO> getEstate();
 	
 	@Query(value = "SELECT SUM(CNT_HOUSE) AS COUNT FROM GROUPSET WHERE CHK_POWER = 'Y' AND IS_DELETE='N'", nativeQuery = true)
 	public int getEstateHouseCount();

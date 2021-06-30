@@ -25,11 +25,11 @@ import lombok.Setter;
 public class ResponseReadingArrayVO {
 
 	private Api api;
-	private List<LpCountVO> lp;
 	private MeterRateVO rate;
-	private List<DashReadingMapVO> map;
 	private List<ReadingRegionAggrVO> region;
-
+	private List<DashReadingMapVO> map;
+	private List<LpCountVO> lp;
+	
 	@Getter
 	@Setter
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)

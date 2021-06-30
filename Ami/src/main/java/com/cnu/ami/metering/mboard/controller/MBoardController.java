@@ -130,12 +130,65 @@ public class MBoardController {
 		ResponseReadingArrayVO responseReadingArrayVO = new ResponseReadingArrayVO(request);
 		
 		// TODO 데이터 수집 수 수정 필요
-		responseReadingArrayVO.setLp(mBoardService.getElectricLPDataCount());
 		responseReadingArrayVO.setRate(mBoardService.getElectricMeterReadingRateDayAll());
+		responseReadingArrayVO.setRegion(mBoardService.getReadingRegionAggr());
+		responseReadingArrayVO.setLp(mBoardService.getElectricLPDataCount());
 		responseReadingArrayVO.setMap(mBoardService.getLocationMapInfo());
+		
+		return Mono.just(responseReadingArrayVO).log("검침현황판 : First 데이터");
+
+	}
+	
+	@RequestMapping(value = "/lp/firstlp", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "검침현황판 : LP 데이터 처음 전달 API")
+	public Mono<ResponseReadingArrayVO> getDashBoardLpDataFirst(HttpServletRequest request) throws Exception {
+
+		ResponseReadingArrayVO responseReadingArrayVO = new ResponseReadingArrayVO(request);
+		
+		// TODO 데이터 수집 수 수정 필요
+		responseReadingArrayVO.setLp(mBoardService.getElectricLPDataCount());
+
+		return Mono.just(responseReadingArrayVO).log("검침현황판 : LP First 데이터");
+
+	}
+	
+	@RequestMapping(value = "/rate/firstrate", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "검침현황판 : Rate 데이터 처음 전달 API")
+	public Mono<ResponseReadingArrayVO> getDashBoardRateDataFirst(HttpServletRequest request) throws Exception {
+
+		ResponseReadingArrayVO responseReadingArrayVO = new ResponseReadingArrayVO(request);
+		
+		responseReadingArrayVO.setRate(mBoardService.getElectricMeterReadingRateDayAll());
+
+		return Mono.just(responseReadingArrayVO).log("검침현황판 : Rate First 데이터");
+
+	}
+	
+	@RequestMapping(value = "/map/firstmap", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "검침현황판 : Map 데이터 처음 전달 API")
+	public Mono<ResponseReadingArrayVO> getDashBoardMapDataFirst(HttpServletRequest request) throws Exception {
+
+		ResponseReadingArrayVO responseReadingArrayVO = new ResponseReadingArrayVO(request);
+		
+		responseReadingArrayVO.setMap(mBoardService.getLocationMapInfo());
+
+		return Mono.just(responseReadingArrayVO).log("검침현황판 : Map First 데이터");
+
+	}
+	
+	@RequestMapping(value = "/region/firstregion", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "검침현황판 : 전체 데이터 처음 전달 API")
+	public Mono<ResponseReadingArrayVO> getDashBoardRegionDataFirst(HttpServletRequest request) throws Exception {
+
+		ResponseReadingArrayVO responseReadingArrayVO = new ResponseReadingArrayVO(request);
+		
 		responseReadingArrayVO.setRegion(mBoardService.getReadingRegionAggr());
 
-		return Mono.just(responseReadingArrayVO).log("검침현황판 : First 데이터");
+		return Mono.just(responseReadingArrayVO).log("검침현황판 : Region First 데이터");
 
 	}
 

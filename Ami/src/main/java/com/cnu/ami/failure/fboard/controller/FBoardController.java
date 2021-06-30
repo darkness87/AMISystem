@@ -130,13 +130,32 @@ public class FBoardController {
 		ResponseFailureArrayVO responseFailureArrayVO = new ResponseFailureArrayVO(request);
 
 		// TODO 장애발생 건수 수정 필요
-		responseFailureArrayVO.setFailureStatus(fBoardService.getElectricFailureDayHourAll());
+		responseFailureArrayVO.setFailureStatus(fBoardService.getElectricFailureDayHourDcu());
 		responseFailureArrayVO.setMap(fBoardService.getLocationFailureMapInfo());
 		responseFailureArrayVO.setFailureCompare(fBoardService.getFailureCompare());
 		responseFailureArrayVO.setFailureRegion(fBoardService.getFailureRegionAggr());
 
 		return Mono.just(responseFailureArrayVO).log("장애현황판 : First 데이터");
 
+	}
+	
+	@RequestMapping(value = "/dcu/dayhour", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "장애현황판 : 금일 DCU 상태(장애) 정보")
+	public Flux<ResponseVO<FailureAllVO>> getElectricFailureDayHourDcu(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
+
+		if (duration == 0) { // 0일 경우 1회 전달
+			return Flux.just(new ResponseVO<FailureAllVO>(request, fBoardService.getElectricFailureDayHourDcu()));
+		} else {
+			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
+				try {
+					return new ResponseVO<FailureAllVO>(request, fBoardService.getElectricFailureDayHourDcu());
+				} catch (Exception e) {
+					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
+				}
+			}).log("장애현황판 : 금일 DCU 상태(장애)정보");
+		}
 	}
 
 }

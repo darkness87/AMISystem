@@ -16,5 +16,7 @@ public interface FBoardService {
 	public FailureCompareVO getFailureCompare() throws Exception;
 
 	public List<FailureRegionAggrVO> getFailureRegionAggr() throws Exception;
+	
+	public FailureAllVO getElectricFailureDayHourDcu() throws Exception;
 
 }

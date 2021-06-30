@@ -15,10 +15,9 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
-import com.cnu.ami.common.TimeCode;
 import com.cnu.ami.dashboard.dao.document.DayRateTemp;
 import com.cnu.ami.device.estate.dao.EstateDAO;
-import com.cnu.ami.device.estate.dao.entity.EstateEntity;
+import com.cnu.ami.device.estate.dao.entity.EstateSeqInterfaceVO;
 import com.cnu.ami.metering.info.models.EstateListReadingCountVO;
 import com.cnu.ami.metering.mboard.dao.MBoardDAO;
 import com.cnu.ami.metering.mboard.dao.document.EstateCountTemp;
@@ -46,7 +45,7 @@ public class MBoardServiceImpl implements MBoardService {
 	public List<LpCountVO> getElectricLPDataCount() throws Exception {
 
 		// TODO for문 Count 더하기 오류
-		
+
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		Calendar cal = Calendar.getInstance();
@@ -54,33 +53,58 @@ public class MBoardServiceImpl implements MBoardService {
 
 		String today = dateFormat.format(cal.getTime());
 
-		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
-		SimpleDateFormat minFormat = new SimpleDateFormat("mm");
+//		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
+//		SimpleDateFormat minFormat = new SimpleDateFormat("mm");
+//
+//		int hour = Integer.valueOf(hourFormat.format(date));
+//		int min = Integer.valueOf(minFormat.format(date));
+//
+//		if (min >= 0 && min < 15) {
+//			hour = hour * 4;
+//		} else if (min >= 15 && min < 30) {
+//			hour = (hour * 4) + 1;
+//		} else if (min >= 30 && min < 45) {
+//			hour = (hour * 4) + 2;
+//		} else if (min >= 45 && min <= 59) {
+//			hour = (hour * 4) + 3;
+//		} else {
+//			hour = hour * 4;
+//		}
 
-		int hour = Integer.valueOf(hourFormat.format(date));
-		int min = Integer.valueOf(minFormat.format(date));
-
-		if (min >= 0 && min < 15) {
-			hour = hour * 4;
-		} else if (min >= 15 && min < 30) {
-			hour = (hour * 4) + 1;
-		} else if (min >= 30 && min < 45) {
-			hour = (hour * 4) + 2;
-		} else if (min >= 45 && min <= 59) {
-			hour = (hour * 4) + 3;
-		} else {
-			hour = hour * 4;
-		}
-
-		List<EstateEntity> estate = estateDAO.findAll();
+		List<EstateSeqInterfaceVO> estate = estateDAO.getEstate();
 
 		List<LpCountVO> list = new ArrayList<LpCountVO>();
 		LpCountVO lpCountVO = new LpCountVO();
 
-		for (EstateEntity est : estate) {
+		int lp0 = 0;
+		int lp1 = 0;
+		int lp2 = 0;
+		int lp3 = 0;
+		int lp4 = 0;
+		int lp5 = 0;
+		int lp6 = 0;
+		int lp7 = 0;
+		int lp8 = 0;
+		int lp9 = 0;
+		int lp10 = 0;
+		int lp11 = 0;
+		int lp12 = 0;
+		int lp13 = 0;
+		int lp14 = 0;
+		int lp15 = 0;
+		int lp16 = 0;
+		int lp17 = 0;
+		int lp18 = 0;
+		int lp19 = 0;
+		int lp20 = 0;
+		int lp21 = 0;
+		int lp22 = 0;
+		int lp23 = 0;
+
+		for (EstateSeqInterfaceVO est : estate) {
 
 			CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
-			String collectionName = collectionNameFormat.formatDay(est.getGSeq(), today);
+			String collectionName = collectionNameFormat.formatDay(est.getGSEQ(), today);
 
 			String[] jsonRawString = { String.format("{$match: { day: '%s' } }", today),
 					"{ $unwind: { path: '$cntLp', includeArrayIndex: 'idx' } }",
@@ -103,19 +127,156 @@ public class MBoardServiceImpl implements MBoardService {
 				continue;
 			}
 
+//			for (MeterReadingCountTemp lpCount : data) {
+//
+//				lpCountVO = new LpCountVO();
+//
+//				if (lpCount.getIdx() > hour) {
+//					continue;
+//				}
+//
+//				lpCountVO.setTime(TimeCode.checkTime(lpCount.getIdx()));
+//				lpCountVO.setCount(lpCount.getCount());
+//
+//				list.add(lpCountVO);
+//			}
+
 			for (MeterReadingCountTemp lpCount : data) {
 
-				lpCountVO = new LpCountVO();
-
-				if (lpCount.getIdx() > hour) {
-					continue;
+				if (lpCount.getIdx() == 0 || lpCount.getIdx() == 1 || lpCount.getIdx() == 2 || lpCount.getIdx() == 3) {
+					lp0 = lp0 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 4 || lpCount.getIdx() == 5 || lpCount.getIdx() == 6
+						|| lpCount.getIdx() == 7) {
+					lp1 = lp1 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 8 || lpCount.getIdx() == 9 || lpCount.getIdx() == 10
+						|| lpCount.getIdx() == 11) {
+					lp2 = lp2 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 12 || lpCount.getIdx() == 13 || lpCount.getIdx() == 14
+						|| lpCount.getIdx() == 15) {
+					lp3 = lp3 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 16 || lpCount.getIdx() == 17 || lpCount.getIdx() == 18
+						|| lpCount.getIdx() == 19) {
+					lp4 = lp4 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 20 || lpCount.getIdx() == 21 || lpCount.getIdx() == 22
+						|| lpCount.getIdx() == 23) {
+					lp5 = lp5 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 24 || lpCount.getIdx() == 25 || lpCount.getIdx() == 26
+						|| lpCount.getIdx() == 27) {
+					lp6 = lp6 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 28 || lpCount.getIdx() == 29 || lpCount.getIdx() == 30
+						|| lpCount.getIdx() == 31) {
+					lp7 = lp7 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 32 || lpCount.getIdx() == 33 || lpCount.getIdx() == 34
+						|| lpCount.getIdx() == 35) {
+					lp8 = lp8 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 36 || lpCount.getIdx() == 37 || lpCount.getIdx() == 38
+						|| lpCount.getIdx() == 39) {
+					lp9 = lp9 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 40 || lpCount.getIdx() == 41 || lpCount.getIdx() == 42
+						|| lpCount.getIdx() == 43) {
+					lp10 = lp10 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 44 || lpCount.getIdx() == 45 || lpCount.getIdx() == 46
+						|| lpCount.getIdx() == 47) {
+					lp11 = lp11 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 48 || lpCount.getIdx() == 49 || lpCount.getIdx() == 50
+						|| lpCount.getIdx() == 51) {
+					lp12 = lp12 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 52 || lpCount.getIdx() == 53 || lpCount.getIdx() == 54
+						|| lpCount.getIdx() == 55) {
+					lp13 = lp13 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 56 || lpCount.getIdx() == 57 || lpCount.getIdx() == 58
+						|| lpCount.getIdx() == 59) {
+					lp14 = lp14 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 60 || lpCount.getIdx() == 61 || lpCount.getIdx() == 62
+						|| lpCount.getIdx() == 63) {
+					lp15 = lp15 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 64 || lpCount.getIdx() == 65 || lpCount.getIdx() == 66
+						|| lpCount.getIdx() == 67) {
+					lp16 = lp16 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 68 || lpCount.getIdx() == 69 || lpCount.getIdx() == 70
+						|| lpCount.getIdx() == 71) {
+					lp17 = lp17 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 72 || lpCount.getIdx() == 73 || lpCount.getIdx() == 74
+						|| lpCount.getIdx() == 75) {
+					lp18 = lp18 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 76 || lpCount.getIdx() == 77 || lpCount.getIdx() == 78
+						|| lpCount.getIdx() == 79) {
+					lp19 = lp19 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 80 || lpCount.getIdx() == 81 || lpCount.getIdx() == 82
+						|| lpCount.getIdx() == 83) {
+					lp20 = lp20 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 84 || lpCount.getIdx() == 85 || lpCount.getIdx() == 86
+						|| lpCount.getIdx() == 87) {
+					lp21 = lp21 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 88 || lpCount.getIdx() == 89 || lpCount.getIdx() == 90
+						|| lpCount.getIdx() == 91) {
+					lp22 = lp22 + lpCount.getCount();
+				} else if (lpCount.getIdx() == 92 || lpCount.getIdx() == 93 || lpCount.getIdx() == 94
+						|| lpCount.getIdx() == 95) {
+					lp23 = lp23 + lpCount.getCount();
 				}
 
-				lpCountVO.setTime(TimeCode.checkTime(lpCount.getIdx()));
-				lpCountVO.setCount(lpCount.getCount());
-
-				list.add(lpCountVO);
 			}
+
+		}
+
+		for (int i = 0; i < 24; i++) {
+
+			lpCountVO = new LpCountVO();
+
+			lpCountVO.setTime(i);
+
+			if (i == 0) {
+				lpCountVO.setCount(lp0);
+			} else if (i == 1) {
+				lpCountVO.setCount(lp1);
+			} else if (i == 2) {
+				lpCountVO.setCount(lp2);
+			} else if (i == 3) {
+				lpCountVO.setCount(lp3);
+			} else if (i == 4) {
+				lpCountVO.setCount(lp4);
+			} else if (i == 5) {
+				lpCountVO.setCount(lp5);
+			} else if (i == 6) {
+				lpCountVO.setCount(lp6);
+			} else if (i == 7) {
+				lpCountVO.setCount(lp7);
+			} else if (i == 8) {
+				lpCountVO.setCount(lp8);
+			} else if (i == 9) {
+				lpCountVO.setCount(lp9);
+			} else if (i == 10) {
+				lpCountVO.setCount(lp10);
+			} else if (i == 11) {
+				lpCountVO.setCount(lp11);
+			} else if (i == 12) {
+				lpCountVO.setCount(lp12);
+			} else if (i == 13) {
+				lpCountVO.setCount(lp13);
+			} else if (i == 14) {
+				lpCountVO.setCount(lp14);
+			} else if (i == 15) {
+				lpCountVO.setCount(lp15);
+			} else if (i == 16) {
+				lpCountVO.setCount(lp16);
+			} else if (i == 17) {
+				lpCountVO.setCount(lp17);
+			} else if (i == 18) {
+				lpCountVO.setCount(lp18);
+			} else if (i == 19) {
+				lpCountVO.setCount(lp19);
+			} else if (i == 20) {
+				lpCountVO.setCount(lp20);
+			} else if (i == 21) {
+				lpCountVO.setCount(lp21);
+			} else if (i == 22) {
+				lpCountVO.setCount(lp22);
+			} else if (i == 23) {
+				lpCountVO.setCount(lp23);
+			}
+
+			list.add(lpCountVO);
 
 		}
 
@@ -148,16 +309,16 @@ public class MBoardServiceImpl implements MBoardService {
 			hour = hour * 4;
 		}
 
-		List<EstateEntity> estate = estateDAO.findAll();
+		List<EstateSeqInterfaceVO> estate = estateDAO.getEstate();
 
 		List<EstateListReadingCountVO> estateListCount = new ArrayList<EstateListReadingCountVO>();
 		EstateListReadingCountVO estateListReadingCountVO = new EstateListReadingCountVO();
 
-		for (EstateEntity est : estate) {
+		for (EstateSeqInterfaceVO est : estate) {
 			estateListReadingCountVO = new EstateListReadingCountVO();
 
 			CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
-			String collectionName = collectionNameFormat.formatYear(est.getGSeq(), year);
+			String collectionName = collectionNameFormat.formatYear(est.getGSEQ(), year);
 
 			String[] jsonRawString = { String.format("{$match: { day: '%s' } }", dateFormat.format(date)),
 					"{ $project: { did: '$did', day: '$day', idxStart: '$idxStart', idxEnd: '$idxEnd', idx: { $subtract: ['$idxEnd', '$idxStart'] } } }",
@@ -180,8 +341,8 @@ public class MBoardServiceImpl implements MBoardService {
 				continue;
 			}
 
-			estateListReadingCountVO.setEstateSeq(est.getGSeq());
-			estateListReadingCountVO.setRegionSeq(est.getRSeq());
+			estateListReadingCountVO.setEstateSeq(est.getGSEQ());
+			estateListReadingCountVO.setRegionSeq(est.getRSEQ());
 			estateListReadingCountVO.setReadingCount(data.getSum());
 
 			estateListCount.add(estateListReadingCountVO);
@@ -357,16 +518,16 @@ public class MBoardServiceImpl implements MBoardService {
 			hour = hour * 4;
 		}
 
-		List<EstateEntity> estate = estateDAO.findAll();
+		List<EstateSeqInterfaceVO> estate = estateDAO.getEstate();
 
 		List<EstateListReadingCountVO> estateListCount = new ArrayList<EstateListReadingCountVO>();
 		EstateListReadingCountVO estateListReadingCountVO = new EstateListReadingCountVO();
 
-		for (EstateEntity est : estate) {
+		for (EstateSeqInterfaceVO est : estate) {
 			estateListReadingCountVO = new EstateListReadingCountVO();
 
 			CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
-			String collectionName = collectionNameFormat.formatYear(est.getGSeq(), year);
+			String collectionName = collectionNameFormat.formatYear(est.getGSEQ(), year);
 
 			String[] jsonRawString = { String.format("{$match: { day: '%s' } }", dateFormat.format(date)),
 					"{ $project: { did: '$did', day: '$day', idxStart: '$idxStart', idxEnd: '$idxEnd', idx: { $subtract: ['$idxEnd', '$idxStart'] } } }",
@@ -389,15 +550,15 @@ public class MBoardServiceImpl implements MBoardService {
 				continue;
 			}
 
-			estateListReadingCountVO.setEstateSeq(est.getGSeq());
-			estateListReadingCountVO.setRegionSeq(est.getRSeq());
+			estateListReadingCountVO.setEstateSeq(est.getGSEQ());
+			estateListReadingCountVO.setRegionSeq(est.getRSEQ());
 			estateListReadingCountVO.setReadingCount(data.getSum());
 
 			estateListCount.add(estateListReadingCountVO);
 		}
 
 		List<MBoardCountInterfaceVO> house = mBoardDAO.getHouseCount();
-		List<MBoardCountInterfaceVO> dcu = mBoardDAO.getDcuCount();
+		// List<MBoardCountInterfaceVO> dcu = mBoardDAO.getDcuCount();
 
 		List<ReadingRegionAggrVO> list = new ArrayList<ReadingRegionAggrVO>();
 		ReadingRegionAggrVO readingRegionAggrVO = new ReadingRegionAggrVO();
@@ -413,10 +574,21 @@ public class MBoardServiceImpl implements MBoardService {
 			}
 
 			readingRegionAggrVO.setRegion(house.get(i).getRNAME());
-			readingRegionAggrVO.setAllCount(house.get(i).getCOUNT() * hour);
-			readingRegionAggrVO.setReadingCount(count);
-			readingRegionAggrVO.setErrorCount((house.get(i).getCOUNT() * hour) - count);
-			readingRegionAggrVO.setNetworkCount(dcu.get(i).getCOUNT());
+			readingRegionAggrVO.setEstateCount(house.get(i).getGCOUNT());
+			readingRegionAggrVO.setHouseCount(house.get(i).getCOUNT());
+
+			float reading = (count / (house.get(i).getCOUNT() * hour * 1.0f)) * 100.0f;
+
+			if (Float.isNaN(reading) || Float.isInfinite(reading)) {
+				readingRegionAggrVO.setReading(0);
+			} else {
+				readingRegionAggrVO.setReading(reading);
+			}
+
+			// readingRegionAggrVO.setAllCount(house.get(i).getCOUNT() * hour);
+			// readingRegionAggrVO.setReadingCount(count);
+			// readingRegionAggrVO.setErrorCount((house.get(i).getCOUNT() * hour) - count);
+			// readingRegionAggrVO.setNetworkCount(dcu.get(i).getCOUNT());
 
 			list.add(readingRegionAggrVO);
 		}

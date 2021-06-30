@@ -154,7 +154,7 @@ public class DashBoardController {
 	}
 
 	// TODO URI 주소 rate로 바꿔야함
-	@RequestMapping(value = "/location/failure/mapinfo", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	@RequestMapping(value = "/location/rate/mapinfo", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 지도 정보")
 	public Flux<ResponseListVO<DashBoardMapVO>> getLocationRateMapInfo(HttpServletRequest request,
@@ -248,11 +248,9 @@ public class DashBoardController {
 			ResponseArrayVO responseArrayVO = new ResponseArrayVO(request);
 			
 			responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
-			responseArrayVO.setRate(dashBoardService.getReadingRateDayHourAll());
 			responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
 			responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
-			responseArrayVO.setMap(dashBoardService.getLocationRateMapInfo());
-			responseArrayVO.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
+			responseArrayVO.setDeviceRegErrorCount(dashBoardService.getDeviceErrorCount());
 			responseArrayVO.setReadingDayInfo(dashBoardService.getReadingDayInfo());
 			
 			return Flux.just(responseArrayVO);
@@ -263,11 +261,9 @@ public class DashBoardController {
 					ResponseArrayVO responseArray = new ResponseArrayVO(request);
 					
 					responseArray.setUseData(dashBoardService.getElectricUseDayHourAll());
-					responseArray.setRate(dashBoardService.getReadingRateDayHourAll());
 					responseArray.setWeather(dashBoardService.getWeatherRealtimeAll());
 					responseArray.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
-					responseArray.setMap(dashBoardService.getLocationRateMapInfo());
-					responseArray.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
+					responseArray.setDeviceRegErrorCount(dashBoardService.getDeviceErrorCount());
 					responseArray.setReadingDayInfo(dashBoardService.getReadingDayInfo());
 					
 					return responseArray;
@@ -287,16 +283,39 @@ public class DashBoardController {
 		ResponseArrayVO responseArrayVO = new ResponseArrayVO(request);
 
 		responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
-		responseArrayVO.setRate(dashBoardService.getReadingRateDayHourAll());
 		responseArrayVO.setWeather(dashBoardService.getWeatherRealtimeAll());
 		responseArrayVO.setWeatherData(dashBoardService.getWeatherDataWeatherAll());
-		responseArrayVO.setMap(dashBoardService.getLocationRateMapInfo());
-		responseArrayVO.setDeviceMapErrorCount(dashBoardService.getDeviceErrorCount());
+		responseArrayVO.setDeviceRegErrorCount(dashBoardService.getDeviceErrorCount());
 		responseArrayVO.setReadingDayInfo(dashBoardService.getReadingDayInfo());
 
 		return Mono.just(responseArrayVO).log("메인현황판 : First 데이터");
 
 	}
+	
+	@RequestMapping(value = "/rate/firstrate", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "현황판 : 시간별검침율 데이터 처음 전달 API")
+	public Mono<ResponseArrayVO> getDashBoardAllDataFirstRate(HttpServletRequest request) throws Exception {
+
+		ResponseArrayVO responseArrayVO = new ResponseArrayVO(request);
+		responseArrayVO.setRate(dashBoardService.getReadingRateDayPeriod());
+
+		return Mono.just(responseArrayVO).log("메인현황판 : First Rate 데이터");
+
+	}
+	
+	@RequestMapping(value = "/map/firstmap", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "현황판 : 맵 데이터 처음 전달 API")
+	public Mono<ResponseArrayVO> getDashBoardAllDataFirstMap(HttpServletRequest request) throws Exception {
+
+		ResponseArrayVO responseArrayVO = new ResponseArrayVO(request);
+		responseArrayVO.setMap(dashBoardService.getLocationRateMapInfo());
+
+		return Mono.just(responseArrayVO).log("메인현황판 : First Map 데이터");
+
+	}
+	
 	
 	@RequestMapping(value = "/readingrateAll/dayHour", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
@@ -304,11 +323,11 @@ public class DashBoardController {
 	public Flux<ResponseVO<RateRealVO>> getReadingRateDayHourAll(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 		if (duration == 0) { // 0일 경우 1회 전달
-			return Flux.just(new ResponseVO<RateRealVO>(request, dashBoardService.getReadingRateDayHourAll()));
+			return Flux.just(new ResponseVO<RateRealVO>(request, dashBoardService.getReadingRateDayPeriod()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
-					return new ResponseVO<RateRealVO>(request, dashBoardService.getReadingRateDayHourAll());
+					return new ResponseVO<RateRealVO>(request, dashBoardService.getReadingRateDayPeriod());
 				} catch (Exception e) {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}

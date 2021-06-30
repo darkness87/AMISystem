@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.DeviceErrorCountVO;
+import com.cnu.ami.dashboard.models.RateHourVO;
 import com.cnu.ami.dashboard.models.RateRealVO;
 import com.cnu.ami.dashboard.models.ReadingDayInfoVO;
 import com.cnu.ami.dashboard.models.UseDayHourAllVO;
@@ -30,10 +31,11 @@ public class ResponseArrayVO {
 	private Api api;
 	private UseDayHourAllVO useData;
 	private RateRealVO rate;
+	private List<RateHourVO> hourRate;
 	private WeatherVO weather;
 	private WeatherDataVO weatherData;
 	private List<DashBoardMapVO> map;
-	private DeviceErrorCountVO deviceMapErrorCount;
+	private DeviceErrorCountVO deviceRegErrorCount;
 	private ReadingDayInfoVO readingDayInfo;
 
 	@Getter
