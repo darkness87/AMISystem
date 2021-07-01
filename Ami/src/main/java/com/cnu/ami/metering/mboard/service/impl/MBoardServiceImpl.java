@@ -298,15 +298,15 @@ public class MBoardServiceImpl implements MBoardService {
 		int min = Integer.valueOf(minFormat.format(date));
 
 		if (min >= 0 && min < 15) {
-			hour = hour * 4;
-		} else if (min >= 15 && min < 30) {
 			hour = (hour * 4) + 1;
-		} else if (min >= 30 && min < 45) {
+		} else if (min >= 15 && min < 30) {
 			hour = (hour * 4) + 2;
-		} else if (min >= 45 && min <= 59) {
+		} else if (min >= 30 && min < 45) {
 			hour = (hour * 4) + 3;
+		} else if (min >= 45 && min <= 59) {
+			hour = (hour * 4) + 4;
 		} else {
-			hour = hour * 4;
+			hour = (hour * 4) + 0;
 		}
 
 		List<EstateSeqInterfaceVO> estate = estateDAO.getEstate();
@@ -507,15 +507,15 @@ public class MBoardServiceImpl implements MBoardService {
 		int min = Integer.valueOf(minFormat.format(date));
 
 		if (min >= 0 && min < 15) {
-			hour = hour * 4;
-		} else if (min >= 15 && min < 30) {
 			hour = (hour * 4) + 1;
-		} else if (min >= 30 && min < 45) {
+		} else if (min >= 15 && min < 30) {
 			hour = (hour * 4) + 2;
-		} else if (min >= 45 && min <= 59) {
+		} else if (min >= 30 && min < 45) {
 			hour = (hour * 4) + 3;
+		} else if (min >= 45 && min <= 59) {
+			hour = (hour * 4) + 4;
 		} else {
-			hour = hour * 4;
+			hour = (hour * 4) + 0;
 		}
 
 		List<EstateSeqInterfaceVO> estate = estateDAO.getEstate();
