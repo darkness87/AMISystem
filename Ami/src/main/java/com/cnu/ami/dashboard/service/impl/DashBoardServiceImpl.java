@@ -1269,6 +1269,12 @@ public class DashBoardServiceImpl implements DashBoardService {
 					Math.round(((Float.valueOf(rate.getLp()) / (houseCount * hour * 1.0f)) * 100.0f) * 100) / 100.0f);
 			rateRealVO.setRealTimelyRate(
 					Math.round(((Float.valueOf(rate.getOn()) / (houseCount * hour * 1.0f)) * 100.0f) * 100) / 100.0f);
+		} else if (rate.get_id()==null || rate.get_id().equals("")) {
+			rateRealVO.setRealMeterReadingRate(Float.NaN);
+			rateRealVO.setRealMeterReadingRate(Float.NaN);
+		} else {
+			rateRealVO.setRealMeterReadingRate(Float.NaN);
+			rateRealVO.setRealMeterReadingRate(Float.NaN);
 		}
 
 		log.info("{} , {}", today, beforeday);
