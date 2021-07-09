@@ -10,6 +10,7 @@ import java.util.List;
 public class UseDayHourAllVO {
 
 	private String day;
+	private String unit; // 단위 : Wh, kWh 등
 	private float todayUseAll;
 	private String type;
 	private List<UseDayHourAllListVO> todayData;

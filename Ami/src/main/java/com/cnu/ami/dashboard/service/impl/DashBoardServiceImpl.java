@@ -193,6 +193,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 		useDayHourAllVO.setTodayUseAll(Math.round(sumUse*1000)/1000.000f);
 		useDayHourAllVO.setDay(today);
 		useDayHourAllVO.setType("electric");
+		useDayHourAllVO.setUnit("kWh"); // TODO 사용량 변화에 따른 단위 변경 필요 -> Wh, kWh ...
 
 		useDayHourAllVO.setTodayData(todaylist);
 		useDayHourAllVO.setYesterdayData(yesterdaylist);
