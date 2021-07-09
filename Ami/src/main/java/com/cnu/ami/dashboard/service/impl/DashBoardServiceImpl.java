@@ -1297,7 +1297,8 @@ public class DashBoardServiceImpl implements DashBoardService {
 		for (DayRateTemp temp : rateData) {
 			rateHourVO = new RateHourVO();
 
-			rateHourVO.setDay(temp.get_id());
+			rateHourVO.setDate(temp.get_id());
+			rateHourVO.setDay(temp.get_id().substring(6, 8));
 
 			if (temp.get_id().equals(today)) {
 				rateHourVO.setReadingRate((temp.getLp() / (houseCount * hour * 1.0f)) * 100.0f);
