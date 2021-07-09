@@ -1283,13 +1283,14 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		String[] jsonRawDataString = {
 				String.format("{ $match: { day: {$gte : '%s', $lte : '%s'} } }", beforeday, today),
-				"{$group: {_id: '$day',lp: {$sum: '$cntLp'},on: {$sum: '$cntOn'},total: {$sum: '$cntTotal'}}}",
-				// "{$project: {day: '$_id',lp: '$lp',on: '$on',total: '$total'}}",
+				"{$project: {day: '$day',lp: '$cntLp',on: '$cntOn',total: '$cntTotal', count: {$size: '$mids'} }}",
+				"{$group: {_id: '$day',lp: {$sum: '$lp'}, on: {$sum: '$on'}, total: {$sum: '$total'}, cnt: {$sum: '$count'} }}",
 				"{$sort: {_id: 1}}" };
 		// aggregation = null;
 		aggregation = Aggregation.newAggregation(new CnuAggregationOperation(Document.parse(jsonRawDataString[0])),
 				new CnuAggregationOperation(Document.parse(jsonRawDataString[1])),
-				new CnuAggregationOperation(Document.parse(jsonRawDataString[2])));
+				new CnuAggregationOperation(Document.parse(jsonRawDataString[2])),
+				new CnuAggregationOperation(Document.parse(jsonRawDataString[3])));
 
 		AggregationResults<DayRateTemp> resultData = mongoTemplate.aggregate(aggregation, collectionName,
 				DayRateTemp.class);
@@ -1310,8 +1311,13 @@ public class DashBoardServiceImpl implements DashBoardService {
 //				rateHourVO.setTimelyRate((temp.getOn() / (houseCount * 96 * 1.0f)) * 100.0f);
 //			}
 
-			rateHourVO.setReadingRate((temp.getLp() / (temp.getTotal() * 1.0f)) * 100.0f);
-			rateHourVO.setTimelyRate((temp.getOn() / (temp.getTotal() * 1.0f)) * 100.0f);
+			if (temp.get_id().equals(today)) {
+				rateHourVO.setReadingRate((temp.getLp() / (temp.getTotal() * 1.0f)) * 100.0f);
+				rateHourVO.setTimelyRate((temp.getOn() / (temp.getTotal() * 1.0f)) * 100.0f);
+			} else {
+				rateHourVO.setReadingRate((temp.getLp() / (temp.getCnt() * 96 * 1.0f)) * 100.0f);
+				rateHourVO.setTimelyRate((temp.getOn() / (temp.getCnt() * 96 * 1.0f)) * 100.0f);
+			}
 
 			hourRate.add(rateHourVO);
 		}

@@ -11,5 +11,6 @@ public class DayRateTemp {
 	private int on;
 	private int lp;
 	private int total;
+	private int cnt;
 
 }
