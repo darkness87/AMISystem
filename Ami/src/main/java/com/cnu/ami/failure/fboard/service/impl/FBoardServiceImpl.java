@@ -21,7 +21,7 @@ import com.cnu.ami.dashboard.models.FailureAllListVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
 import com.cnu.ami.failure.fboard.dao.DcuInfoStatusDAO;
 import com.cnu.ami.failure.fboard.dao.FBoardDAO;
-import com.cnu.ami.failure.fboard.dao.Document.FailureDayCountTemp;
+import com.cnu.ami.failure.fboard.dao.document.FailureDayCountTemp;
 import com.cnu.ami.failure.fboard.dao.entity.DcuInfoStatusEntity;
 import com.cnu.ami.failure.fboard.dao.entity.FBoardCountInterfaceVO;
 import com.cnu.ami.failure.fboard.models.FailureCompareVO;

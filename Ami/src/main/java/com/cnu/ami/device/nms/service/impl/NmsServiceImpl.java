@@ -67,9 +67,13 @@ public class NmsServiceImpl implements NmsService {
 			nmsDcuListVO.setDcuPort(dcu.getDCU_PORT());
 			nmsDcuListVO.setFirmwareVersion(dcu.getFWV());
 
-			String[] nmsVer = dcu.getS_SYS_DESCR().split("Ver:");
-
-			nmsDcuListVO.setNmsVersion(nmsVer[1].replace(")", ""));
+			try {
+				String[] nmsVer = dcu.getS_SYS_DESCR().split("Ver:");
+				nmsDcuListVO.setNmsVersion(nmsVer[1].replace(")", ""));
+			} catch (Exception e) {
+				nmsDcuListVO.setNmsVersion(dcu.getS_SYS_DESCR());
+			}
+			
 			nmsDcuListVO.setSysState(dcu.getS_SYS_STATE());
 			nmsDcuListVO.setDcuStatus(dcu.getDSTATUS());
 
@@ -81,7 +85,7 @@ public class NmsServiceImpl implements NmsService {
 
 	@Override
 	public boolean setDCURebootList(List<NmsDcuCheckListVO> nmsDcuCheckListVO) throws Exception {
-		// TODO 성공 DCU 수, 실패 DCU 수로 세분화 하여야 할듯
+		// TODO 성공 DCU 수, 실패 DCU 수로 세분화 필요
 
 		boolean bool = false;
 
@@ -137,6 +141,7 @@ public class NmsServiceImpl implements NmsService {
 																	// 3:Suspend(통신금지), 4:RegAction(등록 중), 5:Fault(통신실패)
 			stepModemListVO.setHardwareVersion(modem.getHWV_H());
 			stepModemListVO.setProgramVersion(modem.getAPMV_H());
+			log.info("modem.getMETER_STEP1 : {}" , modem.getMETER_STEP1());
 			String[] meterList = modem.getMETER_STEP1().split(";");
 
 			stepModemListVO.setStepCount(meterList.length);

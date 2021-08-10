@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import com.cnu.ami.init.AmiBeanNameGenerator;
 
 @SpringBootApplication
-//@PropertySource("classpath:application.properties")
 @PropertySources({
 	@PropertySource("classpath:application.properties"),
 	@PropertySource(value="file:application.properties", ignoreResourceNotFound=true)

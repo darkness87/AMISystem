@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.ResponseListVO;
+import com.cnu.ami.metering.lookup.dao.document.RawLpCycleTemp;
 import com.cnu.ami.metering.lookup.models.RawLpCycleVO;
 import com.cnu.ami.metering.lookup.models.RawLpDurationChartVO;
 import com.cnu.ami.metering.lookup.models.RawLpDurationVO;
@@ -107,6 +108,19 @@ public class LookupController {
 		List<RawLpDurationChartVO> data = lookupService.getLpDurationChart(estateSeq, buildingSeq, dcuId, fromDate, toDate);
 
 		return Mono.just(new ResponseListVO<RawLpDurationChartVO>(request, data));
+	}
+	
+	@RequestMapping(value = "/test/lp/cycle", method = RequestMethod.GET)
+	@ResponseStatus(value = HttpStatus.OK)
+	@Description(value = "검침조회 : 검침 주기별 데이터 TEST")
+	public Mono<ResponseListVO<RawLpCycleTemp>> getTestMeteringCycleData(HttpServletRequest request,
+			@RequestParam(required = false, defaultValue = "0") int estateSeq,
+			@RequestParam(required = false, defaultValue = "") String dcuId,
+			@RequestParam(required = false, defaultValue = "") String day) throws Exception {
+
+		List<RawLpCycleTemp> data = lookupService.getTestLpCycle(estateSeq, dcuId, day);
+
+		return Mono.just(new ResponseListVO<RawLpCycleTemp>(request, data));
 	}
 
 }

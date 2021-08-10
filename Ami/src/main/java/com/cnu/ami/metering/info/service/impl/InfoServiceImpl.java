@@ -45,7 +45,7 @@ public class InfoServiceImpl implements InfoService {
 	MeterDAO meterDAO;
 
 	@Autowired
-	private MongoTemplate mongoTemplate;
+	MongoTemplate mongoTemplate;
 
 	@Override
 	public List<RealTimeVO> getRealTimeData(int gseq) throws Exception {

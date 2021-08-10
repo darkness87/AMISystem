@@ -1221,29 +1221,9 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		String today = dateFormat.format(cal.getTime());
 
-//		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
-//		SimpleDateFormat minFormat = new SimpleDateFormat("mm");
-
-//		float hour = Integer.valueOf(hourFormat.format(date));
-//		int min = Integer.valueOf(minFormat.format(date));
-//
-//		if (min >= 0 && min < 15) {
-//			hour = (hour * 4) + 1;
-//		} else if (min >= 15 && min < 30) {
-//			hour = (hour * 4) + 2;
-//		} else if (min >= 30 && min < 45) {
-//			hour = (hour * 4) + 3;
-//		} else if (min >= 45 && min <= 59) {
-//			hour = (hour * 4) + 4;
-//		} else {
-//			hour = (hour * 4) + 0;
-//		}
-
 		cal.add(Calendar.DATE, -30);
 
 		String beforeday = dateFormat.format(cal.getTime());
-
-		int houseCount = estateDAO.getEstateHouseCount();
 
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 		String collectionName = collectionNameFormat.formatDcu(today);
@@ -1266,9 +1246,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 		RateHourVO rateHourVO = new RateHourVO();
 
 		if (rate.get_id().equals(today)) {
-			//rateRealVO.setRealMeterReadingRate(Math.round(((Float.valueOf(rate.getLp()) / (houseCount * hour * 1.0f)) * 100.0f) * 100) / 100.0f);
-			//rateRealVO.setRealTimelyRate(Math.round(((Float.valueOf(rate.getOn()) / (houseCount * hour * 1.0f)) * 100.0f) * 100) / 100.0f);
-			
 			rateRealVO.setRealMeterReadingRate(Math.round(((Float.valueOf(rate.getLp()) / (rate.getTotal() * 1.0f)) * 100.0f) * 100) / 100.0f);
 			rateRealVO.setRealTimelyRate(Math.round(((Float.valueOf(rate.getOn()) / (rate.getTotal() * 1.0f)) * 100.0f) * 100) / 100.0f);
 			
@@ -1303,14 +1280,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 			rateHourVO.setDate(temp.get_id());
 			rateHourVO.setDay(temp.get_id().substring(6, 8));
-
-//			if (temp.get_id().equals(today)) {
-//				rateHourVO.setReadingRate((temp.getLp() / (houseCount * hour * 1.0f)) * 100.0f);
-//				rateHourVO.setTimelyRate((temp.getOn() / (houseCount * hour * 1.0f)) * 100.0f);
-//			} else {
-//				rateHourVO.setReadingRate((temp.getLp() / (houseCount * 96 * 1.0f)) * 100.0f);
-//				rateHourVO.setTimelyRate((temp.getOn() / (houseCount * 96 * 1.0f)) * 100.0f);
-//			}
 
 			if (temp.get_id().equals(today)) {
 				rateHourVO.setReadingRate((temp.getLp() / (temp.getTotal() * 1.0f)) * 100.0f);

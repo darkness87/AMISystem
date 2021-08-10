@@ -9,9 +9,13 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 
 @Configuration
-@PropertySource("classpath:/config.properties")
+@PropertySources({
+	@PropertySource("classpath:config.properties"),
+	@PropertySource(value="file:config.properties", ignoreResourceNotFound=true)
+})
 public class ContainerConfig {
 
 	@Value("${tomcat.ajp.protocol}")
