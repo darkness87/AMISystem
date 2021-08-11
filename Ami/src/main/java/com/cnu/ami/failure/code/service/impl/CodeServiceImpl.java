@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.ExceptionConst;
 import com.cnu.ami.common.MeterStatusCode;
+import com.cnu.ami.common.MongoConfig;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
 import com.cnu.ami.failure.code.dao.document.LpFaultTemp;
@@ -32,6 +33,9 @@ public class CodeServiceImpl implements CodeService {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	MongoConfig mongo;
 
 	@Override
 	public List<CodeValueVO> getDataList(int gseq, String dcuId, String fromDate, String toDate, int statusCode)
@@ -58,7 +62,7 @@ public class CodeServiceImpl implements CodeService {
 					.addCriteria(Criteria.where("day").gte(fromDate).lte(toDate));
 		}
 
-		List<LpFaultTemp> data = mongoTemplate.find(query, LpFaultTemp.class, "CASS_LP_FAULT");
+		List<LpFaultTemp> data = mongo.mongodb().find(query, LpFaultTemp.class, "CASS_LP_FAULT");
 
 		if (data == null) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "해당 기간에 데이터가 없습니다.");

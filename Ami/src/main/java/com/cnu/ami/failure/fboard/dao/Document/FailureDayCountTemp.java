@@ -1,4 +1,4 @@
-package com.cnu.ami.failure.fboard.dao.document;
+package com.cnu.ami.failure.fboard.dao.Document;
 
 import lombok.Getter;
 import lombok.Setter;

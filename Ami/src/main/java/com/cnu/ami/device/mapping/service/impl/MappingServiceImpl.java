@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
+import com.cnu.ami.common.MongoConfig;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.device.mapping.dao.MappingDAO;
@@ -40,6 +41,9 @@ public class MappingServiceImpl implements MappingService {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	MongoConfig mongo;
 
 	@Override
 	public MappingVO getEstateMapp(int gseq) throws Exception {
@@ -101,7 +105,7 @@ public class MappingServiceImpl implements MappingService {
 		mappingTemp.setCount(0); // TODO 기존과 비교하여야 함
 
 		try {
-			MappingTemp data = mongoTemplate.save(mappingTemp, collectName);
+			MappingTemp data = mongo.mongodb().save(mappingTemp, collectName);
 			log.info("{}", data);
 
 			if (data == null) {
@@ -133,7 +137,7 @@ public class MappingServiceImpl implements MappingService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
 
-		AggregationResults<MappingHistoryTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<MappingHistoryTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				MappingHistoryTemp.class);
 
 		List<MappingHistoryTemp> data = result.getMappedResults();
@@ -176,7 +180,7 @@ public class MappingServiceImpl implements MappingService {
 		Aggregation aggregation = Aggregation
 				.newAggregation(new CnuAggregationOperation(Document.parse(jsonRawString[0])));
 
-		AggregationResults<MappingVO> result = mongoTemplate.aggregate(aggregation, collectionName, MappingVO.class);
+		AggregationResults<MappingVO> result = mongo.mongodb().aggregate(aggregation, collectionName, MappingVO.class);
 
 		MappingVO data = result.getUniqueMappedResult();
 

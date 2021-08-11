@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
+import com.cnu.ami.common.MongoConfig;
 import com.cnu.ami.device.building.dao.BuildingDAO;
 import com.cnu.ami.device.building.dao.HouseDAO;
 import com.cnu.ami.device.building.dao.entity.BuildingEntity;
@@ -53,14 +54,16 @@ public class LookupServiceImpl implements LookupService {
 	@Autowired
 	HouseDAO houseDAO;
 
+	// TODO MongoTemplate 사용시 성능 이슈 발생
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	MongoConfig mongo;
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<RawLpCycleVO> getLpCycle(int gseq, int bseq, String dcuId, String day) {
-
-		// TODO 속도 개선 필요
 
 		EstateEntity estate = estateDAO.findBygSeq(gseq);
 		
@@ -85,10 +88,7 @@ public class LookupServiceImpl implements LookupService {
 
 		log.info("===== {}",new Date());
 		
-		AggregationResults<RawLpCycleTemp> result = mongoTemplate.aggregate(aggregation, collectionName, RawLpCycleTemp.class);
-		
-		//log.info("===== {}",new Date());
-		//List<LpDataDocument> lpdata = lookupRepo.findAll();
+		AggregationResults<RawLpCycleTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, RawLpCycleTemp.class);
 		
 		log.info("===== {}",new Date());
 
@@ -158,7 +158,7 @@ public class LookupServiceImpl implements LookupService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
 
-		AggregationResults<RawLpHourTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<RawLpHourTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				RawLpHourTemp.class);
 
 		List<RawLpHourTemp> data = result.getMappedResults();
@@ -241,7 +241,7 @@ public class LookupServiceImpl implements LookupService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
 
-		AggregationResults<RawLpDurationTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<RawLpDurationTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				RawLpDurationTemp.class);
 
 		List<RawLpDurationTemp> data = result.getMappedResults();
@@ -396,7 +396,7 @@ public class LookupServiceImpl implements LookupService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[5])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[6])));
 
-		AggregationResults<RawLpHourChartTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<RawLpHourChartTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				RawLpHourChartTemp.class);
 
 		List<RawLpHourChartTemp> data = result.getMappedResults();
@@ -462,7 +462,7 @@ public class LookupServiceImpl implements LookupService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[4])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[5])));
 
-		AggregationResults<RawLpDurationChartTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<RawLpDurationChartTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				RawLpDurationChartTemp.class);
 
 		List<RawLpDurationChartTemp> data = result.getMappedResults();
@@ -487,35 +487,40 @@ public class LookupServiceImpl implements LookupService {
 	@Override
 	public List<RawLpCycleTemp> getTestLpCycle(int gseq, String dcuId, String day) {
 
-		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
-
-		String collectionName = collectionNameFormat.formatDay(gseq, day);
-
+//		MongoConfig mongo = new MongoConfig();
+		
+//		String str = "mongodb://192.168.123.128:27017/skens";
+//		SimpleMongoClientDatabaseFactory fac = new SimpleMongoClientDatabaseFactory(str); 
+//		MongoTemplate mongo = new MongoTemplate(fac);
+		
+		//////////
+		
+		long startTime = System.currentTimeMillis();
+		
+		String collectionName = "CASS_1_2021_RAW_LP";
+		
 		String[] jsonRawString = { String.format("{ $match: { day: '%s', did: '%s' } }", day, dcuId),
 				"{ $unwind: { path: '$lp' } }",
 				"{ $project: { _id: { did: '$did', mid: '$mid', day: '$day' }, did: '$did', mid: '$mid', day: '$day', mac: '$mac', mtime: { $ifNull: ['$lp.mtime', null] }, mstr: { $ifNull: ['$lp.mstr', ''] }, fap: { $ifNull: ['$lp.fap', 0] }, rfap: { $ifNull: ['$lp.rfap', 0] } } }",
 				"{ $sort: { mtime: 1, mid: 1 } }" };
-
+		
 		Aggregation aggregation = Aggregation.newAggregation(
 				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[3])));
+		
+		AggregationResults<RawLpCycleTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, RawLpCycleTemp.class);
 
-		log.info("=====1 {}",new Date());
-		
-		AggregationResults<RawLpCycleTemp> result = mongoTemplate.aggregate(aggregation, collectionName, RawLpCycleTemp.class);
-		
-		log.info("=====2 {}",new Date());
-		
-		mongoTemplate.aggregate(aggregation, collectionName, RawLpCycleTemp.class);
-
-		log.info("=====3 {}",new Date());
-		
 		List<RawLpCycleTemp> data = result.getMappedResults();
-		log.info("size : {}", data.size());
+
+		log.info("data size = {}", data.size());
+		
+		long endTime = System.currentTimeMillis();
+		long elapsedTime = endTime - startTime;
+		log.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Total elapsed time = " + elapsedTime);
 		
 		return data;
 	}
-
+	
 }

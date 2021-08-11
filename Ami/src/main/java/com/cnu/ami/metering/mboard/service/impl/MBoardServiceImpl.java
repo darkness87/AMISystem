@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
+import com.cnu.ami.common.MongoConfig;
 import com.cnu.ami.dashboard.dao.document.DayRateTemp;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateSeqInterfaceVO;
@@ -40,6 +41,9 @@ public class MBoardServiceImpl implements MBoardService {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	MongoConfig mongo;
 
 	@Override
 	public List<LpCountVO> getElectricLPDataCount() throws Exception {
@@ -118,7 +122,7 @@ public class MBoardServiceImpl implements MBoardService {
 					new CnuAggregationOperation(Document.parse(jsonRawString[3])),
 					new CnuAggregationOperation(Document.parse(jsonRawString[4])));
 
-			AggregationResults<MeterReadingCountTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+			AggregationResults<MeterReadingCountTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 					MeterReadingCountTemp.class);
 
 			List<MeterReadingCountTemp> data = result.getMappedResults();
@@ -332,7 +336,7 @@ public class MBoardServiceImpl implements MBoardService {
 					new CnuAggregationOperation(Document.parse(jsonRawString[3])),
 					new CnuAggregationOperation(Document.parse(jsonRawString[4])));
 
-			AggregationResults<EstateCountTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+			AggregationResults<EstateCountTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 					EstateCountTemp.class);
 
 			EstateCountTemp data = result.getUniqueMappedResult();
@@ -477,7 +481,7 @@ public class MBoardServiceImpl implements MBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
 
-		AggregationResults<DayRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<DayRateTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				DayRateTemp.class);
 
 		List<DayRateTemp> data = result.getMappedResults();
@@ -541,7 +545,7 @@ public class MBoardServiceImpl implements MBoardService {
 					new CnuAggregationOperation(Document.parse(jsonRawString[3])),
 					new CnuAggregationOperation(Document.parse(jsonRawString[4])));
 
-			AggregationResults<EstateCountTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+			AggregationResults<EstateCountTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 					EstateCountTemp.class);
 
 			EstateCountTemp data = result.getUniqueMappedResult();

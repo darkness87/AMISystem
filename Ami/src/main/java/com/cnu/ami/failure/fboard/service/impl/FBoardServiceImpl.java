@@ -15,13 +15,14 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
+import com.cnu.ami.common.MongoConfig;
 import com.cnu.ami.dashboard.dao.document.DayLpFailureTemp;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
 import com.cnu.ami.failure.fboard.dao.DcuInfoStatusDAO;
 import com.cnu.ami.failure.fboard.dao.FBoardDAO;
-import com.cnu.ami.failure.fboard.dao.document.FailureDayCountTemp;
+import com.cnu.ami.failure.fboard.dao.Document.FailureDayCountTemp;
 import com.cnu.ami.failure.fboard.dao.entity.DcuInfoStatusEntity;
 import com.cnu.ami.failure.fboard.dao.entity.FBoardCountInterfaceVO;
 import com.cnu.ami.failure.fboard.models.FailureCompareVO;
@@ -39,6 +40,9 @@ public class FBoardServiceImpl implements FBoardService {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	MongoConfig mongo;
 
 	@Override
 	public FailureAllVO getElectricFailureDayHourAll() throws Exception {
@@ -63,7 +67,7 @@ public class FBoardServiceImpl implements FBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[3])));
 
-		AggregationResults<DayLpFailureTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<DayLpFailureTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				DayLpFailureTemp.class);
 
 		List<DayLpFailureTemp> data = result.getMappedResults();
@@ -225,7 +229,7 @@ public class FBoardServiceImpl implements FBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[3])));
 
-		AggregationResults<FailureDayCountTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<FailureDayCountTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				FailureDayCountTemp.class);
 
 		FailureDayCountTemp data = result.getUniqueMappedResult();

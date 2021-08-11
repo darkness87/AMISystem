@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
 import com.cnu.ami.common.ExceptionConst;
+import com.cnu.ami.common.MongoConfig;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.metering.info.dao.DcuDAO;
 import com.cnu.ami.metering.info.dao.MeterDAO;
@@ -46,6 +47,9 @@ public class InfoServiceImpl implements InfoService {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	MongoConfig mongo;
 
 	@Override
 	public List<RealTimeVO> getRealTimeData(int gseq) throws Exception {
@@ -137,7 +141,7 @@ public class InfoServiceImpl implements InfoService {
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 		String collectName = collectionNameFormat.formatDay(gseq, day);
 
-		List<LpDataTemp> lpdata = mongoTemplate.find(query, LpDataTemp.class, collectName);
+		List<LpDataTemp> lpdata = mongo.mongodb().find(query, LpDataTemp.class, collectName);
 
 		List<CollectMeterVO> list = new ArrayList<CollectMeterVO>();
 		CollectMeterVO collectMeterVO = new CollectMeterVO();
@@ -232,7 +236,7 @@ public class InfoServiceImpl implements InfoService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[6])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[7])));
 
-		AggregationResults<OnTimeLpRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<OnTimeLpRateTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				OnTimeLpRateTemp.class);
 
 		List<OnTimeLpRateTemp> dataList = result.getMappedResults();
@@ -261,7 +265,7 @@ public class InfoServiceImpl implements InfoService {
 				new CnuAggregationOperation(Document.parse(jsonRawStringOn[6])),
 				new CnuAggregationOperation(Document.parse(jsonRawStringOn[7])));
 
-		AggregationResults<OnTimeLpRateTemp> resultOn = mongoTemplate.aggregate(aggregationOn, collectionName,
+		AggregationResults<OnTimeLpRateTemp> resultOn = mongo.mongodb().aggregate(aggregationOn, collectionName,
 				OnTimeLpRateTemp.class);
 
 		List<OnTimeLpRateTemp> dataListOn = resultOn.getMappedResults();

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
+import com.cnu.ami.common.MongoConfig;
 import com.cnu.ami.dashboard.dao.document.DayLpFailureTemp;
 import com.cnu.ami.dashboard.dao.document.DayRateTemp;
 import com.cnu.ami.dashboard.dao.document.HourRateTemp;
@@ -92,6 +93,9 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 	@Autowired
 	MongoTemplate mongoTemplate;
+	
+	@Autowired
+	MongoConfig mongo;
 
 	@Override
 	public UseDayHourAllVO getElectricUseDayHourAll() throws Exception {
@@ -127,7 +131,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[4])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[5])));
 
-		AggregationResults<UseDayHourTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<UseDayHourTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				UseDayHourTemp.class);
 
 		List<UseDayHourTemp> data = result.getMappedResults();
@@ -228,7 +232,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
 
-		AggregationResults<DayRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<DayRateTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				DayRateTemp.class);
 
 		List<DayRateTemp> data = result.getMappedResults();
@@ -272,7 +276,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[3])));
 
-		AggregationResults<DayLpFailureTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<DayLpFailureTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				DayLpFailureTemp.class);
 
 		List<DayLpFailureTemp> data = result.getMappedResults();
@@ -616,7 +620,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 					new CnuAggregationOperation(Document.parse(jsonRawString[3])),
 					new CnuAggregationOperation(Document.parse(jsonRawString[4])));
 
-			AggregationResults<EstateCountTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+			AggregationResults<EstateCountTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 					EstateCountTemp.class);
 
 			EstateCountTemp data = result.getUniqueMappedResult();
@@ -796,7 +800,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])));
 
-		AggregationResults<DayRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<DayRateTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				DayRateTemp.class);
 
 		DayRateTemp rate = result.getUniqueMappedResult();
@@ -849,7 +853,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])));
 
-		AggregationResults<DayRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<DayRateTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				DayRateTemp.class);
 
 		DayRateTemp rate = result.getUniqueMappedResult();
@@ -935,7 +939,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 					new CnuAggregationOperation(Document.parse(jsonRawStringEstateLp[3])),
 					new CnuAggregationOperation(Document.parse(jsonRawStringEstateLp[4])));
 
-			AggregationResults<HourRateTemp> estateLpResult = mongoTemplate.aggregate(aggregation, collectionEstateName,
+			AggregationResults<HourRateTemp> estateLpResult = mongo.mongodb().aggregate(aggregation, collectionEstateName,
 					HourRateTemp.class);
 
 			String[] jsonRawStringEstateOn = { String.format("{$match: {day: '%s' }}", today),
@@ -950,7 +954,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 					new CnuAggregationOperation(Document.parse(jsonRawStringEstateOn[3])),
 					new CnuAggregationOperation(Document.parse(jsonRawStringEstateOn[4])));
 
-			AggregationResults<HourRateTemp> estateOnResult = mongoTemplate.aggregate(aggregation, collectionEstateName,
+			AggregationResults<HourRateTemp> estateOnResult = mongo.mongodb().aggregate(aggregation, collectionEstateName,
 					HourRateTemp.class);
 
 			List<HourRateTemp> hourLpRate = estateLpResult.getMappedResults(); // 96개
@@ -1235,7 +1239,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])));
 
-		AggregationResults<DayRateTemp> result = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<DayRateTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
 				DayRateTemp.class);
 
 		DayRateTemp rate = result.getUniqueMappedResult();
@@ -1270,7 +1274,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawDataString[2])),
 				new CnuAggregationOperation(Document.parse(jsonRawDataString[3])));
 
-		AggregationResults<DayRateTemp> resultData = mongoTemplate.aggregate(aggregation, collectionName,
+		AggregationResults<DayRateTemp> resultData = mongo.mongodb().aggregate(aggregation, collectionName,
 				DayRateTemp.class);
 
 		List<DayRateTemp> rateData = resultData.getMappedResults();
