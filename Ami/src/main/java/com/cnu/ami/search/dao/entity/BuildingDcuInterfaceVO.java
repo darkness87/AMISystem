@@ -7,4 +7,5 @@ public interface BuildingDcuInterfaceVO {
 	String getBNAME();
 
 	String getDID();
+
 }

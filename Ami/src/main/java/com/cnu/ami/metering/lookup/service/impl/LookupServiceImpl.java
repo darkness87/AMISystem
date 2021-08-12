@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
-import com.cnu.ami.common.MongoConfig;
+import com.cnu.ami.common.MongoConnect;
 import com.cnu.ami.device.building.dao.BuildingDAO;
 import com.cnu.ami.device.building.dao.HouseDAO;
 import com.cnu.ami.device.building.dao.entity.BuildingEntity;
@@ -36,14 +36,8 @@ import com.cnu.ami.metering.lookup.models.RawLpHourChartVO;
 import com.cnu.ami.metering.lookup.models.RawLpHourVO;
 import com.cnu.ami.metering.lookup.service.LookupService;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 public class LookupServiceImpl implements LookupService {
-
-//	@Autowired
-//	private LookupRepo lookupRepo;
 
 	@Autowired
 	EstateDAO estateDAO;
@@ -59,7 +53,7 @@ public class LookupServiceImpl implements LookupService {
 	MongoTemplate mongoTemplate;
 	
 	@Autowired
-	MongoConfig mongo;
+	MongoConnect mongo;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -77,7 +71,7 @@ public class LookupServiceImpl implements LookupService {
 
 		String[] jsonRawString = { String.format("{ $match: { day: '%s', did: '%s' } }", day, dcuId),
 				"{ $unwind: { path: '$lp' } }",
-				"{ $project: { _id: { did: '$did', mid: '$mid', day: '$day' }, did: '$did', mid: '$mid', day: '$day', mac: '$mac', mtime: { $ifNull: ['$lp.mtime', null] }, mstr: { $ifNull: ['$lp.mstr', ''] }, fap: { $ifNull: ['$lp.fap', 0] }, rfap: { $ifNull: ['$lp.rfap', 0] } } }",
+				"{ $project: { did: '$did', mid: '$mid', day: '$day', mac: '$mac', mtime: { $ifNull: ['$lp.mtime', null] }, mstr: { $ifNull: ['$lp.mstr', ''] }, fap: { $ifNull: ['$lp.fap', 0] }, rfap: { $ifNull: ['$lp.rfap', 0] } } }",
 				"{ $sort: { mtime: 1, mid: 1 } }" };
 
 		Aggregation aggregation = Aggregation.newAggregation(
@@ -85,13 +79,9 @@ public class LookupServiceImpl implements LookupService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[3])));
-
-		log.info("===== {}",new Date());
 		
 		AggregationResults<RawLpCycleTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, RawLpCycleTemp.class);
 		
-		log.info("===== {}",new Date());
-
 		List<RawLpCycleTemp> data = result.getMappedResults();
 		
 		List<RawLpCycleVO> list = new ArrayList<RawLpCycleVO>();
@@ -383,7 +373,7 @@ public class LookupServiceImpl implements LookupService {
 				"{ $unwind: { path: '$mids' } }",
 				"{$project: {day: '$day',did: '$did',mid: '$mids.mid',e: '$mids.e',re: '$mids.re',v: '$mids.v',rv: '$mids.rv'}}",
 				"{$unwind: {path: '$v',includeArrayIndex: 'hour'}}",
-				/* "{$unwind: {path: '$rv',includeArrayIndex: 'hour'}}", */ // TODO 따로 따로 가지고 와야함
+				/* "{$unwind: {path: '$rv',includeArrayIndex: 'hour'}}", */ // TODO 역방향 값 따로 따로 가지고 와야함
 				"{$group: {_id: {day: '$day',hour: '$hour'},sumV: {$sum: '$v'},sumRV: {$sum: '$rv'}}}",
 				"{$project: {hour: '$_id.hour',v: '$sumV',rv: '$sumRV'}}", "{$sort: {hour: 1}}" };
 
@@ -484,43 +474,4 @@ public class LookupServiceImpl implements LookupService {
 		return list;
 	}
 
-	@Override
-	public List<RawLpCycleTemp> getTestLpCycle(int gseq, String dcuId, String day) {
-
-//		MongoConfig mongo = new MongoConfig();
-		
-//		String str = "mongodb://192.168.123.128:27017/skens";
-//		SimpleMongoClientDatabaseFactory fac = new SimpleMongoClientDatabaseFactory(str); 
-//		MongoTemplate mongo = new MongoTemplate(fac);
-		
-		//////////
-		
-		long startTime = System.currentTimeMillis();
-		
-		String collectionName = "CASS_1_2021_RAW_LP";
-		
-		String[] jsonRawString = { String.format("{ $match: { day: '%s', did: '%s' } }", day, dcuId),
-				"{ $unwind: { path: '$lp' } }",
-				"{ $project: { _id: { did: '$did', mid: '$mid', day: '$day' }, did: '$did', mid: '$mid', day: '$day', mac: '$mac', mtime: { $ifNull: ['$lp.mtime', null] }, mstr: { $ifNull: ['$lp.mstr', ''] }, fap: { $ifNull: ['$lp.fap', 0] }, rfap: { $ifNull: ['$lp.rfap', 0] } } }",
-				"{ $sort: { mtime: 1, mid: 1 } }" };
-		
-		Aggregation aggregation = Aggregation.newAggregation(
-				new CnuAggregationOperation(Document.parse(jsonRawString[0])),
-				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
-				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
-				new CnuAggregationOperation(Document.parse(jsonRawString[3])));
-		
-		AggregationResults<RawLpCycleTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, RawLpCycleTemp.class);
-
-		List<RawLpCycleTemp> data = result.getMappedResults();
-
-		log.info("data size = {}", data.size());
-		
-		long endTime = System.currentTimeMillis();
-		long elapsedTime = endTime - startTime;
-		log.info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Total elapsed time = " + elapsedTime);
-		
-		return data;
-	}
-	
 }

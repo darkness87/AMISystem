@@ -1,5 +1,10 @@
 package com.cnu.ami.common;
 
+/**
+ * Meter Type 별 상태 코드 정보
+ * @author sookwon
+ *
+ */
 public class MeterCodeConst {
 
 	// 1:과전류,2:정기검침,3:계절변경,4:모뎀 커버,5:터미널 커버,6:Latch ON,7:Latch OFF,8:Latch

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Response Object return
+ * Common Response Object return
  * 
  * @author sookwon
  */

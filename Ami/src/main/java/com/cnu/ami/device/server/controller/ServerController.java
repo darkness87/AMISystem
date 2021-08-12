@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.ExceptionConst;
-import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.SystemException;
@@ -47,9 +46,6 @@ public class ServerController {
 	@Autowired
 	DashBoardService dashBoardService;
 
-	@Autowired
-	PropertyData propertyData;
-
 	@RequestMapping(value = "/system", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:서버현황 : 시스템 자원정보")
@@ -76,6 +72,7 @@ public class ServerController {
 	@Description(value = "설비:서버현황 : 등록설비정보")
 	public Mono<ResponseVO<ServerRegistrationVO>> getElectricRegistrationDevice(HttpServletRequest request)
 			throws Exception {
+
 		ServerRegistrationVO data = serverService.getServerRegistration();
 
 		return Mono.just(new ResponseVO<ServerRegistrationVO>(request, data));

@@ -33,17 +33,18 @@ public class LoginServiceImpl implements LoginService {
 	public UserLoginVO getLogin(String userid, String password) throws Exception {
 
 		UserLoginVO userLoginVO = new UserLoginVO();
-//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 		PasswordMappingVO pw = loginDAO.findOneByUserid(userid);
 
 		if (pw == null) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "아이디 재확인 바랍니다.");
 		}
+
 		// PBKDF2
 //		if(HashCode.validatePassword(password, pw.getPassword())) {
 //		}
 		// Spring Security
+//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 //		if(encoder.matches(password, pw.getPassword())) {
 
 		if (HashCode.validatePassword(password, pw.getPassword())) {
@@ -135,6 +136,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public UserInfoVO getUserData(String userid) throws Exception {
+
 		UserLoginVO userLoginVO = loginDAO.findByUserid(userid);
 
 		UserInfoVO userInfoVO = new UserInfoVO();
@@ -197,6 +199,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public UserInfoVO getUserInfoData(UserLoginVO userLoginVO) throws Exception {
+
 		UserInfoVO userInfoVO = new UserInfoVO();
 
 		userInfoVO.setUserid(userLoginVO.getUserid());

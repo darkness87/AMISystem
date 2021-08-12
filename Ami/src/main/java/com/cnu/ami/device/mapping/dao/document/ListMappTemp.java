@@ -24,4 +24,5 @@ public class ListMappTemp {
 	private String dcuId;
 
 	private int status;
+
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.ResultVO;
 import com.cnu.ami.device.mapping.dao.document.MappingTemp;
@@ -36,16 +35,11 @@ public class MappingController {
 	@Autowired
 	MappingService mappingService;
 
-	@Autowired
-	PropertyData propertyData;
-
 	@RequestMapping(value = "/estate", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:매핑관리 : 단지매핑정보")
 	public Mono<ResponseVO<MappingVO>> getEstateMapp(HttpServletRequest request, @RequestParam int estateSeq)
 			throws Exception {
-
-		// 1. mysql에서 매핑된 정보를 가지고 와서 전달 - join 관련
 
 		MappingVO data = mappingService.getEstateMapp(estateSeq);
 
@@ -65,8 +59,6 @@ public class MappingController {
 		
 		// TODO  매핑 SQL 저장 및 업데이트
 		// 1. 전달 받은 리스트 정보에서 동 정보를 그룹화하여 insert 또는 Update
-		// 2. 
-		
 
 		if (data == 0) { // 0: Success , 1: Fail
 			resultVO.setResult(true);
@@ -84,7 +76,6 @@ public class MappingController {
 			@RequestParam int estateSeq) throws Exception {
 
 		EstateMappingVO data = mappingService.getEstateMappHistory(estateSeq);
-		// 1. 해당 단지의 이력정보를 출력 - MongoDB
 
 		return Mono.just(new ResponseVO<EstateMappingVO>(request, data));
 	}
@@ -96,9 +87,6 @@ public class MappingController {
 			@RequestParam String mappingId) throws Exception {
 
 		MappingVO data = mappingService.getEstateHistoryMapp(mappingId);
-		// 1. 이력 리스트의 상세 - MongoDB
-		// 2. 매핑정보 가져오기 - mysql
-		// 3. java에서 매핑하여 던지기
 
 		return Mono.just(new ResponseVO<MappingVO>(request, data));
 	}

@@ -1,5 +1,10 @@
 package com.cnu.ami.common;
 
+/**
+ * 확산사업 MongoDB Collection명 선택
+ * @author sookwon
+ *
+ */
 public class CollectionNameFormat {
 
 	public String formatYear(int gseq, String year) {

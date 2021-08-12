@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
-import com.cnu.ami.common.MongoConfig;
+import com.cnu.ami.common.MongoConnect;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateEntity;
 import com.cnu.ami.device.mapping.dao.MappingDAO;
@@ -43,7 +43,7 @@ public class MappingServiceImpl implements MappingService {
 	MongoTemplate mongoTemplate;
 	
 	@Autowired
-	MongoConfig mongo;
+	MongoConnect mongo;
 
 	@Override
 	public MappingVO getEstateMapp(int gseq) throws Exception {
@@ -122,7 +122,6 @@ public class MappingServiceImpl implements MappingService {
 	@Override
 	public EstateMappingVO getEstateMappHistory(int gseq) throws Exception {
 
-		// TODO
 		EstateEntity estate = estateDAO.findBygSeq(gseq);
 		
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();

@@ -9,4 +9,5 @@ public class LpCountVO {
 
 	private int time;
 	private int count;
+
 }

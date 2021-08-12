@@ -40,7 +40,9 @@ public class SearchController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "검색: 지역정보")
 	public Mono<ResponseListVO<RegionVO>> getRegionList(HttpServletRequest request) throws Exception {
+
 		List<RegionVO> data = searchService.getRegionList();
+
 		return Mono.just(new ResponseListVO<RegionVO>(request, data));
 	}
 
@@ -49,7 +51,9 @@ public class SearchController {
 	@Description(value = "검색: 단지정보 : => PARAM regionSeq = 0: 전체")
 	public Mono<ResponseListVO<EstateVO>> getEstateList(HttpServletRequest request, @RequestParam int regionSeq)
 			throws Exception {
+
 		List<EstateVO> data = searchService.getEstateList(regionSeq);
+
 		return Mono.just(new ResponseListVO<EstateVO>(request, data));
 	}
 
@@ -58,7 +62,9 @@ public class SearchController {
 	@Description(value = "검색: 동정보 : => PARAM estateSeq = 0: 전체")
 	public Mono<ResponseListVO<BuildingVO>> getBuildingList(HttpServletRequest request, @RequestParam int estateSeq)
 			throws Exception {
+
 		List<BuildingVO> data = searchService.getBuildingList(estateSeq);
+
 		return Mono.just(new ResponseListVO<BuildingVO>(request, data));
 	}
 
@@ -67,7 +73,9 @@ public class SearchController {
 	@Description(value = "검색: DCU정보 : => PARAM buildingSeq = 0: 전체")
 	public Mono<ResponseListVO<DcuMappVO>> getDcuList(HttpServletRequest request, @RequestParam int buildingSeq)
 			throws Exception {
+
 		List<DcuMappVO> data = searchService.getDcuList(buildingSeq);
+
 		return Mono.just(new ResponseListVO<DcuMappVO>(request, data));
 	}
 

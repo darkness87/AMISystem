@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
-import com.cnu.ami.common.MongoConfig;
+import com.cnu.ami.common.MongoConnect;
 import com.cnu.ami.dashboard.dao.document.DayLpFailureTemp;
 import com.cnu.ami.dashboard.dao.document.DayRateTemp;
 import com.cnu.ami.dashboard.dao.document.HourRateTemp;
@@ -95,7 +95,7 @@ public class DashBoardServiceImpl implements DashBoardService {
 	MongoTemplate mongoTemplate;
 	
 	@Autowired
-	MongoConfig mongo;
+	MongoConnect mongo;
 
 	@Override
 	public UseDayHourAllVO getElectricUseDayHourAll() throws Exception {
@@ -596,9 +596,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 
 		List<EstateSeqInterfaceVO> estate = estateDAO.getEstate();
 
-		// TODO 단지 대신에 단지별 DCU정보를 가져온다.
-		// 몽고DB에서 cntOn을 가져온다
-
 		List<EstateListReadingCountVO> estateListCount = new ArrayList<EstateListReadingCountVO>();
 		EstateListReadingCountVO estateListReadingCountVO = new EstateListReadingCountVO();
 
@@ -658,7 +655,6 @@ public class DashBoardServiceImpl implements DashBoardService {
 				val = 100.0f - (((house.get(i).getCOUNT() * hour) - count) / (house.get(i).getCOUNT() * hour) * 100.0f);
 
 				if (Float.isNaN(val) || Float.isInfinite(val)) {
-					// val = 0.0f;
 					val = Float.NaN;
 				}
 

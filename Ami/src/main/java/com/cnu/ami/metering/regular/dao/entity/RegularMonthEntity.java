@@ -131,4 +131,5 @@ public class RegularMonthEntity {
 	private int R_LPTD;
 	@Column(name = "R_PFTD")
 	private int R_PFTD;
+
 }

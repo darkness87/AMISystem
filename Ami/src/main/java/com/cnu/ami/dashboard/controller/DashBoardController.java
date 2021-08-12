@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.ExceptionConst;
-import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseArrayVO;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
@@ -49,9 +48,6 @@ public class DashBoardController {
 	@Autowired
 	DashBoardService dashBoardService;
 
-	@Autowired
-	PropertyData propertyData;
-
 	@RequestMapping(value = "/useAll/dayhour", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 전국전력사용량")
@@ -78,7 +74,8 @@ public class DashBoardController {
 	@Description(value = "현황판 : 검침률")
 	public Flux<ResponseVO<RateVO>> getElectricMeterReadingRateDayAll(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
-		if (duration == 0) { // 0일 경우 1회 전달
+		
+		if (duration == 0) {
 			return Flux.just(new ResponseVO<RateVO>(request, dashBoardService.getElectricMeterReadingRateDayAll()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
@@ -97,10 +94,8 @@ public class DashBoardController {
 	@Description(value = "현황판 : 금일 상태(장애) 정보")
 	public Flux<ResponseVO<FailureAllVO>> getElectricFailureDayHourAll(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
-//		FailureAllVO data = dashBoardService.getElectricFailureDayHourAll();
-//		return Mono.just(new ResponseVO<FailureAllVO>(request, data));
 
-		if (duration == 0) { // 0일 경우 1회 전달
+		if (duration == 0) {
 			return Flux.just(new ResponseVO<FailureAllVO>(request, dashBoardService.getElectricFailureDayHourAll()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
@@ -119,10 +114,8 @@ public class DashBoardController {
 	@Description(value = "현황판 : 오늘의 날씨")
 	public Flux<ResponseVO<WeatherVO>> getWeatherRealtimeAll(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
-//		WeatherVO data = dashBoardService.getWeatherRealtimeAll();
-//		return Mono.just(new ResponseVO<WeatherVO>(request, data));
 
-		if (duration == 0) { // 0일 경우 1회 전달
+		if (duration == 0) {
 			return Flux.just(new ResponseVO<WeatherVO>(request, dashBoardService.getWeatherRealtimeAll()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
@@ -133,6 +126,7 @@ public class DashBoardController {
 				}
 			}).log("메인현황판 : 오늘의날씨");
 		}
+
 	}
 
 	@RequestMapping(value = "/weather/data", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -140,7 +134,8 @@ public class DashBoardController {
 	@Description(value = "현황판 : 데이터날씨")
 	public Flux<ResponseVO<WeatherDataVO>> getWeatherDataWeatherAll(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
-		if (duration == 0) { // 0일 경우 1회 전달
+		
+		if (duration == 0) {
 			return Flux.just(new ResponseVO<WeatherDataVO>(request, dashBoardService.getWeatherDataWeatherAll()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
@@ -151,18 +146,16 @@ public class DashBoardController {
 				}
 			}).log("메인현황판 : 데이터날씨");
 		}
+
 	}
 
-	// TODO URI 주소 rate로 바꿔야함
 	@RequestMapping(value = "/location/rate/mapinfo", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "현황판 : 지도 정보")
 	public Flux<ResponseListVO<DashBoardMapVO>> getLocationRateMapInfo(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
-//		List<DashBoardMapVO> data = dashBoardService.getLocationFailureMapInfo();
-//		return Mono.just(new ResponseListVO<DashBoardMapVO>(request, data));
 
-		if (duration == 0) { // 0일 경우 1회 전달
+		if (duration == 0) {
 			return Flux.just(new ResponseListVO<DashBoardMapVO>(request, dashBoardService.getLocationRateMapInfo()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
@@ -184,7 +177,6 @@ public class DashBoardController {
 		if (duration == 0) { // 0일 경우 디폴트 15초
 			return Flux.just(new ResponseVO<ServerManagementVO>(request, dashBoardService.getServerManagementInfo()));
 		} else {
-
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
 					return new ResponseVO<ServerManagementVO>(request, dashBoardService.getServerManagementInfo());
@@ -192,7 +184,6 @@ public class DashBoardController {
 					throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.FAIL, "" + e);
 				}
 			});
-
 		}
 
 	}
@@ -202,12 +193,9 @@ public class DashBoardController {
 	@Description(value = "현황판 : 등록설비")
 	public Flux<ResponseListVO<DeviceRegVO>> getElectricRegistrationDevice(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
-//		List<DeviceRegVO> data = dashBoardService.getElectricRegistrationDevice();
-//		return Mono.just(new ResponseListVO<DeviceRegVO>(request, data));
 
-		if (duration == 0) { // 0일 경우 1회 전달
-			return Flux
-					.just(new ResponseListVO<DeviceRegVO>(request, dashBoardService.getElectricRegistrationDevice()));
+		if (duration == 0) {
+			return Flux.just(new ResponseListVO<DeviceRegVO>(request, dashBoardService.getElectricRegistrationDevice()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
@@ -217,6 +205,7 @@ public class DashBoardController {
 				}
 			}).log("메인현황판 : 등록설비");
 		}
+
 	}
 
 	@RequestMapping(value = "/location/use/list", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -225,7 +214,7 @@ public class DashBoardController {
 	public Flux<ResponseListVO<UseLocationVO>> getLocationUseList(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 
-		if (duration == 0) { // 0일 경우 1회 전달
+		if (duration == 0) {
 			return Flux.just(new ResponseListVO<UseLocationVO>(request, dashBoardService.getLocationUseList()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
@@ -236,6 +225,7 @@ public class DashBoardController {
 				}
 			}).log("메인현황판 : 지역별사용량");
 		}
+
 	}
 
 	@RequestMapping(value = "/all/data", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -244,7 +234,7 @@ public class DashBoardController {
 	public Flux<ResponseArrayVO> getDashBoardAllData(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
 
-		if (duration == 0) { // 0일 경우 1회 전달
+		if (duration == 0) {
 			ResponseArrayVO responseArrayVO = new ResponseArrayVO(request);
 			
 			responseArrayVO.setUseData(dashBoardService.getElectricUseDayHourAll());
@@ -257,7 +247,6 @@ public class DashBoardController {
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {
 				try {
-					
 					ResponseArrayVO responseArray = new ResponseArrayVO(request);
 					
 					responseArray.setUseData(dashBoardService.getElectricUseDayHourAll());
@@ -289,7 +278,6 @@ public class DashBoardController {
 		responseArrayVO.setReadingDayInfo(dashBoardService.getReadingDayInfo());
 
 		return Mono.just(responseArrayVO).log("메인현황판 : First 데이터");
-
 	}
 	
 	@RequestMapping(value = "/rate/firstrate", method = RequestMethod.GET)
@@ -301,7 +289,6 @@ public class DashBoardController {
 		responseArrayVO.setRate(dashBoardService.getReadingRateDayPeriod());
 
 		return Mono.just(responseArrayVO).log("메인현황판 : First Rate 데이터");
-
 	}
 	
 	@RequestMapping(value = "/map/firstmap", method = RequestMethod.GET)
@@ -313,7 +300,6 @@ public class DashBoardController {
 		responseArrayVO.setMap(dashBoardService.getLocationRateMapInfo());
 
 		return Mono.just(responseArrayVO).log("메인현황판 : First Map 데이터");
-
 	}
 	
 	
@@ -322,7 +308,8 @@ public class DashBoardController {
 	@Description(value = "현황판 : 시간별 검침률")
 	public Flux<ResponseVO<RateRealVO>> getReadingRateDayHourAll(HttpServletRequest request,
 			@RequestParam(required = false, defaultValue = "0") int duration) throws Exception {
-		if (duration == 0) { // 0일 경우 1회 전달
+
+		if (duration == 0) {
 			return Flux.just(new ResponseVO<RateRealVO>(request, dashBoardService.getReadingRateDayPeriod()));
 		} else {
 			return Flux.interval(Duration.ofSeconds(duration)).map(response -> {

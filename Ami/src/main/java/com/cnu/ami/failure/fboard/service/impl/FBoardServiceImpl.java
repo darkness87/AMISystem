@@ -15,14 +15,14 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
-import com.cnu.ami.common.MongoConfig;
+import com.cnu.ami.common.MongoConnect;
 import com.cnu.ami.dashboard.dao.document.DayLpFailureTemp;
 import com.cnu.ami.dashboard.models.DashBoardMapVO;
 import com.cnu.ami.dashboard.models.FailureAllListVO;
 import com.cnu.ami.dashboard.models.FailureAllVO;
 import com.cnu.ami.failure.fboard.dao.DcuInfoStatusDAO;
 import com.cnu.ami.failure.fboard.dao.FBoardDAO;
-import com.cnu.ami.failure.fboard.dao.Document.FailureDayCountTemp;
+import com.cnu.ami.failure.fboard.dao.document.FailureDayCountTemp;
 import com.cnu.ami.failure.fboard.dao.entity.DcuInfoStatusEntity;
 import com.cnu.ami.failure.fboard.dao.entity.FBoardCountInterfaceVO;
 import com.cnu.ami.failure.fboard.models.FailureCompareVO;
@@ -42,7 +42,7 @@ public class FBoardServiceImpl implements FBoardService {
 	MongoTemplate mongoTemplate;
 	
 	@Autowired
-	MongoConfig mongo;
+	MongoConnect mongo;
 
 	@Override
 	public FailureAllVO getElectricFailureDayHourAll() throws Exception {
@@ -110,15 +110,9 @@ public class FBoardServiceImpl implements FBoardService {
 		List<DashBoardMapVO> dashmap = new ArrayList<DashBoardMapVO>();
 		DashBoardMapVO dashBoardMapVO = new DashBoardMapVO();
 
-//		float val = 0.0f;
-		
 		for (FBoardCountInterfaceVO map : meter) {
 			dashBoardMapVO = new DashBoardMapVO();
 			
-//			if (Float.isNaN(map.getCOUNT()) || Float.isInfinite(map.getCOUNT())) {
-//				val = Float.NaN;
-//			}
-
 			if (map.getRSEQ() == 2) {
 				dashBoardMapVO.setHckey("kr-so"); // 서울특별시
 				dashBoardMapVO.setValue(map.getCOUNT());

@@ -59,8 +59,10 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Override
 	public ResultCountVO getDcuCount() throws Exception {
+
 		ResultCountVO resultCountVO = new ResultCountVO();
 		resultCountVO.setCount(dcuInfoDAO.count());
+
 		return resultCountVO;
 	}
 
@@ -322,8 +324,10 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Override
 	public ResultCountVO getMeterCount() throws Exception {
+
 		ResultCountVO resultCountVO = new ResultCountVO();
 		resultCountVO.setCount(meterInfoDAO.count());
+
 		return resultCountVO;
 	}
 
@@ -446,8 +450,10 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 	@Override
 	public ResultCountVO getOtherMeterCount() throws Exception {
+
 		ResultCountVO resultCountVO = new ResultCountVO();
 		resultCountVO.setCount(deviceInfoDAO.count());
+
 		return resultCountVO;
 	}
 

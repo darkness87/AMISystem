@@ -51,9 +51,12 @@ public class BuildingServiceImpl implements BuildingService {
 
 	@Override
 	public ResultCountVO getBuildingCount() throws Exception {
+		
 		ResultCountVO resultCountVO = new ResultCountVO();
 		resultCountVO.setCount(buildingDAO.count());
+		
 		return resultCountVO;
+
 	}
 
 	@Override
@@ -105,6 +108,7 @@ public class BuildingServiceImpl implements BuildingService {
 		}
 
 		return buildingData;
+
 	}
 
 	@Override
@@ -140,7 +144,6 @@ public class BuildingServiceImpl implements BuildingService {
 			buildingVO.setEstategId(data.get(i).getGid());
 			buildingVO.setEstateName(data.get(i).getGname());
 
-			// BSEQ 로 매핑된 DCU 조회
 			List<BuildingDcuMappingEntity> mappList = buildingDcuMappDAO.findByBSEQ(data.get(i).getBseq());
 
 			List<DcuMappVO> dcuMapplist = new ArrayList<DcuMappVO>();
@@ -157,6 +160,7 @@ public class BuildingServiceImpl implements BuildingService {
 		}
 
 		return list;
+
 	}
 
 	@Transactional

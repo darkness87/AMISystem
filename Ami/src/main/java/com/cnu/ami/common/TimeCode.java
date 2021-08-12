@@ -1,5 +1,10 @@
 package com.cnu.ami.common;
 
+/**
+ * 시간 값 체크 코드
+ * @author sookwon
+ *
+ */
 public class TimeCode {
 
 	public static String checkTime(int idx) throws Exception {

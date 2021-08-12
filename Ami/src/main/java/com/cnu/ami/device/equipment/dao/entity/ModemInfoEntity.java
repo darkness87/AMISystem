@@ -17,6 +17,8 @@ public class ModemInfoEntity {
 	@Id
 	@Column(name = "MAC")
 	private String MAC;
+
 	@Column(name = "DID")
 	private String DID;
+
 }

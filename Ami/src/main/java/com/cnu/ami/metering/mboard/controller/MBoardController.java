@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.ExceptionConst;
-import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseReadingArrayVO;
 import com.cnu.ami.common.ResponseVO;
@@ -43,9 +42,6 @@ public class MBoardController {
 	@Autowired
 	MBoardService mBoardService;
 
-	@Autowired
-	PropertyData propertyData;
-
 	@RequestMapping(value = "/lp/count", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "검침현황판 : 금일 검침 데이터 수집수")
@@ -63,6 +59,7 @@ public class MBoardController {
 				}
 			}).log("검침현황판 : 데이터수집수");
 		}
+
 	}
 
 	@RequestMapping(value = "/location/mapinfo", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -82,6 +79,7 @@ public class MBoardController {
 				}
 			}).log("검침현황판 : 지도정보");
 		}
+
 	}
 
 	@RequestMapping(value = "/readingrateAll/dayOne", method = RequestMethod.GET, produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -120,6 +118,7 @@ public class MBoardController {
 				}
 			}).log("검침현황판 : 지역별집계");
 		}
+
 	}
 
 	@RequestMapping(value = "/all/firstdata", method = RequestMethod.GET)
@@ -129,14 +128,12 @@ public class MBoardController {
 
 		ResponseReadingArrayVO responseReadingArrayVO = new ResponseReadingArrayVO(request);
 		
-		// TODO 데이터 수집 수 수정 필요
 		responseReadingArrayVO.setRate(mBoardService.getElectricMeterReadingRateDayAll());
 		responseReadingArrayVO.setRegion(mBoardService.getReadingRegionAggr());
 		responseReadingArrayVO.setLp(mBoardService.getElectricLPDataCount());
 		responseReadingArrayVO.setMap(mBoardService.getLocationMapInfo());
 		
 		return Mono.just(responseReadingArrayVO).log("검침현황판 : First 데이터");
-
 	}
 	
 	@RequestMapping(value = "/lp/firstlp", method = RequestMethod.GET)
@@ -146,11 +143,9 @@ public class MBoardController {
 
 		ResponseReadingArrayVO responseReadingArrayVO = new ResponseReadingArrayVO(request);
 		
-		// TODO 데이터 수집 수 수정 필요
 		responseReadingArrayVO.setLp(mBoardService.getElectricLPDataCount());
 
 		return Mono.just(responseReadingArrayVO).log("검침현황판 : LP First 데이터");
-
 	}
 	
 	@RequestMapping(value = "/rate/firstrate", method = RequestMethod.GET)
@@ -163,7 +158,6 @@ public class MBoardController {
 		responseReadingArrayVO.setRate(mBoardService.getElectricMeterReadingRateDayAll());
 
 		return Mono.just(responseReadingArrayVO).log("검침현황판 : Rate First 데이터");
-
 	}
 	
 	@RequestMapping(value = "/map/firstmap", method = RequestMethod.GET)
@@ -176,7 +170,6 @@ public class MBoardController {
 		responseReadingArrayVO.setMap(mBoardService.getLocationMapInfo());
 
 		return Mono.just(responseReadingArrayVO).log("검침현황판 : Map First 데이터");
-
 	}
 	
 	@RequestMapping(value = "/region/firstregion", method = RequestMethod.GET)
@@ -189,7 +182,6 @@ public class MBoardController {
 		responseReadingArrayVO.setRegion(mBoardService.getReadingRegionAggr());
 
 		return Mono.just(responseReadingArrayVO).log("검침현황판 : Region First 데이터");
-
 	}
 
 }

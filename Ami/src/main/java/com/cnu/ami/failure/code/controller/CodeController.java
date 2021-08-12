@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.failure.code.models.CodeValueVO;
 import com.cnu.ami.failure.code.service.CodeService;
@@ -33,9 +32,6 @@ public class CodeController {
 
 	@Autowired
 	CodeService codeService;
-
-	@Autowired
-	PropertyData propertyData;
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)

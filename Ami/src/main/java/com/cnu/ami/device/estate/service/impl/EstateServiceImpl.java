@@ -41,8 +41,10 @@ public class EstateServiceImpl implements EstateService {
 
 	@Override
 	public ResultCountVO getEstateCount() throws Exception {
+
 		ResultCountVO resultCountVO = new ResultCountVO();
 		resultCountVO.setCount(estateDAO.count());
+
 		return resultCountVO;
 	}
 

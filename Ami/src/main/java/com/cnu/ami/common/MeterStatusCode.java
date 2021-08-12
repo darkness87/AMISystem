@@ -2,6 +2,11 @@ package com.cnu.ami.common;
 
 import com.cnu.ami.failure.code.dao.document.LpFaultTemp;
 
+/**
+ * 미터 상태 코드 체크
+ * @author sookwon
+ *
+ */
 public class MeterStatusCode {
 
 	public static String checkCode(LpFaultTemp data, String type, int code) {

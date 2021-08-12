@@ -16,14 +16,14 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Component
-public class MongoConfig {
+public class MongoConnect {
 
 	static MessageSourceAccessor messageSourceAccessor;
 
-	public MongoConfig() {
+	public MongoConnect() {
 		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
 		messageSource.setBasename("classpath:application");
-		MongoConfig.messageSourceAccessor = new MessageSourceAccessor(messageSource);
+		MongoConnect.messageSourceAccessor = new MessageSourceAccessor(messageSource);
 	}
 
 	public String getData(String key) {

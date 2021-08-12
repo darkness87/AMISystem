@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.ExceptionConst;
 import com.cnu.ami.common.MeterStatusCode;
-import com.cnu.ami.common.MongoConfig;
+import com.cnu.ami.common.MongoConnect;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.device.equipment.dao.MeterInfoDAO;
 import com.cnu.ami.failure.code.dao.document.LpFaultTemp;
@@ -35,13 +35,11 @@ public class CodeServiceImpl implements CodeService {
 	MongoTemplate mongoTemplate;
 	
 	@Autowired
-	MongoConfig mongo;
+	MongoConnect mongo;
 
 	@Override
 	public List<CodeValueVO> getDataList(int gseq, String dcuId, String fromDate, String toDate, int statusCode)
 			throws Exception {
-
-		// TODO 개선사항 찾아보기
 
 		Query query = new Query();
 
@@ -88,7 +86,6 @@ public class CodeServiceImpl implements CodeService {
 					}
 
 					codeValueVO.setRegionName(mlist.getRname());
-					// codeValueVO.setEstateId(mlist.getGid());
 					codeValueVO.setEstateName(mlist.getGname());
 					codeValueVO.setBuildingName(mlist.getBname());
 					codeValueVO.setDcuId(mlist.getDid());

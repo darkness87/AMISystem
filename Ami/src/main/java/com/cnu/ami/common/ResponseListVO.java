@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Response List return
+ * Common Response List return
  * 
  * @author sookwon
  */

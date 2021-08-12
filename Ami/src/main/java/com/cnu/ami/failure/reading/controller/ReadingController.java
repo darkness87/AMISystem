@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.failure.reading.models.FailureReadingVO;
 import com.cnu.ami.failure.reading.service.FailureReadingService;
@@ -33,9 +32,6 @@ public class ReadingController {
 
 	@Autowired
 	FailureReadingService failureReadingService;
-
-	@Autowired
-	PropertyData propertyData;
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)

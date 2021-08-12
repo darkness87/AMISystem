@@ -31,14 +31,13 @@ public class RegularServiceImpl implements RegularService {
 	@Override
 	public List<RegularMonthVO> getMonthRegularData(int gseq, String yearMonth) throws Exception {
 
-		// 단지정보에서 검침일 값 가져오기
 		EstateEntity estate = estateDAO.findBygSeq(gseq);
 		
 		if(estate==null) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "단지 정보가 없습니다.");
 		}
 
-		int readingDay = estate.getDayPower();
+		int readingDay = estate.getDayPower(); // 전기 검침일
 
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
@@ -105,7 +104,6 @@ public class RegularServiceImpl implements RegularService {
 		}
 
 		return list;
-
 	}
 
 }

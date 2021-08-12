@@ -84,6 +84,7 @@ public class ServerServiceImpl implements ServerService {
 	
 	@Override
 	public List<ServerListVO> getServerList() throws Exception {
+
 		List<ServerEntity> data = serverDAO.findAll();
 
 		List<ServerListVO> list = new ArrayList<ServerListVO>();

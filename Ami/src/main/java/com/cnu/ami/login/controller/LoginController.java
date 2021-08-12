@@ -19,7 +19,6 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.login.models.LoginResponseVO;
 import com.cnu.ami.login.models.TokenVO;
@@ -41,9 +40,6 @@ import org.springframework.core.MethodParameter;
 public class LoginController {
 
 	@Autowired
-	PropertyData propertyData;
-
-	@Autowired
 	LoginService loginService;
 
 	@Autowired
@@ -57,6 +53,7 @@ public class LoginController {
 	@Description(value = "로그인")
 	public Mono<ResponseVO<TokenVO>> getLoginData(HttpServletRequest request, @RequestParam String userid,
 			@RequestParam String password) throws Exception {
+
 		UserLoginVO data = loginService.getLogin(userid, password);
 
 		TokenVO tokenVO = new TokenVO();
@@ -73,6 +70,7 @@ public class LoginController {
 	@Description(value = "사용자 정보")
 	public Mono<ResponseVO<UserInfoVO>> getUserData(HttpServletRequest request, @RequestParam String userid)
 			throws Exception {
+
 		UserInfoVO data = loginService.getUserData(userid);
 
 		return Mono.just(new ResponseVO<UserInfoVO>(request, data));
@@ -83,8 +81,8 @@ public class LoginController {
 	@Description(value = "사용자 등록")
 	public Mono<ResponseVO<LoginResponseVO>> setRegistration(HttpServletRequest request,
 			@RequestBody UserLoginVO userLoginVO) throws Exception {
-		log.info("{}", userLoginVO);
 
+		log.info("{}", userLoginVO);
 		int data = loginService.setRegistration(userLoginVO);
 
 		LoginResponseVO loginResponseVO = new LoginResponseVO();
@@ -102,8 +100,8 @@ public class LoginController {
 	@Description(value = "사용자 수정")
 	public Mono<ResponseVO<LoginResponseVO>> setUserUpdate(HttpServletRequest request,
 			@RequestBody UserLoginVO userLoginVO) throws Exception {
-		log.info("{}", userLoginVO);
 
+		log.info("{}", userLoginVO);
 		int data = loginService.setUserUpdate(userLoginVO);
 
 		LoginResponseVO loginResponseVO = new LoginResponseVO();
@@ -120,8 +118,8 @@ public class LoginController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "API 리스트 정보")
 	public Mono<List<Map<String, String>>> getApiList(HttpServletRequest request) {
-		log.info("=== get Api List : /api/getApiList === : {}", request);
 
+		log.info("=== get Api List : /api/getApiList === : {}", request);
 		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
 		Map<RequestMappingInfo, HandlerMethod> map = requestMappingHandlerMapping.getHandlerMethods();
 

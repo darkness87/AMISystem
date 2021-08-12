@@ -77,6 +77,7 @@ public class AskServiceImpl implements AskService {
 
 	@Override
 	public List<AskListVO> getAskListData(int gseq, String toDate, String fromDate, String userId) throws Exception {
+
 		List<AskInterfaceVO> askList = null;
 
 		if (toDate.equals("") || fromDate.equals("")) {
@@ -135,6 +136,7 @@ public class AskServiceImpl implements AskService {
 
 	@Override
 	public int setAskData(AskSetVO askSetVO) throws Exception {
+
 		AskEntity askEntity = new AskEntity();
 
 		askEntity.setGSeq(askSetVO.getEstateSeq());

@@ -10,4 +10,5 @@ import com.cnu.ami.search.dao.entity.RegionEntity;
 public interface SearchRegionDAO extends JpaRepository<RegionEntity, Long> {
 
 	public RegionNameIneterfaceVO findFirstByrSeq(int rseq);
+
 }

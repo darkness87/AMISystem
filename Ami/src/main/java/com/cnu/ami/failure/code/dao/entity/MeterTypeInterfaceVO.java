@@ -21,4 +21,5 @@ public interface MeterTypeInterfaceVO {
 	String getMeter_id();
 
 	String getMtype_name();
+
 }

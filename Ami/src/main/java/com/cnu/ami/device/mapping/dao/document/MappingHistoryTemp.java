@@ -15,4 +15,5 @@ public class MappingHistoryTemp {
 	private String _id;
 	private Date dateTime;
 	private int count;
+
 }

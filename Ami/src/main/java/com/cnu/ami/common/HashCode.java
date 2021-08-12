@@ -9,7 +9,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 /**
- * PBKDF2
+ * PBKDF2 암호화
  * 
  * @author sookwon
  */

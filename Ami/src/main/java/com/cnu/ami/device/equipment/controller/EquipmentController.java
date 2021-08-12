@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cnu.ami.common.ExceptionConst;
-import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.ResultCountVO;
@@ -60,9 +59,6 @@ public class EquipmentController {
 
 	@Autowired
 	EquipmentService equipmentService;
-
-	@Autowired
-	PropertyData propertyData;
 
 	@RequestMapping(value = "/dcu/count", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)

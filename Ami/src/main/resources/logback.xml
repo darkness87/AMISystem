@@ -14,6 +14,7 @@
             </then>
             <else>
             	<fileNamePattern>/app/AmiWas/logs/ami-waslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
+            	<!-- <fileNamePattern>/app/Ami_skens/logs/skens-waslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern> -->
             </else>
         </if>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -34,6 +35,7 @@
             </then>
             <else>
             	<fileNamePattern>/app/AmiWas/logs/ami-syslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern>
+            	<!-- <fileNamePattern>/app/Ami_skens/logs/skens-syslog-%d{yyyy-MM-dd}-%i.log.zip</fileNamePattern> -->
             </else>
         </if>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">

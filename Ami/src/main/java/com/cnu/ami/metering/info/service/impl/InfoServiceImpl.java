@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
 import com.cnu.ami.common.ExceptionConst;
-import com.cnu.ami.common.MongoConfig;
+import com.cnu.ami.common.MongoConnect;
 import com.cnu.ami.common.SystemException;
 import com.cnu.ami.metering.info.dao.DcuDAO;
 import com.cnu.ami.metering.info.dao.MeterDAO;
@@ -49,7 +49,7 @@ public class InfoServiceImpl implements InfoService {
 	MongoTemplate mongoTemplate;
 	
 	@Autowired
-	MongoConfig mongo;
+	MongoConnect mongo;
 
 	@Override
 	public List<RealTimeVO> getRealTimeData(int gseq) throws Exception {
@@ -151,7 +151,6 @@ public class InfoServiceImpl implements InfoService {
 			for (LpDataTemp lpDataTemp : lpdata) {
 				if (meter.getMETER_ID().equals(lpDataTemp.getMid())) {
 					collectMeterVO = new CollectMeterVO();
-					// 같으면 파일 진행
 
 					collectMeterVO.setDcuId(meter.getDID());
 					collectMeterVO.setMeterId(meter.getMETER_ID());
@@ -175,12 +174,7 @@ public class InfoServiceImpl implements InfoService {
 					collectMeterVO.setCountLp(countLp);
 					collectMeterVO.setCountOn(countOn);
 
-					int countTotal = (60 / meter.getLP_PERIOD()) * 24;
-//					if(meterdata.get(i).getLP_PERIOD()==15) {
-//						countTotal = 96;
-//					} else if(meterdata.get(i).getLP_PERIOD()==60) {
-//						countTotal = 24;
-//					}
+					int countTotal = (60 / meter.getLP_PERIOD()) * 24; // Period 에 따라 total count 계산 , 15분일 경우 96개 , 60분일 경우 24개
 
 					collectMeterVO.setTotalLp(countTotal);
 					collectMeterVO.setTotalOn(countTotal);
@@ -201,8 +195,7 @@ public class InfoServiceImpl implements InfoService {
 	}
 
 	@Override
-	public List<CollectMeterVO> getMeterAggrData(int gseq, String day, String dcuId) throws Exception { // Aggregation 을
-																										// 통한 카운트 수
+	public List<CollectMeterVO> getMeterAggrData(int gseq, String day, String dcuId) throws Exception { // Aggregation을 통한 카운트 수
 
 		List<MeterInterfaceVO> meterdata = meterDAO.getMeterData(dcuId);
 
@@ -240,9 +233,8 @@ public class InfoServiceImpl implements InfoService {
 				OnTimeLpRateTemp.class);
 
 		List<OnTimeLpRateTemp> dataList = result.getMappedResults();
-		/////
 
-		_lpOrOn = "cntOn";
+		_lpOrOn = "cntOn"; // cntOn 값 변경
 
 		String[] jsonRawStringOn = { String.format("{ $match: { day: '%s' , did: '%s' } }", day, dcuId),
 				String.format("{ $unwind: { path: '$%s', includeArrayIndex: 'cntOn_idx' } }", _lpOrOn),

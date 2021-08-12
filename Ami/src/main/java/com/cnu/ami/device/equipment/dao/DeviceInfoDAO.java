@@ -20,4 +20,5 @@ public interface DeviceInfoDAO extends JpaRepository<DeviceInfoEntity, String> {
 	public DeviceEstateInterfaceVO getDeviceEstateInfo(@Param("gseq") int gseq);
 	
 	public DeviceInfoEntity findByGSEQAndGATEWAYIDAndMETERID(int gseq, String gatewayId, String meterId);
+
 }

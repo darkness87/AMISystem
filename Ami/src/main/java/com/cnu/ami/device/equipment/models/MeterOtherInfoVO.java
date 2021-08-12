@@ -25,4 +25,5 @@ public class MeterOtherInfoVO {
 	private int otherReadingDay; // 계량기Other 검침일
 	private int lpPeriod; // 검침주기
 	private Date meterTime;
+
 }

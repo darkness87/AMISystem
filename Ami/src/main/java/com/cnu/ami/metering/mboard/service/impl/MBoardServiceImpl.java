@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.cnu.ami.common.CnuAggregationOperation;
 import com.cnu.ami.common.CollectionNameFormat;
-import com.cnu.ami.common.MongoConfig;
+import com.cnu.ami.common.MongoConnect;
 import com.cnu.ami.dashboard.dao.document.DayRateTemp;
 import com.cnu.ami.device.estate.dao.EstateDAO;
 import com.cnu.ami.device.estate.dao.entity.EstateSeqInterfaceVO;
@@ -43,12 +43,10 @@ public class MBoardServiceImpl implements MBoardService {
 	MongoTemplate mongoTemplate;
 	
 	@Autowired
-	MongoConfig mongo;
+	MongoConnect mongo;
 
 	@Override
 	public List<LpCountVO> getElectricLPDataCount() throws Exception {
-
-		// TODO for문 Count 더하기 오류
 
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -56,24 +54,6 @@ public class MBoardServiceImpl implements MBoardService {
 		cal.setTime(date);
 
 		String today = dateFormat.format(cal.getTime());
-
-//		SimpleDateFormat hourFormat = new SimpleDateFormat("HH");
-//		SimpleDateFormat minFormat = new SimpleDateFormat("mm");
-//
-//		int hour = Integer.valueOf(hourFormat.format(date));
-//		int min = Integer.valueOf(minFormat.format(date));
-//
-//		if (min >= 0 && min < 15) {
-//			hour = hour * 4;
-//		} else if (min >= 15 && min < 30) {
-//			hour = (hour * 4) + 1;
-//		} else if (min >= 30 && min < 45) {
-//			hour = (hour * 4) + 2;
-//		} else if (min >= 45 && min <= 59) {
-//			hour = (hour * 4) + 3;
-//		} else {
-//			hour = hour * 4;
-//		}
 
 		List<EstateSeqInterfaceVO> estate = estateDAO.getEstate();
 
@@ -130,20 +110,6 @@ public class MBoardServiceImpl implements MBoardService {
 			if (data == null) {
 				continue;
 			}
-
-//			for (MeterReadingCountTemp lpCount : data) {
-//
-//				lpCountVO = new LpCountVO();
-//
-//				if (lpCount.getIdx() > hour) {
-//					continue;
-//				}
-//
-//				lpCountVO.setTime(TimeCode.checkTime(lpCount.getIdx()));
-//				lpCountVO.setCount(lpCount.getCount());
-//
-//				list.add(lpCountVO);
-//			}
 
 			for (MeterReadingCountTemp lpCount : data) {
 
@@ -588,11 +554,6 @@ public class MBoardServiceImpl implements MBoardService {
 			} else {
 				readingRegionAggrVO.setReading(reading);
 			}
-
-			// readingRegionAggrVO.setAllCount(house.get(i).getCOUNT() * hour);
-			// readingRegionAggrVO.setReadingCount(count);
-			// readingRegionAggrVO.setErrorCount((house.get(i).getCOUNT() * hour) - count);
-			// readingRegionAggrVO.setNetworkCount(dcu.get(i).getCOUNT());
 
 			list.add(readingRegionAggrVO);
 		}

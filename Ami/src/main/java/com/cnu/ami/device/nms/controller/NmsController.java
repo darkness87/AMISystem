@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cnu.ami.common.PropertyData;
 import com.cnu.ami.common.ResponseListVO;
 import com.cnu.ami.common.ResponseVO;
 import com.cnu.ami.common.ResultVO;
@@ -39,9 +38,6 @@ public class NmsController {
 	@Autowired
 	NmsService nmsService;
 
-	@Autowired
-	PropertyData propertyData;
-
 	@RequestMapping(value = "/dcu/list", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.OK)
 	@Description(value = "설비:NMS : DCU 리스트정보")
@@ -63,8 +59,7 @@ public class NmsController {
 
 		ResultVO resultVO = new ResultVO();
 		resultVO.setResult(bool);
-
-		// TODO 성공 DCU 수, 실패 DCU 수로 세분화 하여야 할듯
+		// TODO 성공 DCU 수, 실패 DCU 수로 세분화 필요
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
@@ -75,7 +70,6 @@ public class NmsController {
 	public Mono<ResponseListVO<MasterModemListVO>> getModemMeterList(HttpServletRequest request, @RequestParam String dcuId)
 			throws Exception {
 
-		// TODO NMS 트리구조 관련
 		List<MasterModemListVO> data = nmsService.getModemMeterList(dcuId);
 
 		return Mono.just(new ResponseListVO<MasterModemListVO>(request, data));
@@ -91,8 +85,7 @@ public class NmsController {
 
 		ResultVO resultVO = new ResultVO();
 		resultVO.setResult(bool);
-
-		// TODO 성공 DCU 수, 실패 DCU 수로 세분화 하여야 할듯
+		// TODO 성공 DCU 수, 실패 DCU 수로 세분화 필요
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
@@ -107,8 +100,7 @@ public class NmsController {
 
 		ResultVO resultVO = new ResultVO();
 		resultVO.setResult(bool);
-
-		// TODO 성공 DCU 수, 실패 DCU 수로 세분화 하여야 할듯
+		// TODO 성공 DCU 수, 실패 DCU 수로 세분화 필요
 
 		return Mono.just(new ResponseVO<ResultVO>(request, resultVO));
 	}
