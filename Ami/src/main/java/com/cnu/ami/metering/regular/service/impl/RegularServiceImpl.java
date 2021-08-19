@@ -41,6 +41,7 @@ public class RegularServiceImpl implements RegularService {
 
 		Date date = new Date();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+		SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.YEAR, Integer.valueOf(yearMonth.substring(0, 4)));
@@ -84,11 +85,19 @@ public class RegularServiceImpl implements RegularService {
 				regularMonthVO.setReadingDayCompare(false);
 			}
 
-			regularMonthVO.setTo_meterTime(new Date(month.getTo_Mtime() * 1000));
+			if(month.getTo_Mtime() == 0) {
+				regularMonthVO.setTo_meterTime("");
+			} else {
+				regularMonthVO.setTo_meterTime(simpleFormat.format(new Date(month.getTo_Mtime() * 1000)));
+			}
 			regularMonthVO.setTo_apt1(month.getTo_Apt1());
 			regularMonthVO.setTo_rapt1(month.getTo_R_Apt1());
 
-			regularMonthVO.setFrom_meterTime(new Date(month.getFrom_Mtime() * 1000));
+			if(month.getFrom_Mtime() == 0) {
+				regularMonthVO.setFrom_meterTime("");
+			} else {
+				regularMonthVO.setFrom_meterTime(simpleFormat.format(new Date(month.getFrom_Mtime() * 1000)));
+			}
 			regularMonthVO.setFrom_apt1(month.getFrom_Apt1());
 			regularMonthVO.setFrom_rapt1(month.getFrom_R_Apt1());
 

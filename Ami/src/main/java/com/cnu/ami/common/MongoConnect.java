@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Mongo DB 커넥션
+ * 
  * @author sookwon
  *
  */
@@ -19,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MongoConnect {
 
 	static MessageSourceAccessor messageSourceAccessor;
+	String uri;
+	SimpleMongoClientDatabaseFactory fac;
 
 	public MongoConnect() {
 		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
@@ -36,11 +39,15 @@ public class MongoConnect {
 	}
 
 	public MongoTemplate mongodb() {
-		String uri = this.getData("spring.data.mongodb.uri");
-		SimpleMongoClientDatabaseFactory fac = new SimpleMongoClientDatabaseFactory(uri);
+		uri = this.getData("spring.data.mongodb.uri");
+		fac = new SimpleMongoClientDatabaseFactory(uri);
 		MongoTemplate mongo = new MongoTemplate(fac);
 
 		return mongo;
+	}
+
+	public void close() throws Exception {
+		fac.destroy();
 	}
 
 }

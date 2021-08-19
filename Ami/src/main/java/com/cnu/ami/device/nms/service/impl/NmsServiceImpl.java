@@ -1,5 +1,6 @@
 package com.cnu.ami.device.nms.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -127,6 +128,7 @@ public class NmsServiceImpl implements NmsService {
 		MasterModemListVO masterModemListVO = new MasterModemListVO();
 
 		Date date = new Date();
+		SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		long toTime = cal.getTimeInMillis();
@@ -158,8 +160,14 @@ public class NmsServiceImpl implements NmsService {
 
 						stepMeterListVO.setMeterId(meterList[i]);
 						stepMeterListVO.setHouseName(datalist.getHO());
-						stepMeterListVO.setMeterTime(new Date(datalist.getMTIME() * 1000));
+						
+						if(datalist.getMTIME() == 0) {
+							stepMeterListVO.setMeterTime("");
+						} else {
+							stepMeterListVO.setMeterTime(simple.format(new Date(datalist.getMTIME() * 1000)));
+						}
 						stepMeterListVO.setFap(datalist.getFAP());
+						stepMeterListVO.setMeterType(datalist.getMTYPE_NAME());
 
 						// 시간 비교
 						if (datalist.getMTIME() * 1000 >= fromTime && datalist.getMTIME() * 1000 <= toTime) {

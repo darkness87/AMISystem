@@ -1,7 +1,5 @@
 package com.cnu.ami.failure.reading.models;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +12,7 @@ public class FailureReadingVO {
 	private String buildingName;
 	private String houseName;
 	private String meterId;
-	private Date meterTime;
+	private String meterTime;
 	private String dcuId;
 	private String mac;
 	private String status;

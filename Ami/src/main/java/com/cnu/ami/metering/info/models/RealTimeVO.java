@@ -1,7 +1,5 @@
 package com.cnu.ami.metering.info.models;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,9 +18,9 @@ public class RealTimeVO {
 	private String dcuId; // DCU 아이디
 	private String meterId; // 전력량계 아이디
 	private String mac; // 모뎀 MAC번호
-	private Date meterTime; // 발생시각
+	private String meterTime; // 발생시각
 	private int fap; // 순방향 유효전력
 	private int rfap; // 역방향 유효전력
-	private Date updateDate; // 변경시각
+	private String updateDate; // 변경시각
 
 }

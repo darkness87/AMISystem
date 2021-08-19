@@ -61,7 +61,8 @@ public class CodeServiceImpl implements CodeService {
 		}
 
 		List<LpFaultTemp> data = mongo.mongodb().find(query, LpFaultTemp.class, "CASS_LP_FAULT");
-
+		mongo.close();
+		
 		if (data == null) {
 			throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "해당 기간에 데이터가 없습니다.");
 		}

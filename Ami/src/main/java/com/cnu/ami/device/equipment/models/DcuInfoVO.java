@@ -21,7 +21,7 @@ public class DcuInfoVO {
 	private String macA; // 마스터 모뎀 A 맥어드레스
 	private String macB; // 마스터 모뎀 B 맥어드레스
 	private String macC; // 마스터 모뎀 C 맥어드레스
-	private Date dcuCurrentTime; // DCU 현재 시각
+	private String dcuCurrentTime; // DCU 현재 시각
 	private String firmwareVersion; // DCU FIRMWARE VERSION
 	private String wanCode; // 간성망 분류 코드 (1:HFC, 2:OPTICAL, 3:LTE)
 	private String commCode; // 인입망 통신기술 분류코드 (1:HS-PLC, 2:HPGP, 3:WI-SUN, 4:ZIGBEE)

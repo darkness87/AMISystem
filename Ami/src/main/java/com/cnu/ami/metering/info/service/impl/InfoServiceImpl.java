@@ -62,6 +62,7 @@ public class InfoServiceImpl implements InfoService {
 
 		List<RealTimeVO> list = new ArrayList<RealTimeVO>();
 		RealTimeVO realTimeVO = new RealTimeVO();
+		SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		for (RealTimeInterfaceVO real : data) {
 			realTimeVO = new RealTimeVO();
@@ -87,10 +88,21 @@ public class InfoServiceImpl implements InfoService {
 			realTimeVO.setDcuId(real.getDID());
 			realTimeVO.setMeterId(real.getMETER_ID());
 			realTimeVO.setMac(real.getMAC());
-			realTimeVO.setMeterTime(new Date(real.getMTIME() * 1000));
+			
+			if(real.getMTIME()==0) {
+				realTimeVO.setMeterTime("");
+			} else {
+				realTimeVO.setMeterTime(simpleFormat.format(new Date(real.getMTIME() * 1000)));
+			}
+			
 			realTimeVO.setFap(real.getFAP());
 			realTimeVO.setRfap(real.getRFAP());
-			realTimeVO.setUpdateDate(new Date(real.getUDATE() * 1000));
+			
+			if(real.getUDATE()==0) {
+				realTimeVO.setUpdateDate("");
+			} else {
+				realTimeVO.setUpdateDate(simpleFormat.format(new Date(real.getUDATE() * 1000)));
+			}
 
 			list.add(realTimeVO);
 		}
@@ -142,6 +154,7 @@ public class InfoServiceImpl implements InfoService {
 		String collectName = collectionNameFormat.formatDay(gseq, day);
 
 		List<LpDataTemp> lpdata = mongo.mongodb().find(query, LpDataTemp.class, collectName);
+		mongo.close();
 
 		List<CollectMeterVO> list = new ArrayList<CollectMeterVO>();
 		CollectMeterVO collectMeterVO = new CollectMeterVO();
@@ -229,8 +242,8 @@ public class InfoServiceImpl implements InfoService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[6])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[7])));
 
-		AggregationResults<OnTimeLpRateTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
-				OnTimeLpRateTemp.class);
+		AggregationResults<OnTimeLpRateTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, OnTimeLpRateTemp.class);
+		mongo.close();
 
 		List<OnTimeLpRateTemp> dataList = result.getMappedResults();
 
@@ -257,8 +270,8 @@ public class InfoServiceImpl implements InfoService {
 				new CnuAggregationOperation(Document.parse(jsonRawStringOn[6])),
 				new CnuAggregationOperation(Document.parse(jsonRawStringOn[7])));
 
-		AggregationResults<OnTimeLpRateTemp> resultOn = mongo.mongodb().aggregate(aggregationOn, collectionName,
-				OnTimeLpRateTemp.class);
+		AggregationResults<OnTimeLpRateTemp> resultOn = mongo.mongodb().aggregate(aggregationOn, collectionName, OnTimeLpRateTemp.class);
+		mongo.close();
 
 		List<OnTimeLpRateTemp> dataListOn = resultOn.getMappedResults();
 

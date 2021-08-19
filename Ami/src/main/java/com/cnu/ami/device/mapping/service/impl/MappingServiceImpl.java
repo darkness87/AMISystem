@@ -106,6 +106,7 @@ public class MappingServiceImpl implements MappingService {
 
 		try {
 			MappingTemp data = mongo.mongodb().save(mappingTemp, collectName);
+			mongo.close();
 			log.info("{}", data);
 
 			if (data == null) {
@@ -136,8 +137,8 @@ public class MappingServiceImpl implements MappingService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
 
-		AggregationResults<MappingHistoryTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
-				MappingHistoryTemp.class);
+		AggregationResults<MappingHistoryTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, MappingHistoryTemp.class);
+		mongo.close();
 
 		List<MappingHistoryTemp> data = result.getMappedResults();
 		
@@ -180,6 +181,7 @@ public class MappingServiceImpl implements MappingService {
 				.newAggregation(new CnuAggregationOperation(Document.parse(jsonRawString[0])));
 
 		AggregationResults<MappingVO> result = mongo.mongodb().aggregate(aggregation, collectionName, MappingVO.class);
+		mongo.close();
 
 		MappingVO data = result.getUniqueMappedResult();
 

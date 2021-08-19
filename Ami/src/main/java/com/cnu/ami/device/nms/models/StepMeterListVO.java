@@ -1,7 +1,5 @@
 package com.cnu.ami.device.nms.models;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +9,8 @@ public class StepMeterListVO {
 
 	private String meterId;
 	private String houseName;
-	private Date meterTime;
+	private String meterTime;
+	private String meterType;
 	private int fap;
 	private int status; // 0: 정상, 1:오류(빨간색글씨표기)
 

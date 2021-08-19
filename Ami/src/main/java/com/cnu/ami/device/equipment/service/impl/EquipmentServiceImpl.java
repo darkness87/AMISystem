@@ -1,5 +1,6 @@
 package com.cnu.ami.device.equipment.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -121,6 +122,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 			int count = meterInfoDAO.getDcuMeterCount(did);
 
 			DeviceBuildingInterfaceVO mapp = dcuInfoDAO.getDcuMappInfo(did);
+			
+			SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 			if (dcu == null) {
 				throw new SystemException(HttpStatus.UNAUTHORIZED, ExceptionConst.NULL_EXCEPTION, "데이터가 없습니다.");
@@ -144,7 +147,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 			dcuInfoVO.setMacA(dcu.getMAC_A());
 			dcuInfoVO.setMacB(dcu.getMAC_B());
 			dcuInfoVO.setMacC(dcu.getMAC_C());
-			dcuInfoVO.setDcuCurrentTime(new Date(dcu.getITIME() * 1000));
+			dcuInfoVO.setDcuCurrentTime(simpleFormat.format(new Date(dcu.getITIME() * 1000)));
 			dcuInfoVO.setFirmwareVersion(dcu.getFWV());
 			dcuInfoVO.setWanCode(dcu.getWAN_CODE());
 			dcuInfoVO.setCommCode(dcu.getCOMM_CODE());
@@ -411,9 +414,14 @@ public class EquipmentServiceImpl implements EquipmentService {
 
 		}
 
-		meterInfoVO.setLpTime(new Date(lp.getMTIME() * 1000));
-		meterInfoVO.setLp(Float.valueOf(lp.getFAP()) / 1000);
-
+		if(lp==null) {
+			meterInfoVO.setLpTime(null);
+			meterInfoVO.setLp(0);
+		} else {
+			meterInfoVO.setLpTime(new Date(lp.getMTIME() * 1000));
+			meterInfoVO.setLp(Float.valueOf(lp.getFAP()) / 1000);
+		}
+		
 		meterInfoVO.setMeterId(meter.getMETERID());
 		meterInfoVO.setMac(meter.getMAC());
 		meterInfoVO.setDcuId(meter.getDID());

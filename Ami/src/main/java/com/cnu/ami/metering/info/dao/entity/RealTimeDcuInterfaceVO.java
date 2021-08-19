@@ -11,7 +11,9 @@ public interface RealTimeDcuInterfaceVO {
 	int getFAP();
 
 	int getRFAP();
-	
+
 	String getHO();
+
+	String getMTYPE_NAME();
 
 }

@@ -67,8 +67,8 @@ public class FBoardServiceImpl implements FBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[3])));
 
-		AggregationResults<DayLpFailureTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
-				DayLpFailureTemp.class);
+		AggregationResults<DayLpFailureTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, DayLpFailureTemp.class);
+		mongo.close();
 
 		List<DayLpFailureTemp> data = result.getMappedResults();
 
@@ -223,9 +223,9 @@ public class FBoardServiceImpl implements FBoardService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[3])));
 
-		AggregationResults<FailureDayCountTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
-				FailureDayCountTemp.class);
-
+		AggregationResults<FailureDayCountTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, FailureDayCountTemp.class);
+		mongo.close();
+		
 		FailureDayCountTemp data = result.getUniqueMappedResult();
 
 		return data;

@@ -57,7 +57,7 @@ public class LookupServiceImpl implements LookupService {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<RawLpCycleVO> getLpCycle(int gseq, int bseq, String dcuId, String day) {
+	public List<RawLpCycleVO> getLpCycle(int gseq, int bseq, String dcuId, String day) throws Exception {
 
 		EstateEntity estate = estateDAO.findBygSeq(gseq);
 		
@@ -81,6 +81,7 @@ public class LookupServiceImpl implements LookupService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[3])));
 		
 		AggregationResults<RawLpCycleTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, RawLpCycleTemp.class);
+		mongo.close();
 		
 		List<RawLpCycleTemp> data = result.getMappedResults();
 		
@@ -127,7 +128,7 @@ public class LookupServiceImpl implements LookupService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<RawLpHourVO> getLpHour(int gseq, int bseq, String dcuId, String day) {
+	public List<RawLpHourVO> getLpHour(int gseq, int bseq, String dcuId, String day) throws Exception {
 
 		EstateEntity estate = estateDAO.findBygSeq(gseq);
 
@@ -148,8 +149,8 @@ public class LookupServiceImpl implements LookupService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
 
-		AggregationResults<RawLpHourTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
-				RawLpHourTemp.class);
+		AggregationResults<RawLpHourTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, RawLpHourTemp.class);
+		mongo.close();
 
 		List<RawLpHourTemp> data = result.getMappedResults();
 
@@ -209,7 +210,7 @@ public class LookupServiceImpl implements LookupService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<RawLpDurationVO> getLpDuration(int gseq, int bseq, String dcuId, String fromDate, String toDate) {
+	public List<RawLpDurationVO> getLpDuration(int gseq, int bseq, String dcuId, String fromDate, String toDate) throws Exception {
 
 		EstateEntity estate = estateDAO.findBygSeq(gseq);
 
@@ -231,8 +232,8 @@ public class LookupServiceImpl implements LookupService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[1])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[2])));
 
-		AggregationResults<RawLpDurationTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
-				RawLpDurationTemp.class);
+		AggregationResults<RawLpDurationTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, RawLpDurationTemp.class);
+		mongo.close();
 
 		List<RawLpDurationTemp> data = result.getMappedResults();
 
@@ -363,7 +364,7 @@ public class LookupServiceImpl implements LookupService {
 	}
 
 	@Override
-	public List<RawLpHourChartVO> getLpHourChart(int gseq, int bseq, String dcuId, String day) {
+	public List<RawLpHourChartVO> getLpHourChart(int gseq, int bseq, String dcuId, String day) throws Exception {
 
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 
@@ -386,8 +387,8 @@ public class LookupServiceImpl implements LookupService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[5])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[6])));
 
-		AggregationResults<RawLpHourChartTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
-				RawLpHourChartTemp.class);
+		AggregationResults<RawLpHourChartTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, RawLpHourChartTemp.class);
+		mongo.close();
 
 		List<RawLpHourChartTemp> data = result.getMappedResults();
 
@@ -431,7 +432,7 @@ public class LookupServiceImpl implements LookupService {
 
 	@Override
 	public List<RawLpDurationChartVO> getLpDurationChart(int gseq, int bseq, String dcuId, String fromDate,
-			String toDate) {
+			String toDate) throws Exception {
 
 		CollectionNameFormat collectionNameFormat = new CollectionNameFormat();
 
@@ -452,8 +453,8 @@ public class LookupServiceImpl implements LookupService {
 				new CnuAggregationOperation(Document.parse(jsonRawString[4])),
 				new CnuAggregationOperation(Document.parse(jsonRawString[5])));
 
-		AggregationResults<RawLpDurationChartTemp> result = mongo.mongodb().aggregate(aggregation, collectionName,
-				RawLpDurationChartTemp.class);
+		AggregationResults<RawLpDurationChartTemp> result = mongo.mongodb().aggregate(aggregation, collectionName, RawLpDurationChartTemp.class);
+		mongo.close();
 
 		List<RawLpDurationChartTemp> data = result.getMappedResults();
 

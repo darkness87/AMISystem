@@ -10,14 +10,14 @@ import com.cnu.ami.metering.lookup.models.RawLpHourVO;
 
 public interface LookupService {
 
-	public List<RawLpCycleVO> getLpCycle(int gseq, int bseq, String dcuId, String day);
+	public List<RawLpCycleVO> getLpCycle(int gseq, int bseq, String dcuId, String day) throws Exception;
 
-	public List<RawLpHourVO> getLpHour(int gseq, int bseq, String dcuId, String day);
+	public List<RawLpHourVO> getLpHour(int gseq, int bseq, String dcuId, String day) throws Exception;
 
-	public List<RawLpDurationVO> getLpDuration(int gseq, int bseq, String dcuId, String fromDate, String toDate);
+	public List<RawLpDurationVO> getLpDuration(int gseq, int bseq, String dcuId, String fromDate, String toDate) throws Exception;
 
-	public List<RawLpHourChartVO> getLpHourChart(int gseq, int bseq, String dcuId, String day);
+	public List<RawLpHourChartVO> getLpHourChart(int gseq, int bseq, String dcuId, String day) throws Exception;
 
-	public List<RawLpDurationChartVO> getLpDurationChart(int gseq, int bseq, String dcuId, String fromDate, String toDate);
+	public List<RawLpDurationChartVO> getLpDurationChart(int gseq, int bseq, String dcuId, String fromDate, String toDate) throws Exception;
 	
 }

@@ -1,5 +1,6 @@
 package com.cnu.ami.failure.reading.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,6 +31,7 @@ public class FailureReadingServiceImpl implements FailureReadingService {
 		}
 
 		Date date = new Date();
+		SimpleDateFormat simpleFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cal.add(Calendar.HOUR_OF_DAY, -6);
@@ -51,7 +53,13 @@ public class FailureReadingServiceImpl implements FailureReadingService {
 			failureReadingVO.setBuildingName(real.getBNAME());
 			failureReadingVO.setHouseName(real.getHO());
 			failureReadingVO.setMeterId(real.getMETER_ID());
-			failureReadingVO.setMeterTime(new Date(real.getMTIME() * 1000));
+			
+			if(real.getMTIME()==0) {
+				failureReadingVO.setMeterTime("");
+			} else {
+				failureReadingVO.setMeterTime(simpleFormat.format(new Date(real.getMTIME() * 1000)));
+			}
+			
 			failureReadingVO.setDcuId(real.getDID());
 			failureReadingVO.setMac(real.getMAC());
 
